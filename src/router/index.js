@@ -9,6 +9,8 @@ import AdminView from '@/views/adminCreate.vue'
 import AdminDeleteView from '@/views/adminDelete.vue'
 import AdminUpdateView from '@/views/adminUpdate.vue'
 import AdminSearch from '@/views/adminSearch.vue'
+import Auth from '@/views/Authentication.vue'
+
 
 const routes = [
   // 👇 Ruta principal (cliente)
@@ -45,6 +47,11 @@ const routes = [
     path: '/admin/search',
     name: 'AdminSearch',
     component: AdminSearch
+  },
+  {
+    path: '/Login',
+    name: 'Authentication',
+    component: Auth
   }
 ]
 
