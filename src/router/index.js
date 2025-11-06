@@ -4,6 +4,7 @@ import AdminView from '@/views/adminCreate.vue'
 import AdminDeleteView from '@/views/adminDelete.vue'
 import AdminUpdateView from '@/views/adminUpdate.vue'
 import AdminSearch from '@/views/adminSearch.vue'
+import HomeScreen from '../views/HomeScreen.vue'
 const routes = [
   {
     path: '/admin/create',
@@ -26,6 +27,11 @@ const routes = [
     path: '/admin/search',
     name: 'AdminSearch',
     component: AdminSearch
+  },
+  {
+    path: '',
+    name: 'HomeScreen',
+    component: HomeScreen
   }
 ]
 
