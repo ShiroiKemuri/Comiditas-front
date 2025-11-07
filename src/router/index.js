@@ -1,31 +1,10 @@
+
 import { createRouter, createWebHistory } from 'vue-router'
-
-// Vistas de cliente
-import HomeScreen from '@/views/HomeScreen.vue'
-import CartView from '@/views/CartView.vue'
-
-// Vistas de administrador
 import AdminView from '@/views/adminCreate.vue'
 import AdminDeleteView from '@/views/adminDelete.vue'
 import AdminUpdateView from '@/views/adminUpdate.vue'
 import AdminSearch from '@/views/adminSearch.vue'
-
 const routes = [
-  // 👇 Ruta principal (cliente)
-  {
-    path: '/',
-    name: 'Home',
-    component: HomeScreen
-  },
-
-  // 👇 Carrito de compras
-  {
-    path: '/cart',
-    name: 'Cart',
-    component: CartView
-  },
-
-  // 👇 Módulo de administración
   {
     path: '/admin/create',
     name: 'AdminCreate',
@@ -35,6 +14,8 @@ const routes = [
     path: '/admin/delete',
     name: 'AdminDelete',
     component: AdminDeleteView
+  },
+  {
   },
   {
     path: '/admin/update',
