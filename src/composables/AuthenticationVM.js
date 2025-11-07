@@ -2,12 +2,7 @@ import { ref } from 'vue';
 import apiClient from '@/api/axiosConfig';
 import AuthModel from '@/models/AuthenticationModel';
 import router from '@/router';
-<<<<<<< HEAD
-import axios from 'axios';
-import AuthModel from '@/models/AuthenticationModel';
-import router from '@/router';
-=======
->>>>>>> d36250f10b777e95ee32ebaffdf5dc4db8e72d84
+
 
 const Auth = ref({ ...AuthModel });
 
@@ -59,11 +54,7 @@ const login = async () => {
         const response = await apiClient.post('/auth/login', Auth.value);
         if (response.data && response.data.token) {
             localStorage.setItem('jwt_token', response.data.token);
-<<<<<<< HEAD
-            console.log('Login successful, token stored.');
-=======
->>>>>>> d36250f10b777e95ee32ebaffdf5dc4db8e72d84
-            console.log('Login successful, token stored.');          
+            console.log('Login successful, token stored.');        
             router.push({ name: 'AdminCreate' });
             return true;
         }
@@ -76,7 +67,6 @@ const login = async () => {
         } else {
             errorMessage.value = 'Error de conexión. Por favor, intente más tarde.';
         }
-<<<<<<< HEAD
         // 4. Intentar el inicio de sesión
         try {
             const response = await axios.post('http://localhost:8085/auth/login', Auth.value);
@@ -90,10 +80,5 @@ const login = async () => {
     };
 }
 
-=======
-        return false;
-    }
-};
->>>>>>> d36250f10b777e95ee32ebaffdf5dc4db8e72d84
 
 export { Auth, login, errorMessage };
