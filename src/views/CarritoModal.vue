@@ -1,47 +1,51 @@
 <template>
   <div class="overlay" @click.self="cerrarModal">
     <div class="modalCarrito">
-      <img :src="product.imageUrl" alt="Foto del producto" />
+      <img :src="product ? product.imageUrl : ''" alt="Foto del producto" />
       <div class="infoProducto">
         <h4>¡Producto añadido!</h4>
-        <p> {{ product.name }}</p>
-        <p> {{ product.description }} </p>
-        <p> ${{ product.price }} </p>
+        <p>{{ product ? product.name : "No hay producto seleccionado" }}</p>
+        <p>
+          {{ product ? product.description : "" }}
+        </p>
+        <p>${{ product ? product.price : 0 }}</p>
         <button @click="cerrarModal">Continuar comprando</button>
         <button @click="irAlCarrito">Ir al carrito</button>
-        <button @click="pagarAhora">Pagar Ahora</button>
+        <button @click="irAlCarrito">Pagar Ahora</button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue';
-  //Recibe la informacion del producto de la pagina principal
-  const props=  defineProps ({
-    product:{
-      type: Object,
-      required: true
-    }
-  })
-  
-  //Trae las funciones de la pagina principal 
-  const emit = defineEmits (['cerrar', 'enviarAlCarrito'])
+import { useRouter } from "vue-router";
+import { defineProps, defineEmits } from "vue";
+import { useAddToCartStore } from "../stores/addToCart";
 
-  function cerrarModal(){
-    emit('cerrar')
+//Recibe la informacion del producto de la pagina principal
+const props = defineProps({
+  product: {
+    type: Object,
+  },
+});
+
+const router = useRouter();
+
+//Trae las funciones de la pagina principal
+const emit = defineEmits(["cerrar", "enviarAlCarrito"]);
+
+function cerrarModal() {
+  emit("cerrar");
+}
+
+function irAlCarrito() {
+  const store = useAddToCartStore();
+  if (props.product) {
+    store.agregarAlCarrito(props.product);
   }
-
-  function irAlCarrito(){
-    emit('enviarAlCarrito', props.product)
-    emit('cerrar')
-  }
-
-  function pagarAhora(){
-    emit('enviarAlCarrito', props.product)
-    emit('cerrar')
-  }
-
+  router.push("/cart");
+  emit("cerrar");
+}
 </script>
 
 <style scoped>
@@ -145,5 +149,3 @@ import { defineProps, defineEmits } from 'vue';
   }
 }
 </style>
-
-
