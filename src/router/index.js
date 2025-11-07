@@ -5,9 +5,15 @@ import AdminDeleteView from '@/views/adminDelete.vue'
 import AdminUpdateView from '@/views/adminUpdate.vue'
 import AdminSearch from '@/views/adminSearch.vue'
 import Auth from '@/views/Authentication.vue'
+import HomeScreen from '@/views/HomeScreen.vue'
 
 
 const routes = [
+  {
+    path: '/',
+    name: 'Home',
+    component: HomeScreen
+  },
   {
     path: '/admin/create',
     name: 'AdminCreate',
