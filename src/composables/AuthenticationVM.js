@@ -4,13 +4,14 @@ import AuthModel from '@/models/AuthenticationModel';
 import router from '@/router';
 import axios from 'axios';
 import AuthModel from '@/models/AuthenticationModel';
+import router from '@/router';
 
 const Auth = ref({ ...AuthModel });
 
 const errorMessage = ref('');
 
 const login = async () => {
-    errorMessage.value = ''; // Limpiar errores previos
+    errorMessage.value = '';
 
     // Validar que no haya espacios en blanco
     const whitespaceRegex = /\s/;
@@ -56,6 +57,7 @@ const login = async () => {
         if (response.data && response.data.token) {
             localStorage.setItem('jwt_token', response.data.token);
             console.log('Login successful, token stored.');
+            console.log('Login successful, token stored.');          
             router.push({ name: 'AdminCreate' });
             return true;
         }
@@ -80,4 +82,6 @@ const login = async () => {
         }
     };
 }
+
+
 export { Auth, login, errorMessage };
