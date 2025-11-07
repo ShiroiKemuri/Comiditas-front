@@ -101,7 +101,7 @@ const goToCart = () => {
 
 const goToAdminLogin = () => {
     // Redirecciona al formulario de login de administrador
-    router.push('/admin-login'); 
+    router.push('/login'); 
 };
 </script>
 
