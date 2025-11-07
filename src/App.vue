@@ -1,8 +1,6 @@
 <script setup>
-import HomeScreen from './views/HomeScreen.vue';
-
 </script>
 
 <template>
-  <HomeScreen/>
+  <router-view></router-view>
 </template>
