@@ -1,6 +1,6 @@
 import { ref, onMounted } from 'vue';
 import { ProductModel } from '../models/ProductModel';
-
+import { useAddToCartStore } from '../stores/addToCart';
 // Simulación de una API de backend
 
 
@@ -81,14 +81,11 @@ export function useHomeViewModel() {
   };
   
   // Función de la acción "Agregar al carrito"
-  const productosCarrito = [];
-   
+  const carritoStore = useAddToCartStore();
+
   const addToCart = (product) => {
-      // AQUÍ VA LA LÓGICA DE LA HU DEL CARRITO
-      
-      // Lógica para agregar al estado global del carrito
-     
-  }
+  carritoStore.agregarAlCarrito(product);
+  };
   
   // Llama a cargar los productos al inicio
   onMounted(fetchProducts);
