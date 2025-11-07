@@ -1,25 +1,28 @@
 <template>
   <div class="overlay" @click.self="cerrarModal">
     <div class="modalCarrito">
-      <img :src="product ? product.imageUrl : ''" alt="Foto del producto" />
-      <div class="infoProducto">
-        <h4>¡Producto añadido!</h4>
-        <p>{{ product ? product.name : "No hay producto seleccionado" }}</p>
-        <p>
-          {{ product ? product.description : "" }}
-        </p>
-        <p>${{ product ? product.price : 0 }}</p>
-        <button @click="cerrarModal">Continuar comprando</button>
-        <button @click="irAlCarrito">Ir al carrito</button>
-        <button @click="irAlCarrito">Pagar Ahora</button>
+        <img :src="product ? product.imageUrl : ''" alt="Foto del producto" />
+        <div class="infoProducto">
+          <h4>Producto en el carrito</h4>
+          <p class="prod-name">{{ product ? product.name : "No hay producto seleccionado" }}</p>
+          <p class="prod-desc">{{ product ? product.description : "" }}</p>
+
+          <div class="modal-price">
+            <div>Precio: ${{ formatPrice(unitPrice) }}</div>
+          </div>
+
+          <div class="modal-actions">
+            <button @click="cerrarModal">Seguir comprando</button>
+            <button @click="irAlCarrito">Ir al carrito</button>
+          </div>
+        </div>
       </div>
-    </div>
   </div>
 </template>
 
 <script setup>
 import { useRouter } from "vue-router";
-import { defineProps, defineEmits } from "vue";
+import { defineProps, defineEmits, computed } from "vue";
 import { useAddToCartStore } from "../stores/addToCart";
 
 //Recibe la informacion del producto de la pagina principal
@@ -32,19 +35,30 @@ const props = defineProps({
 const router = useRouter();
 
 //Trae las funciones de la pagina principal
-const emit = defineEmits(["cerrar", "enviarAlCarrito"]);
+const emit = defineEmits(["cerrar"]);
+
+const store = useAddToCartStore();
+
+// obtener precio unitario desde props
+const unitPrice = computed(() => (props.product ? props.product.price : 0));
 
 function cerrarModal() {
   emit("cerrar");
 }
 
 function irAlCarrito() {
-  const store = useAddToCartStore();
   if (props.product) {
-    store.agregarAlCarrito(props.product);
+    const existing = store.productos.find((p) => p.id === props.product.id);
+    if (!existing) {
+      store.agregarAlCarrito(props.product, 1);
+    }
   }
   router.push("/cart");
   emit("cerrar");
+}
+
+function formatPrice(n) {
+  return Number(n).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 </script>
 
@@ -65,7 +79,7 @@ function irAlCarrito() {
 
 /* Modal */
 .modalCarrito {
-  background-color: #fff;
+  background-color: #000000;
   border-radius: 12px;
   overflow: hidden;
   width: 90%;
@@ -92,13 +106,22 @@ function irAlCarrito() {
 .infoProducto h4 {
   margin-bottom: 10px;
   font-size: 1.2rem;
-  color: #333;
+  color: #ffffff;
 }
 
 .infoProducto p {
   margin: 5px 0;
   font-size: 0.95rem;
-  color: #555;
+  color: #ffffff;
+}
+
+.modal-price {
+  margin-top: 10px;
+  font-weight: 600;
+  color: #ffffff;
+}
+.modal-actions {
+  margin-top: 12px;
 }
 
 /* Botones */
@@ -109,7 +132,7 @@ function irAlCarrito() {
   border-radius: 6px;
   cursor: pointer;
   background-color: #f37a17;
-  color: white;
+  color: rgb(255, 255, 255);
   transition: background-color 0.2s;
 }
 
