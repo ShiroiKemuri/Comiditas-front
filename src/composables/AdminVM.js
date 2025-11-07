@@ -1,12 +1,12 @@
 import { ref } from 'vue'
-import axios from 'axios'
+import apiClient from '@/api/axiosConfig' 
 import adminModel from '@/models/admin'
 
 const admin = ref({ ...adminModel })
 
 const createAdmin = async () => {
   try {
-    const response = await axios.post('http://localhost:8085/admin/createAdmin', admin.value)
+    const response = await apiClient.post('/admin/createAdmin', admin.value);
     console.log('Admin creado')
   } catch (error) {
     console.error('Error al crear admin:', error)
@@ -15,8 +15,8 @@ const createAdmin = async () => {
 
 const getAdmin = async () => {
   try {
-    const response = await axios.get(`http://localhost:8085/admin/getAdminById/${admin.value.id}`)
-    admin.value = await response.json()
+    const response = await apiClient.get(`/admin/getAdminById/${admin.value.id}`);
+    admin.value = response.data;
     
   } catch (error) {
     console.error('Error al obtener admin:', error)
@@ -25,7 +25,7 @@ const getAdmin = async () => {
 
 const deleteAdmin = async () => {
   try {
-    await axios.delete(`http://localhost:8085/admin/deleteAdmin/${admin.value.id}`)
+    await apiClient.delete(`/admin/deleteAdmin/${admin.value.id}`);
     console.log('Admin eliminado')
   } catch (error) {
     console.error('Error al eliminar admin:', error)
@@ -34,7 +34,7 @@ const deleteAdmin = async () => {
 
 const updateAdmin = async () => {
   try {
-    await axios.put(`http://localhost:8085/admin/updateAdmin/${admin.value.id}`, admin.value)
+    await apiClient.put(`/admin/updateAdmin/${admin.value.id}`, admin.value);
     console.log('Admin actualizado')
   } catch (error) {
     console.error('Error al actualizar admin:', error)

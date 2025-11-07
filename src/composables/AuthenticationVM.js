@@ -1,13 +1,14 @@
 import { ref } from 'vue';
-import axios from 'axios';
+import apiClient from '@/api/axiosConfig';
 import AuthModel from '@/models/AuthenticationModel';
+import router from '@/router';
 
 const Auth = ref({ ...AuthModel });
 
 const errorMessage = ref('');
 
 const login = async () => {
-    errorMessage.value = ''; // Limpiar errores previos
+    errorMessage.value = '';
 
     // Validar que no haya espacios en blanco
     const whitespaceRegex = /\s/;
@@ -47,14 +48,24 @@ const login = async () => {
         return false;
     }
 
-    // 4. Intentar el inicio de sesión
+
     try {
-        const response = await axios.post('http://localhost:8085/auth/login', Auth.value);
-        console.log('Login successful');
-        return response.data;
+        const response = await apiClient.post('/auth/login', Auth.value);
+        if (response.data && response.data.token) {
+            localStorage.setItem('jwt_token', response.data.token);
+            console.log('Login successful, token stored.');          
+            router.push({ name: 'AdminCreate' });
+            return true;
+        }
+        return false;
     } catch (error) {
         console.error('Error during login:', error);
-        errorMessage.value = 'Usuario o contraseña incorrecta, por favor vuelva a intentar o comuníquese con el equipo de desarrollo.';
+        if (error.response && error.response.data) {
+            // Muestra el mensaje de error específico del backend (ej: "Cuenta bloqueada...")
+            errorMessage.value = error.response.data;
+        } else {
+            errorMessage.value = 'Error de conexión. Por favor, intente más tarde.';
+        }
         return false;
     }
 };
