@@ -2,9 +2,7 @@ import { ref } from 'vue';
 import apiClient from '@/api/axiosConfig';
 import AuthModel from '@/models/AuthenticationModel';
 import router from '@/router';
-import axios from 'axios';
-import AuthModel from '@/models/AuthenticationModel';
-import router from '@/router';
+
 
 const Auth = ref({ ...AuthModel });
 
@@ -56,8 +54,7 @@ const login = async () => {
         const response = await apiClient.post('/auth/login', Auth.value);
         if (response.data && response.data.token) {
             localStorage.setItem('jwt_token', response.data.token);
-            console.log('Login successful, token stored.');
-            console.log('Login successful, token stored.');          
+            console.log('Login successful, token stored.');        
             router.push({ name: 'AdminCreate' });
             return true;
         }
