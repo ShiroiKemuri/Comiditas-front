@@ -83,8 +83,8 @@ export function useHomeViewModel() {
   // Función de la acción "Agregar al carrito"
   const carritoStore = useAddToCartStore();
 
-  const addToCart = (product) => {
-  carritoStore.agregarAlCarrito(product);
+  const addToCart = (product, cantidad = 1) => {
+    carritoStore.agregarAlCarrito(product, cantidad);
   };
   
   // Llama a cargar los productos al inicio

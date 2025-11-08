@@ -46,13 +46,21 @@
       <div v-else class="product-grid">
         <div v-for="product in products" :key="product.id" class="product-card">
           <img :src="product.imageUrl" :alt="product.name" class="product-image">
-          
+
           <div class="product-info">
             <h3 class="product-name">{{ product.name }}</h3>
-            <p class="product-price">${{ product.price.toLocaleString() }}</p>
+            
           </div>
-          
-          <button class="add-to-cart-button" @click="handleAddToCart(product)">
+
+          <div class="product-qty">
+            
+            <div class="qty-controls">
+              <span class="qty-value"></span>
+            </div>
+            <div class="product-subtotal">Precio: $ {{ formatPrice(product.price * 1) }}</div>
+          </div>
+
+          <button class="add-to-cart-button" @click="handleAddToCartWithQty(product)">
             + Agregar al carrito
           </button>
         </div>
@@ -80,13 +88,22 @@ const { products, searchTerm, selectedFilter, isLoading, error, executeSearch, a
 const mostrarModal = ref(false);
 const productoSeleccionado = ref(null);
 
+// En la vista principal no hay controles +/-; la cantidad por defecto al agregar es 1.
+
 const router = useRouter();
 
-const handleAddToCart = (product) => {
-  addToCart(product);       // Lógica de tu carrito
+const handleAddToCartWithQty = (product) => {
+  const qty = 1; // cantidad fija desde la vista principal
+  addToCart(product, qty); // Lógica de tu carrito con cantidad
   productoSeleccionado.value = product;
   mostrarModal.value = true;
 };
+
+// increment/decrement removed as requested
+
+function formatPrice(n) {
+  return Number(n).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
 
 const cerrarModal = () => {
   mostrarModal.value = false
@@ -207,18 +224,38 @@ const goToAdminLogin = () => {
   font-size: 1.2em;
 }
 
-.product-price {
-  font-weight: bold;
-  color: #28a745;
-}
+
+
 
 .add-to-cart-button {
   background-color: #ffc107;
-  color: #333;
+  color: #ffffff;
   border: none;
   padding: 10px;
   border-radius: 5px;
   margin-top: 10px;
   cursor: pointer;
+}
+
+.product-qty {
+  margin-top: 10px;
+}
+.product-qty label {
+  font-size: 0.9rem;
+  color: #444;
+}
+.qty-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+}
+.qty-value {
+  min-width: 28px;
+  text-align: center;
+}
+.product-subtotal {
+  margin-top: 8px;
+  font-weight: 600;
 }
 </style>
