@@ -18,21 +18,40 @@
         <div v-else class="items-wrapper">
           <ul class="items" ref="itemsRef">
             <li v-for="item in cartStore.productos" :key="item.id" class="item">
-              <img v-if="item.imageUrl" :src="item.imageUrl" alt="imagen" class="thumb" />
+              <img
+                v-if="item.imageUrl"
+                :src="item.imageUrl"
+                alt="imagen"
+                class="thumb"
+              />
               <div class="item-body">
                 <div class="item-top">
                   <strong class="name">{{ item.nombre }}</strong>
                   <div class="price-details">
                     <div class="quantity">Cantidad: {{ item.cantidad }}</div>
-                    <div class="price">Precio Unitario: $ {{ formatNumber(item.precio) }}</div>
-                    <div class="subtotal">Subtotal: $ {{ formatNumber(item.subtotal) }}</div>
+                    <div class="price">
+                      Precio Unitario: $ {{ formatNumber(item.precio) }}
+                    </div>
+                    <div class="subtotal">
+                      Subtotal: $ {{ formatNumber(item.subtotal) }}
+                    </div>
                   </div>
                 </div>
 
                 <div class="item-controls">
                   <div class="controls">
-                    <button class="edit-qty" aria-label="editar cantidad">Editar Cantidad</button>
-                    <button class="delete" aria-label="eliminar">Eliminar</button>
+                    <button @click="decreaseQuantity(item)">-</button>
+                    <input
+                      type="number"
+                      v-model.number="item.cantidad"
+                      min="1"
+                      max="20"
+                      @change="updateQuantity(item)"
+                    />
+                    <button @click="increaseQuantity(item)">+</button>
+                    <button class="delete" aria-label="eliminar">
+                      Eliminar
+                    </button>
                   </div>
                 </div>
               </div>
@@ -45,20 +64,24 @@
         <h3>Resumen de la compra</h3>
         <div class="summary-row">
           <span>Subtotal de productos</span>
-          <span>$ {{ formatNumber(subtotal) }}</span>
+          <span>$ {{ formatNumber(cartStore.subtotal) }}</span>
         </div>
         <div class="summary-row">
           <span>IVA (19%)</span>
-          <span>$ {{ formatNumber(taxes) }}</span>
+          <span>$ {{ formatNumber(cartStore.iva) }}</span>
         </div>
         <div class="summary-row total">
           <strong>Total a pagar</strong>
-          <strong>$ {{ formatNumber(total) }}</strong>
+          <strong>$ {{ formatNumber(cartStore.totalConIva) }}</strong>
         </div>
 
         <div class="summary-actions">
-          <button class="cancel" @click="cancelPurchase">Cancelar compra</button>
-          <button class="checkout" @click="finalizePurchase">Finalizar compra</button>
+          <button class="cancel" @click="cancelPurchase">
+            Cancelar compra
+          </button>
+          <button class="checkout" @click="finalizePurchase">
+            Finalizar compra
+          </button>
         </div>
       </aside>
     </main>
@@ -69,6 +92,7 @@
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useAddToCartStore } from "../stores/addToCart";
+import { onMounted } from "vue";
 
 const TAX_RATE = 0.19; // IVA 19%
 
@@ -77,8 +101,44 @@ const router = useRouter();
 
 const itemsRef = ref(null);
 
+onMounted(() => {
+  cartStore.loadCart();
+});
+
+// Calcula el subtotal de cada producto
+function actualizarSubtotal(item) {
+  item.subtotal = item.cantidad * item.precio;
+}
+
+//Aumenta la cantidad del producto cuando se da clic "+"
+const increaseQuantity = (item) => {
+  if (item.cantidad < 20) {
+    item.cantidad++;
+    actualizarSubtotal(item);
+    cartStore.saveCart();
+  }
+};
+
+//Decrese la cantidad del producto cuando se da clic "-"
+const decreaseQuantity = (item) => {
+  if (item.cantidad > 1) {
+    item.cantidad--;
+    actualizarSubtotal(item);
+    cartStore.saveCart();
+  }
+};
+
+//Actualiza la cantidad del producto para que cumpla con las normas
+const updateQuantity = (item) => {
+  if (item.cantidad < 1) item.cantidad = 1;
+  if (item.cantidad > 20) item.cantidad = 20;
+  actualizarSubtotal(item);
+  cartStore.saveCart();
+};
+
+/*
 const subtotal = computed(() => {
-  return cartStore.total || 0;
+  return cartStore.subtotal || 0;
 });
 
 const taxes = computed(() => {
@@ -88,14 +148,12 @@ const taxes = computed(() => {
 const total = computed(() => {
   return +(subtotal.value + taxes.value).toFixed(2);
 });
-
+*/
 function formatNumber(n) {
-  return Number(n).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-}
-
-// Función para editar la cantidad (a implementar)
-function editQuantity(id) {
-  // TODO: Implementar la edición de cantidad
+  return Number(n).toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 }
 
 // Función para eliminar producto (a implementar)
@@ -119,6 +177,13 @@ function goBack() {
 </script>
 
 <style scoped>
+/* 🔽 Ocultar flechas en Chrome, Edge y Safari */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .cart-page {
   padding: 16px;
 }
