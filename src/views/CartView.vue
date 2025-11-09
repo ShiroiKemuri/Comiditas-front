@@ -136,19 +136,6 @@ const updateQuantity = (item) => {
   cartStore.saveCart();
 };
 
-/*
-const subtotal = computed(() => {
-  return cartStore.subtotal || 0;
-});
-
-const taxes = computed(() => {
-  return +(subtotal.value * TAX_RATE).toFixed(2);
-});
-
-const total = computed(() => {
-  return +(subtotal.value + taxes.value).toFixed(2);
-});
-*/
 function formatNumber(n) {
   return Number(n).toLocaleString(undefined, {
     minimumFractionDigits: 2,
