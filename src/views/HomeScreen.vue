@@ -129,6 +129,11 @@ const goToAdminLogin = () => {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
+
+  /* --- Sticker/Marca de Agua en el Fondo --- */
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><text x="10" y="50" style="font-size:20px;opacity:0.08;fill:%23ffc107;">🍔</text><text x="60" y="80" style="font-size:18px;opacity:0.08;fill:%23ffc107;">🍟</text></svg>');
+  background-repeat: repeat; /* Repite el patrón de stickers */
+  background-size: 80px; /* Tamaño del sticker */
 }
 
 .header {
@@ -166,6 +171,9 @@ const goToAdminLogin = () => {
   display: flex;
   flex-grow: 1;
   max-width: 600px; 
+
+  overflow: hidden; /* Contiene el borde redondeado */
+  box-shadow: var(--card-shadow);
 }
 
 .search-bar input {

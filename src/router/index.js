@@ -18,22 +18,25 @@ const routes = [
     path: "/admin/create",
     name: "AdminCreate",
     component: AdminView,
+    meta: { requiresAuth: true },
   },
   {
     path: "/admin/delete",
     name: "AdminDelete",
     component: AdminDeleteView,
+    meta: { requiresAuth: true },
   },
-  {},
   {
     path: "/admin/update",
     name: "AdminUpdate",
     component: AdminUpdateView,
+    meta: { requiresAuth: true },
   },
   {
     path: "/admin/search",
     name: "AdminSearch",
     component: AdminSearch,
+    meta: { requiresAuth: true },
   },
   {
     path: "/Login",
@@ -44,6 +47,7 @@ const routes = [
     path: "/cart",
     name: "Cart",
     component: CartView,
+    
   },
   {
     path: "/finalizar/compra",
@@ -55,6 +59,20 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+});
+
+// Guard global para proteger rutas que requieren autenticación
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem('jwt_token');
+  // Si la ruta requiere auth y no hay token, redirigir al login
+  if (to.meta && to.meta.requiresAuth && !token) {
+    return next({ name: 'Authentication' });
+  }
+  // Si el usuario ya está autenticado y accede al login, redirigir al dashboard
+  if (to.name === 'Authentication' && token) {
+    return next({ name: 'AdminCreate' });
+  }
+  return next();
 });
 
 export default router;

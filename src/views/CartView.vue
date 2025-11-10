@@ -1,7 +1,8 @@
 <template>
   <div class="cart-page">
     <header class="cart-header">
-      <button class="back-btn" @click="goBack">← Volver</button>
+      <div v-if="mostrarBotonVolver2" class =""></div>
+      <button v-if="mostrarBotonVolver" class="back-btn" @click="goBack">← Volver</button>
       <h1>🛒 Carrito</h1>
       <div class="cart-icon"></div>
     </header>
@@ -32,7 +33,7 @@
                 <div class="item-controls">
                   <div class="controls">
                     <button class="edit-qty" aria-label="editar cantidad">Editar Cantidad</button>
-                    <button class="delete" aria-label="eliminar">Eliminar</button>
+                    <button class="delete" aria-label="eliminar producto" @click="mostrarConfirmacionEliminar(item.id)">Eliminar</button>
                   </div>
                 </div>
               </div>
@@ -40,6 +41,18 @@
           </ul>
         </div>
       </section>
+
+      <!-- Modal para eliminar un producto individual -->
+      <div v-if="mostrarModalEliminar" class="modal">
+        <div class="modal-contenido">
+          <p class="advertencia">¿Estás seguro de que deseas eliminar el producto {{ productoSeleccionadoId }}?</p>
+          <p class="modal-descripcion">Esta acción no se puede deshacer.</p>
+          <div class="botones-modal">
+            <button @click="remove" class="remove">Eliminar producto</button>
+            <button @click="cancelarEliminar" class="cancelar">Mantener producto</button>
+          </div>
+        </div>
+      </div>
 
       <aside class="cart-summary">
         <h3>Resumen de la compra</h3>
@@ -57,13 +70,36 @@
         </div>
 
         <div class="summary-actions">
-          <button class="cancel" @click="cancelPurchase">Cancelar compra</button>
-          <button class="checkout" @click="finalizePurchase">Finalizar compra</button>
+          <button class="cancelPurchase" @click="mostrarConfirmacionCancelar" :disabled="cartStore.productos.length === 0">Cancelar compra</button>
+          <button class="checkout" @click="finalizePurchase" :disabled="cartStore.productos.length === 0" >Finalizar compra</button>
+
+          <!-- Modal para cancelar toda la compra -->
+          <div v-if="mostrarModalCancelarCompra" class="modal">
+            <div class="modal-contenido">
+              <p class="advertencia">¿Estás seguro de que deseas cancelar toda la compra?</p>
+              <p class="modal-descripcion">Se eliminarán todos los productos del carrito y volverás a la página anterior.</p>
+              <div class="botones-modal">
+                <button @click="cancelPurchase" class="remove">Sí, cancelar todo</button>
+                <button @click="cancelarModal" class="cancelar">No, seguir comprando</button>
+              </div>
+            </div>
+          </div>
+
         </div>
       </aside>
     </main>
+
+    <!-- Toast de confirmación -->
+    <div v-if="mostrarToast" class="toast">
+      <div class="toast-content">
+        <span class="toast-icon">✓</span>
+        Producto eliminado
+      </div>
+    </div>
   </div>
 </template>
+
+
 
 <script setup>
 import { ref, computed } from "vue";
@@ -77,8 +113,46 @@ const router = useRouter();
 
 const itemsRef = ref(null);
 
+// Estados para los diferentes modales de confirmación
+const mostrarModalEliminar = ref(false); // Modal para eliminar un producto individual
+const mostrarModalCancelarCompra = ref(false); // Modal para cancelar toda la compra
+const productoSeleccionadoId = ref(null); // ID del producto a eliminar
+const mostrarToast = ref(false); // Estado para mostrar/ocultar el mensaje de confirmación
+
 const subtotal = computed(() => {
   return cartStore.total || 0;
+});
+
+// Funciones para manejar el modal de eliminar producto
+function mostrarConfirmacionEliminar(id) {
+  productoSeleccionadoId.value = id;
+  mostrarModalEliminar.value = true;
+}
+
+function cancelarEliminar() {
+  mostrarModalEliminar.value = false;
+  productoSeleccionadoId.value = null;
+}
+
+// Funciones para manejar el modal de cancelar compra
+function mostrarConfirmacionCancelar() {
+  mostrarModalCancelarCompra.value = true;
+}
+
+function cancelarModal() {
+  mostrarModalEliminar.value = false;
+  mostrarModalCancelarCompra.value = false;
+  productoSeleccionadoId.value = null;
+}
+
+// Mostrar botón "Volver" solo si hay productos en el carrito
+const mostrarBotonVolver = computed(() => {
+  return cartStore.productos.length > 0;
+});
+
+// espaciador cuando no hay productos
+const mostrarBotonVolver2 = computed(() => {
+  return cartStore.productos.length === 0;
 });
 
 const taxes = computed(() => {
@@ -98,14 +172,27 @@ function editQuantity(id) {
   // TODO: Implementar la edición de cantidad
 }
 
-// Función para eliminar producto (a implementar)
-function remove(id) {
-  // TODO: Implementar la eliminación de productos
+// Función para eliminar un producto individual del carrito
+function remove() {
+  const id = productoSeleccionadoId.value;
+  if (!id) return;
+  cartStore.removerDelCarrito(id);
+  // Limpiar selección y cerrar modal
+  productoSeleccionadoId.value = null;
+  mostrarModalEliminar.value = false;
+  // Mostrar mensaje de confirmación
+  mostrarToast.value = true;
+  // Ocultar el toast después de 2 segundos
+  setTimeout(() => {
+    mostrarToast.value = false;
+  }, 2000);
 }
 
+// Función para cancelar toda la compra
 function cancelPurchase() {
-  cartStore.limpiarCarrito();
-  router.back();
+  cartStore.limpiarCarrito(); // Elimina todos los productos
+  mostrarModalCancelarCompra.value = false;
+  router.back(); // Vuelve a la página anterior
 }
 
 function finalizePurchase() {
@@ -121,7 +208,13 @@ function goBack() {
 <style scoped>
 .cart-page {
   padding: 16px;
+
+  /* --- Sticker/Marca de Agua en el Fondo --- */
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><text x="10" y="50" style="font-size:20px;opacity:0.08;fill:%23ffc107;">🍔</text><text x="60" y="80" style="font-size:18px;opacity:0.08;fill:%23ffc107;">🍟</text></svg>');
+  background-repeat: repeat; /* Repite el patrón de stickers */
+  background-size: 80px; /* Tamaño del sticker */
 }
+
 .cart-header {
   display: flex;
   align-items: center;
@@ -249,4 +342,127 @@ function goBack() {
   background: #2b8aef;
   color: rgb(255, 255, 255);
 }
+
+/* Estilos para los modales de confirmación */
+.modal { 
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+  width: 100%; 
+  height: 100%; 
+  background: rgba(0,0,0,0.75); 
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-contenido { 
+  background: #0c0b0b; 
+  padding: 24px; 
+  border-radius: 12px; 
+  text-align: center; 
+  color: #fff;
+  max-width: 400px;
+  width: 90%;
+}
+
+.advertencia { 
+  font-size: 1.1em;
+  font-weight: 700; 
+  margin-bottom: 12px;
+  color: #ff4444;
+}
+
+.modal-descripcion {
+  color: #999;
+  margin-bottom: 16px;
+  font-size: 0.9em;
+}
+
+.botones-modal {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.botones-modal button { 
+  padding: 10px 20px; 
+  border-radius: 6px; 
+  border: none; 
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.botones-modal button:hover {
+  transform: translateY(-1px);
+}
+
+.botones-modal button:active {
+  transform: translateY(1px);
+}
+
+.cancelar { 
+  background: #2b8aef; 
+  color: #ffffff;
+}
+
+.cancelar:hover {
+  background: #2377d1;
+}
+
+.remove { 
+  background: #cc2a1e; 
+  color: #ffffff;
+}
+
+.remove:hover {
+  background: #b52219;
+}
+
+/* Estilos para el toast de confirmación */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1100;
+  animation: slideUp 0.3s ease-out;
+}
+
+.toast-content {
+  background: #2b8aef;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+}
+
+.toast-icon {
+  background: rgba(255,255,255,0.2);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translate(-50%, 100%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
 </style>
