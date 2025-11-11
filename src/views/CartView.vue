@@ -48,6 +48,11 @@
               <div class="item-subtotal">
                 $ {{ formatNumber(producto.subtotal) }}
               </div>
+              <div class="item-actions">
+                <button class="delete" @click="remove(producto.id)">
+                  Eliminar
+                </button>
+              </div>
             </li>
           </ul>
         </div>
@@ -133,8 +138,9 @@ function formatNumber(n) {
 }
 
 // Función para eliminar producto (a implementar)
-function remove(id) {
-  // TODO: Implementar la eliminación de productos
+function remove(productId) {
+  cartStore.removerDelCarrito(productId);
+  cartStore.saveCart();
 }
 
 function cancelPurchase() {
@@ -203,7 +209,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 .item {
   display: flex;
-  gap: 20px;
+  gap: 16px;
   padding: 6px 0;
   border-bottom: 1px solid #eee;
 }
@@ -255,6 +261,10 @@ input[type="number"]::-webkit-outer-spin-button {
   color: #a0a0a0;
   font-size: 0.9em;
 }
+.item-actions {
+  display: flex;
+  align-items: center;
+}
 .item-controls {
   display: flex;
   align-items: center;
@@ -266,6 +276,13 @@ input[type="number"]::-webkit-outer-spin-button {
   font-size: 1.1em;
   color: #ffffff;
   font-weight: bold;
+}
+.delete {
+  background: #bb3d3d;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
 }
 .cart-summary {
   background: #0c0b0b;
