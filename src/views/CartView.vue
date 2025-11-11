@@ -17,43 +17,36 @@
 
         <div v-else class="items-wrapper">
           <ul class="items" ref="itemsRef">
-            <li v-for="item in cartStore.productos" :key="item.id" class="item">
+            <li
+              v-for="producto in cartStore.productos"
+              :key="producto.id"
+              class="item"
+            >
               <img
-                v-if="item.imageUrl"
-                :src="item.imageUrl"
+                v-if="producto.imageUrl"
+                :src="producto.imageUrl"
                 alt="imagen"
                 class="thumb"
               />
-              <div class="item-body">
-                <div class="item-top">
-                  <strong class="name">{{ item.nombre }}</strong>
-                  <div class="price-details">
-                    <div class="quantity">Cantidad: {{ item.cantidad }}</div>
-                    <div class="price">
-                      Precio Unitario: $ {{ formatNumber(item.precio) }}
-                    </div>
-                    <div class="subtotal">
-                      Subtotal: $ {{ formatNumber(item.subtotal) }}
-                    </div>
-                  </div>
+              <div class="item-details">
+                <strong class="name">{{ producto.nombre }}</strong>
+                <div class="price">
+                  Precio Unitario: $ {{ formatNumber(producto.precio) }}
                 </div>
-
-                <div class="item-controls">
-                  <div class="controls">
-                    <button @click="decreaseQuantity(item)">-</button>
-                    <input
-                      type="number"
-                      v-model.number="item.cantidad"
-                      min="1"
-                      max="20"
-                      @change="updateQuantity(item)"
-                    />
-                    <button @click="increaseQuantity(item)">+</button>
-                    <button class="delete" aria-label="eliminar">
-                      Eliminar
-                    </button>
-                  </div>
-                </div>
+              </div>
+              <div class="item-controls">
+                <button @click="decreaseQuantity(producto)">-</button>
+                <input
+                  type="number"
+                  v-model.number="producto.cantidad"
+                  min="1"
+                  max="20"
+                  @change="updateQuantity(producto)"
+                />
+                <button @click="increaseQuantity(producto)">+</button>
+              </div>
+              <div class="item-subtotal">
+                $ {{ formatNumber(producto.subtotal) }}
               </div>
             </li>
           </ul>
@@ -89,50 +82,46 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useAddToCartStore } from "../stores/addToCart";
 import { onMounted } from "vue";
 
-const TAX_RATE = 0.19; // IVA 19%
-
 const cartStore = useAddToCartStore();
 const router = useRouter();
 
-const itemsRef = ref(null);
-
+// Guarda los productos en el carrito aunque se refresque la página
 onMounted(() => {
   cartStore.loadCart();
 });
 
 // Calcula el subtotal de cada producto
-function actualizarSubtotal(item) {
-  item.subtotal = item.cantidad * item.precio;
+function actualizarSubtotal(product) {
+  product.subtotal = product.cantidad * product.precio;
 }
 
 //Aumenta la cantidad del producto cuando se da clic "+"
-const increaseQuantity = (item) => {
-  if (item.cantidad < 20) {
-    item.cantidad++;
-    actualizarSubtotal(item);
+const increaseQuantity = (product) => {
+  if (product.cantidad < 20) {
+    product.cantidad++;
+    actualizarSubtotal(product);
     cartStore.saveCart();
   }
 };
 
 //Decrese la cantidad del producto cuando se da clic "-"
-const decreaseQuantity = (item) => {
-  if (item.cantidad > 1) {
-    item.cantidad--;
-    actualizarSubtotal(item);
+const decreaseQuantity = (product) => {
+  if (product.cantidad > 1) {
+    product.cantidad--;
+    actualizarSubtotal(product);
     cartStore.saveCart();
   }
 };
 
 //Actualiza la cantidad del producto para que cumpla con las normas
-const updateQuantity = (item) => {
-  if (item.cantidad < 1) item.cantidad = 1;
-  if (item.cantidad > 20) item.cantidad = 20;
-  actualizarSubtotal(item);
+const updateQuantity = (product) => {
+  if (product.cantidad < 1) product.cantidad = 1;
+  if (product.cantidad > 20) product.cantidad = 20;
+  actualizarSubtotal(product);
   cartStore.saveCart();
 };
 
@@ -224,22 +213,21 @@ input[type="number"]::-webkit-outer-spin-button {
   object-fit: cover;
   border-radius: 6px;
 }
-.item-body {
+.item-details {
   flex: 1;
-}
-.item-top {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
 }
 .controls {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-top: 12px;
+  margin-top: 0;
 }
 .controls button {
-  padding: 8px 16px;
+  padding: 0;
   border-radius: 6px;
   border: none;
   cursor: pointer;
@@ -247,6 +235,9 @@ input[type="number"]::-webkit-outer-spin-button {
   transition: background-color 0.2s;
 }
 .controls .edit-qty {
+  width: 32px;
+  height: 32px;
+  font-size: 1.2em;
   background: #2b8aef;
   color: #ffffff;
 }
@@ -260,18 +251,20 @@ input[type="number"]::-webkit-outer-spin-button {
 .controls .delete:hover {
   background: #3a3a3a;
 }
-.quantity {
-  margin-top: 8px;
-  color: #ffffff;
-  font-weight: 500;
-}
 .price {
-  margin-top: 4px;
-  color: #ffffff;
+  color: #a0a0a0;
+  font-size: 0.9em;
 }
-.subtotal {
-  margin-top: 4px;
-  color: #2b8aef;
+.item-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.item-subtotal {
+  min-width: 100px;
+  text-align: right;
+  font-size: 1.1em;
+  color: #ffffff;
   font-weight: bold;
 }
 .cart-summary {

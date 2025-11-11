@@ -6,24 +6,21 @@ export const useAddToCartStore = defineStore("addToCart", {
   }),
 
   getters: {
-    subtotal: (state) => {
-      // Calcula el subtotal de todos los productos en el carrito
-      const productos = Array.isArray(state.productos) ? state.productos : [];
-      return productos.reduce(
-        (acc, item) => acc + (item && item.subtotal ? item.subtotal : 0),
+    // 🧮 Calcular el subtotal
+    subtotal: (state) =>
+      state.productos.reduce(
+        (acc, producto) => acc + producto.cantidad * producto.precio,
         0
-      );
-    },
+      ),
 
+    // 💰 Calcular IVA (19%)
     iva: (state) => {
-      const subtotal = this.subtotal || 0;
-      return subtotal * 0.19;
+      return state.subtotal * 0.19;
     },
 
+    // 💸 Total final (subtotal + IVA)
     totalConIva: (state) => {
-      const subtotal = this.subtotal || 0;
-      const iva = this.iva || 0;
-      return this.subtotal + this.iva;
+      return state.subtotal + state.iva;
     },
   },
 
