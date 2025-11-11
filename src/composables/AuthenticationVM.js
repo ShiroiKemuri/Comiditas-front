@@ -66,17 +66,8 @@ const login = async () => {
             errorMessage.value = error.response.data;
         } else {
             errorMessage.value = 'Error de conexión. Por favor, intente más tarde.';
-        }
-        // 4. Intentar el inicio de sesión
-        try {
-            const response = await axios.post('http://localhost:8085/auth/login', Auth.value);
-            console.log('Login successful');
-            return response.data;
-        } catch (error) {
-            console.error('Error during login:', error);
-            errorMessage.value = 'Usuario o contraseña incorrecta, por favor vuelva a intentar o comuníquese con el equipo de desarrollo.';
-            return false;
-        }
+        }        
+        return false;
     };
 }
 

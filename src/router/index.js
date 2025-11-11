@@ -7,6 +7,7 @@ import Auth from "@/views/Authentication.vue";
 import HomeScreen from "@/views/HomeScreen.vue";
 import CartView from "@/views/CartView.vue";
 import FinalizarCompra from "@/views/FinalizarCompra.vue";
+import CatalogUpdate from "@/views/CatalogUpdate.vue";
 
 const routes = [
   {
@@ -50,6 +51,11 @@ const routes = [
     name: "FinalizarCompra",
     component: FinalizarCompra,
   },
+  {
+    path: "/admin/catalog/update",
+    name: "CatalogUpdate",
+    component: CatalogUpdate,
+  }
 ];
 
 const router = createRouter({

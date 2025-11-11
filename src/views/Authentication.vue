@@ -32,6 +32,35 @@ const togglePasswordVisibility = () => {
 </script>
 
 <style scoped>
+.authentication {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+}
+
+.authentication form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* Espacio entre elementos del formulario */
+  width: 100%;
+  max-width: 350px; /* Ancho máximo para el formulario */
+}
+
+/* Estilo general para los inputs de texto y contraseña */
+.authentication input[type="text"],
+.authentication input[type="password"] {
+  width: 100%; /* Ocupan todo el ancho del contenedor del formulario */
+  padding: 0.8em 1em;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-card-bg);
+  color: var(--color-text);
+  box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+}
+
 .password-wrapper {
   position: relative;
   display: flex;
@@ -39,8 +68,7 @@ const togglePasswordVisibility = () => {
 }
 
 .password-wrapper input {
-  padding-right: 70px; /* Espacio para el botón */
-  width: 100%;
+  padding-right: 80px; /* Espacio para el botón 'Mostrar' */
 }
 
 .toggle-button {
@@ -50,11 +78,15 @@ const togglePasswordVisibility = () => {
   border: none;
   cursor: pointer;
   font-size: 0.8em;
-  color: #ffffff;
+  color: var(--color-text);
 }
 
 .error-message {
-  color: red;
+  color: #f1a1a1; /* Un rojo más suave para el tema oscuro */
+  background-color: rgba(230, 126, 34, 0.15); /* Fondo sutil usando el color de acento */
+  border: 1px solid var(--color-accent-hover);
+  padding: 0.75rem;
+  border-radius: 8px;
   margin-top: 10px;
 }
 

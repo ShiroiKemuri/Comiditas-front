@@ -135,7 +135,7 @@ const goToAdminLogin = () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 2px solid #ffffff;
+  border-bottom: 2px solid var(--color-border);
   padding-bottom: 15px;
   margin-bottom: 20px;
 }
@@ -147,10 +147,12 @@ const goToAdminLogin = () => {
 .header-actions .icon-button {
   padding: 10px 15px;
   margin-left: 10px;
+  background-color: transparent;
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
   cursor: pointer;
-  border: 1px solid #ffffff;
-  background-color: #700b0b;
-  border-radius: 5px;
+  transition: background-color 0.2s, color 0.2s;
 }
 
 /* Estilos de Búsqueda y Filtros */
@@ -171,23 +173,24 @@ const goToAdminLogin = () => {
 .search-bar input {
   padding: 10px;
   flex-grow: 1;
-  border: 1px solid #ccc;
-  border-radius: 5px 0 0 5px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-card-bg);
+  color: var(--color-text);
+  border-radius: 8px 0 0 8px;
 }
 
 .search-bar button {
-  padding: 10px 15px;
-  background-color: #007bff;
-  color: white;
   border: none;
-  border-radius: 0 5px 5px 0;
+  border-radius: 0 8px 8px 0;
   cursor: pointer;
 }
 
 .filter-dropdown {
     padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-card-bg);
+    color: var(--color-text);
+    border-radius: 8px;
 }
 
 /* Estilos de la Lista de Productos */
@@ -199,12 +202,14 @@ const goToAdminLogin = () => {
 }
 
 .product-card {
-  border: 1px solid #eee;
+  background-color: var(--color-card-bg);
+  border: 1px solid var(--color-border);
   border-radius: 8px;
   padding: 15px;
-  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
 }
 
 .product-image {
@@ -221,15 +226,12 @@ const goToAdminLogin = () => {
 
 .product-name {
   margin-top: 0;
+  color: var(--color-text);
   font-size: 1.2em;
 }
 
-
-
-
 .add-to-cart-button {
-  background-color: #ffc107;
-  color: #ffffff;
+  background-color: var(--color-accent);
   border: none;
   padding: 10px;
   border-radius: 5px;
