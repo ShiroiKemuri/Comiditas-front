@@ -18,7 +18,24 @@
         type="text"
         placeholder="Buscar categorías..."
         v-model="searchTerm"
+        maxlength="30"
       />
+    </div>
+
+    <!-- Contenedor para mensajes de estado con altura fija para evitar saltos de layout -->
+    <div class="status-message-container">
+      <!-- Mensaje de error para caracteres no permitidos -->
+      <div v-if="searchError" class="search-error-message">
+        <p>{{ searchError }}</p>
+      </div>
+
+      <!-- Mensaje si no hay resultados (se muestra solo si no hay error de caracteres) -->
+      <div
+        v-else-if="filteredCategories.length === 0 && searchTerm"
+        class="no-results-message"
+      >
+        <p>No se encontró la categoría "{{ searchTerm }}".</p>
+      </div>
     </div>
 
     <!-- Grid de categorías -->
@@ -46,7 +63,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
@@ -61,9 +78,21 @@ const categories = ref([
 ]);
 
 const searchTerm = ref("");
+const searchError = ref("");
+
+// Observador para validar la entrada de búsqueda
+watch(searchTerm, (newValue) => {
+  // Permite letras, números y espacios.
+  const allowedCharsRegex = /^[a-zA-Z0-9\s]*$/;
+  if (!allowedCharsRegex.test(newValue)) {
+    searchError.value = "Solo se permiten caracteres alfanuméricos, sin signos especiales.";
+  } else {
+    searchError.value = "";
+  }
+});
 
 // Filtra las categorías por búsqueda
-const filteredCategories = computed(() =>
+const filteredCategories = computed(() => !searchTerm.value ? categories.value :
   categories.value.filter((cat) =>
     cat.name.toLowerCase().includes(searchTerm.value.toLowerCase())
   )
@@ -127,6 +156,27 @@ const goBack = () => router.push("/admin/dashboard");
   border-radius: 6px;
   background-color: #2c2c2c;
   color: #fff;
+}
+
+/* Contenedor de mensajes para estabilizar el layout */
+.status-message-container {
+  min-height: 2.5rem; /* Altura suficiente para un mensaje, reserva el espacio */
+  margin-bottom: 1.5rem;
+}
+
+/* Mensaje de error del buscador */
+.search-error-message {
+  color: #ffc107; /* Un color de advertencia */
+  font-size: 0.85rem;
+  text-align: right; /* Alineado con el input */
+}
+
+/* Mensaje de no resultados */
+.no-results-message {
+  text-align: center;
+  padding: 1rem;
+  color: #888;
+  font-style: italic;
 }
 
 /* Rejilla de categorías */
