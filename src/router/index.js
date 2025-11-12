@@ -70,8 +70,8 @@ const routes = [
   },
 
   {
-    path: '/prueba-form',
-    name: 'PruebaForm',
+    path: '/admin/categories/form',
+    name: 'categoryForm',
     component: CategoryForm,
   }
 ];

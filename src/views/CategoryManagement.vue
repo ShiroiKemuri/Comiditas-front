@@ -59,23 +59,34 @@
         </div>
       </div>
     </main>
+    <CategoryForm v-if="mostrarForm" @cerrar="cerrarForm"/>
+
   </div>
 </template>
 
 <script setup>
 import { ref, computed, watch } from "vue";
 import { useRouter } from "vue-router";
+import CategoryForm from "./CategoryForm.vue";
+import { categories, getCategories } from '@/composables/CategoryVM'
+import { onMounted } from "vue";
 
 const router = useRouter();
+const mostrarForm = ref(false);
+
+onMounted(() => {
+  getCategories();
+});
 
 // Datos simulados (reemplazar con fetch al backend)
-const categories = ref([
+/*const categories = ref([
   { name: "Bebidas" },
   { name: "Entradas" },
   { name: "Platos Fuertes" },
   { name: "Postres" },
   { name: "Especiales" },
 ]);
+*/
 
 const searchTerm = ref("");
 const searchError = ref("");
@@ -99,7 +110,14 @@ const filteredCategories = computed(() => !searchTerm.value ? categories.value :
 );
 
 // Funciones simuladas
-const addCategory = () => alert("Funcionalidad para añadir categoría");
+const addCategory = () => {
+    mostrarForm.value = true
+};
+
+const cerrarForm =() => {
+  mostrarForm.value = false
+};
+
 const editCategory = (cat) =>
   alert(`Editar categoría: ${cat.name}`);
 const deleteCategory = (cat) =>

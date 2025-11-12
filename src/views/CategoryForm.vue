@@ -8,12 +8,17 @@
           type="text"
           placeholder="nombre de la categoría"
           required
+          pattern="[A-Za-z\s]+"
+          title="'Solo se permiten letras en este apartado.'"
+          
         />
         <input
           v-model="category.description"
           type="text"
           placeholder="Descripción de la categoría"
           required
+          pattern="[A-Za-z\s]+"
+          title="'Solo se permiten letras en este apartado.'"
         />
         <div class="modal-actions">
           <button type="submit" class="btn-guardar">Guardar</button>
@@ -26,14 +31,27 @@
 
 <script setup>
 import { ref } from 'vue'
-import { category, createCategory } from '@/composables/CategoryVM'
+import { category, createCategory, categories, getCategories } from '@/composables/CategoryVM'
 
 
 const emit = defineEmits(['cerrar'])
 
 const enviarFormulario = async () => {
+  if (!category.value.name || !category.value.description) {
+    errorMsg.value = 'Todos los campos son obligatorios.'
+    return
+  }
+
+  const regex = /^[A-Za-z\s]+$/
+  if (!regex.test(category.value.name) || !regex.test(category.value.description)) {
+    errorMsg.value = 'Solo se permiten letras en este apartado.'
+    return
+  }
+
+
   try {
     await createCategory()
+    await getCategories()
     cerrarModal()
   } catch (error) {
     console.error('Error al crear categoría:', error)

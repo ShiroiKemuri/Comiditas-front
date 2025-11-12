@@ -3,6 +3,7 @@ import apiClient from '@/api/axiosConfig'
 import CategoryModel from '@/models/CategoryModel'
 
 export const category= ref({...CategoryModel})
+export const categories= ref([])
 
 export const createCategory = async () => {
   try {
@@ -17,3 +18,15 @@ export const createCategory = async () => {
     console.error('error al crear categoria')
   }
 }
+
+export const getCategories = async () => {
+    try{
+    const response = await apiClient.get('/category/getAllCategories')
+      categories.value = response.data
+    }
+    catch (error) {
+      console.error('error al obtener categorias')
+
+    }
+
+  }
