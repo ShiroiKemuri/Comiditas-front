@@ -10,6 +10,7 @@ import AdminDashboard from "../views/AdminDashboard.vue";
 import ProductManagement from "../views/ProductManagement.vue";
 import CategoryManagement from "../views/CategoryManagement.vue";
 import FinalizarCompra from "../views/FinalizarCompra.vue";
+import CategoryForm from "../views/CategoryForm.vue";
 
 const routes = [
   {
@@ -67,6 +68,12 @@ const routes = [
     name: "FinalizarCompra",
     component: FinalizarCompra,
   },
+
+  {
+    path: '/prueba-form',
+    name: 'PruebaForm',
+    component: CategoryForm,
+  }
 ];
 
 const router = createRouter({
