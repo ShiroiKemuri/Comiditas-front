@@ -31,6 +31,10 @@ export const useAddToCartStore = defineStore('addToCart', () => {
   function limpiarCarrito() {
     productos.value = [];
   }
+  
+  function removeItem(id) {
+    productos.value = productos.value.filter(p => p.id !== id);
+  }
 
-  return { productos, total, agregarAlCarrito, limpiarCarrito };
+  return { productos, total, agregarAlCarrito, limpiarCarrito, removeItem };
 });

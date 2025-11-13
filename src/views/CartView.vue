@@ -27,9 +27,11 @@
         <h2 class="section-title">Comiditas en el Carrito</h2>
 
         <div v-if="cartStore.productos.length === 0" class="empty-cart">
-          <div class="empty-illustration">😞</div>
-          <h2>Tu carrito está vacío</h2>
-          <p>Empieza a agregar Comiditas.</p>          
+          <div class="empty-illustration">
+            <img src="@/assets/triste.png" alt="Logo triste" class="triste-img" />
+          </div>
+          <h2 class="empty-cart-title">Tu carrito está vacío</h2>
+          <p class="empty-cart-description">Empieza a agregar Comiditas.</p>          
         </div>
 
         <ul v-else class="item-list">
@@ -234,20 +236,21 @@ function editQuantity(id) {
 }
 
 // Función para eliminar un producto individual del carrito
+
 function remove() {
-  const id = productoSeleccionadoId.value;
-  if (!id) return;
-  cartStore.removerDelCarrito(id);
-  // Limpiar selección y cerrar modal
-  productoSeleccionadoId.value = null;
+  if (!productoSeleccionadoId.value) return;
+  // Llamar al store para eliminar el producto por id
+  cartStore.removeItem(productoSeleccionadoId.value);
+  // Cerrar modal y limpiar selección
   mostrarModalEliminar.value = false;
-  // Mostrar mensaje de confirmación
+  productoSeleccionadoId.value = null;
+  // Mostrar toast de confirmación breve
   mostrarToast.value = true;
-  // Ocultar el toast después de 2 segundos
   setTimeout(() => {
     mostrarToast.value = false;
   }, 2000);
 }
+
 
 // Función para cancelar toda la compra
 function cancelPurchase() {
@@ -277,7 +280,7 @@ const goToAdminLogin = () => {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--color-bg-page);
+  background-color: #ffffff;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
@@ -321,6 +324,13 @@ const goToAdminLogin = () => {
   height: 90px;
   width: auto;
   object-fit: contain;
+}
+
+.triste-img {
+  width: 150px;
+  height: auto;
+  margin: 0 auto 20px auto;
+  display: block;
 }
 
 .nav-links {
@@ -367,7 +377,7 @@ const goToAdminLogin = () => {
 
 .cart-title p {
   font-size: 1.1rem;
-  color: var(--color-text-light);
+  color: #111827;
   margin-top: 5px;
 }
 
@@ -384,7 +394,7 @@ const goToAdminLogin = () => {
   font-size: 1.5rem;
   font-weight: 600;
   margin-bottom: 20px;
-  color: var(--color-text);
+  color: #111827;
 }
 
 /* Columna Izquierda: Lista de Items */
@@ -405,7 +415,7 @@ const goToAdminLogin = () => {
   display: flex;
   align-items: center;
   gap: 20px;
-  background: var(--color-bg);
+  background: #ffffff;
   border: 1px solid var(--color-border);
   border-radius: 12px;
   padding: 20px;
@@ -430,10 +440,11 @@ const goToAdminLogin = () => {
   font-size: 1.25rem;
   font-weight: 600;
   margin: 0 0 5px 0;
+  color: #111827;
 }
 
 .item-quantity {
-  color: var(--color-text-light);
+  color: #111827;
   font-size: 0.95rem;
   margin-bottom: 8px;
 }
@@ -441,7 +452,7 @@ const goToAdminLogin = () => {
 .item-subtotal {
   font-size: 1.1rem;
   font-weight: 700;
-  color: var(--color-text);
+  color: #111827;
 }
 
 .item-actions {
@@ -483,11 +494,21 @@ const goToAdminLogin = () => {
   padding: 40px;
   border: 2px dashed var(--color-border);
   border-radius: 8px;
-  background-color: var(--color-bg);
+  background-color: #ffffff;
 }
 .empty-illustration {
   font-size: 3rem;
   margin-bottom: 15px;
+}
+.empty-cart-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 10px;
+}
+.empty-cart-description {
+  font-size: 1rem;
+  color: #6b7280;
 }
 .btn-secondary {
   background-color: var(--color-orange);
@@ -522,7 +543,7 @@ const goToAdminLogin = () => {
   justify-content: space-between;
   margin-bottom: 18px;
   font-size: 1rem;
-  color: var(--color-text-light);
+  color: #111827;
 }
 
 .summary-row.total {
@@ -530,7 +551,7 @@ const goToAdminLogin = () => {
   padding-top: 18px;
   font-size: 1.25rem;
   font-weight: 700;
-  color: var(--color-text);
+  color: #111827;
 }
 
 /* Botones del Resumen */
@@ -604,7 +625,7 @@ const goToAdminLogin = () => {
   padding: 30px; 
   border-radius: 12px; 
   text-align: center; 
-  color: var(--color-text);
+  color: #111827;
   max-width: 400px;
   width: 90%;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
@@ -759,54 +780,4 @@ const goToAdminLogin = () => {
   text-decoration: none;
 }
 
-@keyframes slideUp {
-  from {
-    transform: translate(-50%, 100%);
-    opacity: 0;
-  }
-  to {
-    transform: translate(-50%, 0);
-    opacity: 1;
-  }
-}
-
-/* --- Responsividad --- */
-@media (max-width: 900px) {
-  .cart-layout {
-    grid-template-columns: 1fr; /* Apila las columnas */
-  }
-
-  .order-summary-wrapper {
-    position: static; /* Quita el sticky en móvil */
-    top: auto;
-    margin-top: 30px;
-  }
-}
-
-@media (max-width: 500px) {
-  .cart-item {
-    flex-direction: column;
-    align-items: flex-start; /* Alinea todo a la izquierda */
-  }
-
-  .item-image {
-    width: 100%;
-    height: 150px;
-  }
-
-  .item-actions {
-    flex-direction: row;
-    width: 100%;
-    margin-top: 15px;
-  }
-  
-  .item-actions .btn-edit,
-  .item-actions .btn-remove {
-    flex: 1; /* Los botones ocupan 50% cada uno */
-  }
-
-  .cart-title h1 {
-    font-size: 2rem;
-  }
-}
 </style>
