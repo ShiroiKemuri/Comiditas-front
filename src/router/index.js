@@ -1,12 +1,15 @@
 import { createRouter, createWebHistory } from "vue-router";
-import AdminView from "@/views/adminCreate.vue";
-import AdminDeleteView from "@/views/adminDelete.vue";
-import AdminUpdateView from "@/views/adminUpdate.vue";
-import AdminSearch from "@/views/adminSearch.vue";
-import Auth from "@/views/Authentication.vue";
-import HomeScreen from "@/views/HomeScreen.vue";
-import CartView from "@/views/CartView.vue";
-import FinalizarCompra from "@/views/FinalizarCompra.vue";
+import AdminView from "../views/adminCreate.vue";
+import AdminDeleteView from "../views/adminDelete.vue";
+import AdminUpdateView from "../views/adminUpdate.vue";
+import AdminSearch from "../views/adminSearch.vue";
+import Auth from "../views/Authentication.vue";
+import HomeScreen from "../views/HomeScreen.vue";
+import CartView from "../views/CartView.vue";
+import AdminDashboard from "../views/AdminDashboard.vue";
+import ProductManagement from "../views/ProductManagement.vue";
+import CategoryManagement from "../views/CategoryManagement.vue";
+import FinalizarCompra from "../views/FinalizarCompra.vue";
 
 const routes = [
   {
@@ -39,7 +42,22 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
-    path: "/Login",
+    path: "/admin/dashboard",
+    name: "AdminDashboard",
+    component: AdminDashboard,
+  },
+  {
+    path: "/admin/products",
+    name: "ProductManagement",
+    component: ProductManagement,
+  },
+  {
+    path: "/admin/categories",
+    name: "CategoryManagement",
+    component: CategoryManagement,
+  },
+  {
+    path: "/login",
     name: "Authentication",
     component: Auth,
   },

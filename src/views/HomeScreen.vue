@@ -143,7 +143,7 @@ const router = useRouter();
 
 const handleAddToCartWithQty = (product) => {
   const qty = 1; // cantidad fija desde la vista principal
-  addToCart(product, qty); // Lógica de tu carrito con cantidad
+  addToCart(product, qty); // Lógica de carrito con cantidad
   productoSeleccionado.value = product;
   mostrarModal.value = true;
 };
