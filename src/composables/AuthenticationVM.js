@@ -55,7 +55,7 @@ const login = async () => {
         if (response.data && response.data.token) {
             localStorage.setItem('jwt_token', response.data.token);
             console.log('Login successful, token stored.');        
-            router.push({ name: 'AdminCreate' });
+            router.push({ name: 'adminDashboard' });
             return true;
         }
         return false;

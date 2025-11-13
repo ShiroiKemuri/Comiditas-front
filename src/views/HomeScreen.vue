@@ -78,9 +78,9 @@
 import { useRouter } from 'vue-router';
 // Importa el ViewModel (Composable) que contiene la lógica
 import { useHomeViewModel } from '../composables/HomeVM';
-//Importar el modal del carrito
+// Importar el modal del carrito
 import CarritoModal from './CarritoModal.vue';
-import { ref } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 
 // Usa el ViewModel para acceder a todos los estados y funciones
 const { products, searchTerm, selectedFilter, isLoading, error, executeSearch, addToCart } = useHomeViewModel();
@@ -120,6 +120,18 @@ const goToAdminLogin = () => {
     // Redirecciona al formulario de login de administrador
     router.push('/login'); 
 };
+
+onMounted(() => {
+  document.body.style.backgroundImage = "url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=2070&auto=format&fit=crop')";
+  document.body.style.backgroundSize = 'cover';
+  document.body.style.backgroundPosition = 'center';
+  document.body.style.backgroundAttachment = 'fixed';
+});
+
+onUnmounted(() => {
+  // Restaura el fondo por defecto al salir de la pantalla
+  document.body.style.backgroundImage = '';
+});
 </script>
 
 
@@ -141,13 +153,13 @@ const goToAdminLogin = () => {
 }
 
 .restaurant-name {
-  color: #ffffff;
+  color: #740065;
 }
 
 .header-actions .icon-button {
   padding: 10px 15px;
   margin-left: 10px;
-  background-color: transparent;
+  background-color: #1d2841; /*color de los botones en la pagina de inicio*/
   color: var(--color-text);
   border: 1px solid var(--color-border);
   border-radius: 8px;
@@ -197,7 +209,7 @@ const goToAdminLogin = () => {
 .product-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 25px;
+  gap: 20px;
   margin-top: 20px;
 }
 
@@ -205,8 +217,8 @@ const goToAdminLogin = () => {
   background-color: var(--color-card-bg);
   border: 1px solid var(--color-border);
   border-radius: 8px;
-  padding: 15px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  box-shadow: 0 4px 12px rgba(87, 168, 0, 0.1);
   display: flex;
   flex-direction: column;
   transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;

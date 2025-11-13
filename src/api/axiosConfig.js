@@ -1,10 +1,12 @@
 import axios from 'axios';
 
-// Configura la URL base de tu API
-axios.defaults.baseURL = 'http://localhost:8085';
+// 1. Crea una instancia dedicada en lugar de usar la global
+const apiClient = axios.create({
+  baseURL: 'http://localhost:8085', // Configura la URL base de tu API
+});
 
 // Interceptor de peticiones
-axios.interceptors.request.use(
+apiClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('jwt_token');
     if (token) {
@@ -20,4 +22,5 @@ axios.interceptors.request.use(
   }
 );
 
-export default axios;
+// 3. Exporta la instancia que creaste
+export default apiClient;

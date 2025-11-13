@@ -8,6 +8,7 @@ import HomeScreen from "@/views/HomeScreen.vue";
 import CartView from "@/views/CartView.vue";
 import FinalizarCompra from "@/views/FinalizarCompra.vue";
 import CatalogUpdate from "@/views/CatalogUpdate.vue";
+import AdminDashboard from "@/views/AdminDashboard.vue";
 
 const routes = [
   {
@@ -55,6 +56,11 @@ const routes = [
     path: "/admin/catalog/update",
     name: "CatalogUpdate",
     component: CatalogUpdate,
+  },
+  {
+    path: "/admin/dashboard",
+    name: "adminDashboard",
+    component: AdminDashboard,
   }
 ];
 

@@ -1,10 +1,14 @@
 <template>
     <div class="authentication">
-        <h1>Inicio de Sesion</h1>
-        <div>
+        <div class="login-card">
+            <div class="card-header">
+                <img src="https://cdn.discordapp.com/attachments/1212093127435755551/1438364149167034399/logo.png?ex=69169c80&is=69154b00&hm=98bbd0eaacf578d6c884a2c25d570483fbb876109b0c47907426907aa44e0b2a&" alt="Logo Comiditas" class="login-logo">
+                <h1 class="app-title">COMIDITAS</h1>
+            </div>
+            <h1>Inicio de Sesión</h1>
             <form @submit.prevent="login">
                 <input v-model="AuthModel.user" type="text" placeholder="Usuario"/>
-                <div class="password-wrapper">
+                <div class="input-wrapper password-wrapper">
                     <input 
                         v-model="AuthModel.password" 
                         :type="isPasswordVisible ? 'text' : 'password'" 
@@ -21,7 +25,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { Auth as AuthModel, login, errorMessage } from '@/composables/AuthenticationVM'
 
 const isPasswordVisible = ref(false);
@@ -29,9 +33,39 @@ const isPasswordVisible = ref(false);
 const togglePasswordVisibility = () => {
   isPasswordVisible.value = !isPasswordVisible.value;
 };
+
+onMounted(() => {
+  document.body.style.backgroundImage = "url('https://tenor.com/view/vergil-sparda-vergil-dmc5-gif-26869378.gif')";
+  document.body.style.backgroundSize = 'cover';
+  document.body.style.backgroundPosition = 'center';
+  document.body.style.backgroundAttachment = 'fixed';
+});
+
+onUnmounted(() => {
+  document.body.style.backgroundImage = '';
+});
 </script>
 
 <style scoped>
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem; /* Espacio entre el logo y el título */
+  margin-bottom: 1rem;
+}
+
+.app-title {
+  margin: 0;
+  font-size: 2.5rem; /* Tamaño del nombre de la app */
+  color: var(--color-heading);
+}
+
+.login-logo {
+  width: 80px; /* Ancho del logo ajustado */
+  margin-bottom: 0; /* Se quita el margen inferior */
+}
+
 .authentication {
   display: flex;
   flex-direction: column;
@@ -39,14 +73,28 @@ const togglePasswordVisibility = () => {
   justify-content: center;
   padding: 2rem;
   text-align: center;
+  margin-top: 4rem; /* subir o bajar la tarjeta */
+}
+
+.login-card {
+  /* Fondo semitransparente con efecto de desenfoque */
+  background-color: rgba(221, 221, 221, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  padding: 2.5rem 2rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 400px;
 }
 
 .authentication form {
   display: flex;
   flex-direction: column;
   gap: 1rem; /* Espacio entre elementos del formulario */
-  width: 100%;
-  max-width: 350px; /* Ancho máximo para el formulario */
+  margin-top: 1.5rem;
 }
 
 /* Estilo general para los inputs de texto y contraseña */
@@ -56,12 +104,12 @@ const togglePasswordVisibility = () => {
   padding: 0.8em 1em;
   border-radius: 8px;
   border: 1px solid var(--color-border);
-  background-color: var(--color-card-bg);
+  background-color: rgba(0, 0, 0, 0.2); /* Fondo sutil para los inputs */
   color: var(--color-text);
   box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
 }
 
-.password-wrapper {
+.input-wrapper {
   position: relative;
   display: flex;
   align-items: center;
@@ -79,11 +127,12 @@ const togglePasswordVisibility = () => {
   cursor: pointer;
   font-size: 0.8em;
   color: var(--color-text);
+  padding: 0.5em;
 }
 
 .error-message {
-  color: #f1a1a1; /* Un rojo más suave para el tema oscuro */
-  background-color: rgba(230, 126, 34, 0.15); /* Fondo sutil usando el color de acento */
+  color: #eb4444; /* Un rojo más suave para el tema oscuro */
+  background-color: rgba(230, 47, 34, 0.15); /* Fondo sutil usando el color de acento */
   border: 1px solid var(--color-accent-hover);
   padding: 0.75rem;
   border-radius: 8px;

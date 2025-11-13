@@ -13,11 +13,15 @@ const createCategory = async () => {
     }
 };
 
-const getCategory = async () => {
+const getCategory = async (estadoCarga) => {
     try {
         const response = await apiClient.get(`/category/getCategoryById/${category.value.id}`);
         category.value = response.data;
+        if (estadoCarga) {
+            estadoCarga.value = true; // Actualiza el estado en la vista a true
+        }
     } catch (error) {
+        if (estadoCarga) estadoCarga.value = false; // Asegura que el form no se muestre si hay error
         console.error('Error al obtener categoría:', error);
     }
 };
