@@ -90,7 +90,6 @@ import { useHomeViewModel } from '../composables/HomeVM';
 // Importar el modal del carrito
 import CarritoModal from './CarritoModal.vue';
 import { ref, onMounted, onUnmounted } from 'vue';
-import { useHomeViewModel } from "../composables/HomeVM";
 import { useAddToCartStore } from "../stores/addToCart";
 
 //ViewModel para acceder a todos los estados y funciones
