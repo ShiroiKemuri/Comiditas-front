@@ -106,19 +106,19 @@ function formatPrice(n) {
 .infoProducto h4 {
   margin-bottom: 10px;
   font-size: 1.2rem;
-  color: var(--color-text);;
+  color: #111827;
 }
 
 .infoProducto p {
   margin: 5px 0;
   font-size: 0.95rem;
-  color: var(--color-text);
+  color: #111827;
 }
 
 .modal-price {
   margin-top: 10px;
   font-weight: 600;
-  color: var(--color-text);
+  color: #111827;
 }
 .modal-actions {
   margin-top: 12px;
