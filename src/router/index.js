@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+<<<<<<< HEAD
 import AdminView from "@/views/adminCreate.vue";
 import AdminDeleteView from "@/views/adminDelete.vue";
 import AdminUpdateView from "@/views/adminUpdate.vue";
@@ -9,6 +10,19 @@ import CartView from "@/views/CartView.vue";
 import FinalizarCompra from "@/views/FinalizarCompra.vue";
 import CatalogUpdate from "@/views/CatalogUpdate.vue";
 import AdminDashboard from "@/views/AdminDashboard.vue";
+=======
+import AdminView from "../views/adminCreate.vue";
+import AdminDeleteView from "../views/adminDelete.vue";
+import AdminUpdateView from "../views/adminUpdate.vue";
+import AdminSearch from "../views/adminSearch.vue";
+import Auth from "../views/Authentication.vue";
+import HomeScreen from "../views/HomeScreen.vue";
+import CartView from "../views/CartView.vue";
+import AdminDashboard from "../views/AdminDashboard.vue";
+import ProductManagement from "../views/ProductManagement.vue";
+import CategoryManagement from "../views/CategoryManagement.vue";
+import FinalizarCompra from "../views/FinalizarCompra.vue";
+>>>>>>> 98b1529aa77d0597be503e29b1815356dcc3889b
 
 const routes = [
   {
@@ -26,7 +40,6 @@ const routes = [
     name: "AdminDelete",
     component: AdminDeleteView,
   },
-  {},
   {
     path: "/admin/update",
     name: "AdminUpdate",
@@ -38,7 +51,22 @@ const routes = [
     component: AdminSearch,
   },
   {
-    path: "/Login",
+    path: "/admin/dashboard",
+    name: "AdminDashboard",
+    component: AdminDashboard,
+  },
+  {
+    path: "/admin/products",
+    name: "ProductManagement",
+    component: ProductManagement,
+  },
+  {
+    path: "/admin/categories",
+    name: "CategoryManagement",
+    component: CategoryManagement,
+  },
+  {
+    path: "/login",
     name: "Authentication",
     component: Auth,
   },

@@ -82,7 +82,7 @@ import { useHomeViewModel } from '../composables/HomeVM';
 import CarritoModal from './CarritoModal.vue';
 import { ref, onMounted, onUnmounted } from 'vue';
 
-// Usa el ViewModel para acceder a todos los estados y funciones
+//ViewModel para acceder a todos los estados y funciones
 const { products, searchTerm, selectedFilter, isLoading, error, executeSearch, addToCart } = useHomeViewModel();
 
 const mostrarModal = ref(false);
@@ -94,7 +94,7 @@ const router = useRouter();
 
 const handleAddToCartWithQty = (product) => {
   const qty = 1; // cantidad fija desde la vista principal
-  addToCart(product, qty); // Lógica de tu carrito con cantidad
+  addToCart(product, qty); // Lógica de carrito con cantidad
   productoSeleccionado.value = product;
   mostrarModal.value = true;
 };

@@ -25,11 +25,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { Auth as AuthModel, login, errorMessage } from '@/composables/AuthenticationVM'
 
 const isPasswordVisible = ref(false);
-
+const router = useRouter(); // Importante para que el composable pueda usarlo
+ 
 const togglePasswordVisibility = () => {
   isPasswordVisible.value = !isPasswordVisible.value;
 };
