@@ -1,13 +1,14 @@
 <template>
     <div class="catalog-update">
-        <h1>Buscar categoria</h1>
+        <h1>Actualizar Categoría</h1>
         <div class="form-container">
-            <div class="form-section">
+            <!-- La búsqueda manual se elimina, ahora es automática -->
+            <!-- <div class="form-section">
                 <input v-model="category.id" type="text" placeholder="ID de la categoria" />
-            <button @click="buscarCategoria()">Buscar</button>
-            </div>
+                <button @click="buscarCategoria()">Buscar</button>
+            </div> -->
 
-            <div v-if="categoriaCargada" class="update-section">
+            <div v-if="categoriaCargada" class="form-section">
                 <h2>Actualizar categoria</h2>
                 <input v-model="category.name" type="text" placeholder="Nombre de la categoria" />
                 <input v-model="category.description" type="text" placeholder="Descripcion de la categoria" />
@@ -27,22 +28,38 @@
         </div>
     </div>
 </template>
- 
+
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
+import { useRoute } from 'vue-router';
 import { category, getCategory, updateCategory } from '@/composables/CategoryVM.js'
 
 const categoriaCargada = ref(false);
 const mostrarModalConfirmacion = ref(false);
+const route = useRoute();
+
+onMounted(() => {
+    const categoryId = route.params.id;
+    if (categoryId) {
+        category.value.id = categoryId;
+        buscarCategoria();
+    }
+
+    // Añadir fondo a la página
+    document.body.style.backgroundImage = "url('https://images.unsplash.com/photo-1504754524776-8f4f37790774?q=80&w=2070&auto=format&fit=crop')";
+    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundPosition = 'center';
+    document.body.style.backgroundAttachment = 'fixed';
+});
+
+onUnmounted(() => {
+    document.body.style.backgroundImage = ''; // Limpiar el fondo al salir
+});
 
 const buscarCategoria = async () => {
-    // Reinicia el estado antes de cada búsqueda
-    categoriaCargada.value = false;
-    if (!category.value.id) {
-        alert('Por favor, ingresa un ID de categoría.');
-        return;
-    }
-    await getCategory(categoriaCargada); // Pasa la referencia para ser actualizada
+    // Limpiamos los datos antes de la nueva búsqueda
+    categoriaCargada.value = false; 
+    await getCategory(categoriaCargada)
 };
 
 const solicitarConfirmacion = () => {
@@ -55,7 +72,7 @@ const solicitarConfirmacion = () => {
 
 const confirmarActualizacion = () => {
     mostrarModalConfirmacion.value = false;
-    updateCategory(); // Se llama a la función original para actualizar
+    updateCategory();
 };
 
 const cancelarActualizacion = () => {
@@ -70,6 +87,8 @@ const cancelarActualizacion = () => {
   align-items: center;
   padding: 2rem;
   text-align: center;
+  min-height: 100vh; /* Ocupa toda la altura para centrar correctamente */
+  box-sizing: border-box;
 }
 
 .form-container {
@@ -80,24 +99,28 @@ const cancelarActualizacion = () => {
   max-width: 400px;
 }
 
-.form-section, .update-section {
+.form-section {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding: 1.5rem;
-  border-radius: 8px;
-  background-color: var(--color-card-bg);
-  border: 1px solid var(--color-border);
+  /* Estilo mejorado para la tarjeta */
+  padding: 2.5rem 2rem;
+  border-radius: 12px;
+  background-color: rgba(44, 44, 44, 0.75); /* Fondo oscuro semitransparente */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
-.update-section h2 {
+.form-section h2 {
     margin-top: 0;
 }
 
 input[type="text"] {
   padding: 0.8em 1em;
   border-radius: 8px;
-  border: 1px solid var(--color-border);
+  border: 1px solid #555;
   background-color: var(--color-background);
   color: var(--color-text);
   font-size: 1em;

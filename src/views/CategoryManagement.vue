@@ -70,11 +70,11 @@ const router = useRouter();
 
 // Datos simulados (reemplazar con fetch al backend)
 const categories = ref([
-  { name: "Bebidas" },
-  { name: "Entradas" },
-  { name: "Platos Fuertes" },
-  { name: "Postres" },
-  { name: "Especiales" },
+  { id: 1, name: "Bebidas" },
+  { id: 2, name: "Entradas" },
+  { id: 3, name: "Platos Fuertes" },
+  { id: 4, name: "Postres" },
+  { id: 5, name: "Especiales" },
 ]);
 
 const searchTerm = ref("");
@@ -100,8 +100,9 @@ const filteredCategories = computed(() => !searchTerm.value ? categories.value :
 
 // Funciones simuladas
 const addCategory = () => alert("Funcionalidad para añadir categoría");
-const editCategory = (cat) =>
-  alert(`Editar categoría: ${cat.name}`);
+const editCategory = (category) => {
+  router.push({ name: 'catalogUpdate', params: { id: category.id } });
+};
 const deleteCategory = (cat) =>
   alert(`Eliminar categoría: ${cat.name}`);
 const goBack = () => router.push("/admin/dashboard");

@@ -57,7 +57,7 @@ const goToProductManagement = () => {
 };
 
 const goToCategoryManagement = () => {
-  router.push('/admin/categories');
+  router.push('/admin/category/management');
 };
 
 const goToHomeScreen = () => {

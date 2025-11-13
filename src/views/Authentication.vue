@@ -1,12 +1,13 @@
 <template>
     <div class="authentication">
         <div class="login-card">
+            <button @click="goToHome" class="back-button">← Volver</button>
             <div class="card-header">
                 <img src="https://cdn.discordapp.com/attachments/1212093127435755551/1438364149167034399/logo.png?ex=69169c80&is=69154b00&hm=98bbd0eaacf578d6c884a2c25d570483fbb876109b0c47907426907aa44e0b2a&" alt="Logo Comiditas" class="login-logo">
                 <h1 class="app-title">COMIDITAS</h1>
             </div>
             <h1>Inicio de Sesión</h1>
-            <form @submit.prevent="login">
+            <form @submit.prevent="handleLogin">
                 <input v-model="AuthModel.user" type="text" placeholder="Usuario"/>
                 <div class="input-wrapper password-wrapper">
                     <input 
@@ -25,7 +26,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { Auth as AuthModel, login, errorMessage } from '@/composables/AuthenticationVM'
 
@@ -34,6 +35,14 @@ const router = useRouter(); // Importante para que el composable pueda usarlo
  
 const togglePasswordVisibility = () => {
   isPasswordVisible.value = !isPasswordVisible.value;
+};
+
+const goToHome = () => {
+  router.push('/');
+};
+
+const handleLogin = () => {
+  login(router); // Pasamos la instancia del router a la función de login
 };
 
 onMounted(() => {
@@ -75,10 +84,12 @@ onUnmounted(() => {
   justify-content: center;
   padding: 2rem;
   text-align: center;
-  margin-top: 4rem; /* subir o bajar la tarjeta */
+  min-height: 100vh; /* Ocupa toda la altura de la pantalla */
+  box-sizing: border-box; /* Asegura que el padding no afecte la altura total */
 }
 
 .login-card {
+  position: relative; /* Necesario para posicionar el botón de volver */
   /* Fondo semitransparente con efecto de desenfoque */
   background-color: rgba(221, 221, 221, 0.6);
   backdrop-filter: blur(10px);
@@ -139,6 +150,18 @@ onUnmounted(() => {
   padding: 0.75rem;
   border-radius: 8px;
   margin-top: 10px;
+}
+
+.back-button {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background: none;
+  border: none;
+  color: var(--color-text);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
 </style>

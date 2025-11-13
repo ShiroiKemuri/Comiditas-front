@@ -7,7 +7,7 @@ const Auth = ref({ ...AuthModel });
 
 const errorMessage = ref('');
 
-const login = async () => {
+const login = async (router) => {
     errorMessage.value = '';
 
     // Validar que no haya espacios en blanco
@@ -51,7 +51,7 @@ const login = async () => {
 
     try {
         // Usamos la URL completa aquí para asegurar la conexión, asumiendo que el backend corre en el puerto 8080
-        const response = await apiClient.post('http://localhost:8080/api/auth/login', Auth.value);
+        const response = await apiClient.post('/auth/login', Auth.value);
 
         if (response.data && response.data.token) {
             localStorage.setItem('jwt_token', response.data.token);
