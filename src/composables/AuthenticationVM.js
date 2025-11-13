@@ -1,8 +1,7 @@
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import apiClient from '@/api/axiosConfig';
 import AuthModel from '@/models/AuthenticationModel';
-import router from '@/router';
-
 
 const Auth = ref({ ...AuthModel });
 
@@ -51,33 +50,28 @@ const login = async () => {
 
 
     try {
-        const response = await apiClient.post('/auth/login', Auth.value);
+        // Usamos la URL completa aquí para asegurar la conexión, asumiendo que el backend corre en el puerto 8080
+        const response = await apiClient.post('http://localhost:8080/api/auth/login', Auth.value);
+
         if (response.data && response.data.token) {
             localStorage.setItem('jwt_token', response.data.token);
-            console.log('Login successful, token stored.');        
-            router.push({ name: 'AdminCreate' });
+            console.log('Login successful, token stored.');
             return true;
         }
-        return false;
+        // Si no hay token, es un error inesperado
+        errorMessage.value = 'Respuesta inesperada del servidor.';
+        return false; // Retornar false si no hay token
     } catch (error) {
         console.error('Error during login:', error);
         if (error.response && error.response.data) {
             // Muestra el mensaje de error específico del backend (ej: "Cuenta bloqueada...")
             errorMessage.value = error.response.data;
         } else {
-            errorMessage.value = 'Error de conexión. Por favor, intente más tarde.';
+            // Este es el error más común si el backend no está corriendo o la URL es incorrecta
+            errorMessage.value = 'Error de conexión. Verifique que el servidor esté activo y la URL sea correcta.';
         }
-        // 4. Intentar el inicio de sesión
-        try {
-            const response = await axios.post('http://localhost:8085/auth/login', Auth.value);
-            console.log('Login successful');
-            return response.data;
-        } catch (error) {
-            console.error('Error during login:', error);
-            errorMessage.value = 'Usuario o contraseña incorrecta, por favor vuelva a intentar o comuníquese con el equipo de desarrollo.';
-            return false;
-        }
-    };
+        return false;
+    }
 }
 
 

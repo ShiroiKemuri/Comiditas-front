@@ -92,16 +92,8 @@ import CarritoModal from "./CarritoModal.vue";
 import { ref } from "vue";
 import { useAddToCartStore } from "../stores/addToCart";
 
-// Usa el ViewModel para acceder a todos los estados y funciones
-const {
-  products,
-  searchTerm,
-  selectedFilter,
-  isLoading,
-  error,
-  executeSearch,
-  addToCart,
-} = useHomeViewModel();
+//ViewModel para acceder a todos los estados y funciones
+const { products, searchTerm, selectedFilter, isLoading, error, executeSearch, addToCart } = useHomeViewModel();
 
 const mostrarModal = ref(false);
 const productoSeleccionado = ref(null);
