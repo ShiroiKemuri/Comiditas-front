@@ -6,7 +6,7 @@ import { fileURLToPath } from 'url'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const server = {
-  allowedHosts: ['brad-smoking-refugees-dependent.trycloudflare.com', 'localhost'],
+  allowedHosts: ['clinic-stylish-cet-scotia.trycloudflare.com', 'localhost'],
 }
 export default defineConfig({
   plugins: [vue()],
