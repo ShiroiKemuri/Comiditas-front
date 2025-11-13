@@ -11,6 +11,7 @@ import CatalogUpdate from "@/views/CatalogUpdate.vue";
 import AdminDashboard from "@/views/AdminDashboard.vue";
 import ProductManagement from "@/views/ProductManagement.vue";
 import CategoryManagement from "@/views/CategoryManagement.vue";
+import CategoryForm from "../views/CategoryForm.vue";
 
 const routes = [
   {
@@ -67,6 +68,11 @@ const routes = [
     path: "/admin/category/management",
     name: "categoryManagement",
     component: CategoryManagement,
+  },
+  {
+    path: '/admin/categories/form',
+    name: 'categoryForm',
+    component: CategoryForm,
   }
 ];
 

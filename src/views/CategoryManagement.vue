@@ -59,23 +59,34 @@
         </div>
       </div>
     </main>
+    <CategoryForm v-if="mostrarForm" @cerrar="cerrarForm"/>
+
   </div>
 </template>
 
 <script setup>
 import { ref, computed, watch } from "vue";
 import { useRouter } from "vue-router";
+import CategoryForm from "./CategoryForm.vue";
+import { categories, getCategories } from '@/composables/CategoryVM'
+import { onMounted } from "vue";
 
 const router = useRouter();
+const mostrarForm = ref(false);
+
+onMounted(() => {
+  getCategories();
+});
 
 // Datos simulados (reemplazar con fetch al backend)
-const categories = ref([
-  { id: 1, name: "Bebidas" },
-  { id: 2, name: "Entradas" },
-  { id: 3, name: "Platos Fuertes" },
-  { id: 4, name: "Postres" },
-  { id: 5, name: "Especiales" },
+/*const categories = ref([
+  { name: "Bebidas" },
+  { name: "Entradas" },
+  { name: "Platos Fuertes" },
+  { name: "Postres" },
+  { name: "Especiales" },
 ]);
+*/
 
 const searchTerm = ref("");
 const searchError = ref("");
