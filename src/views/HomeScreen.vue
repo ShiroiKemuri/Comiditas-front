@@ -2,12 +2,12 @@
   <div class="home-screen">
     <header class="header">
       <h1 class="restaurant-name">COMIDITAS</h1>
-      
+
       <div class="header-actions">
         <button class="icon-button cart-button" @click="goToCart">
           🛒 Carrito
         </button>
-        
+
         <button class="icon-button admin-button" @click="goToAdminLogin">
           👤 Admin Login
         </button>
@@ -16,51 +16,60 @@
 
     <section class="search-filter-section">
       <div class="search-bar">
-        <input 
-          type="text" 
-          v-model="searchTerm" 
-          placeholder="Buscar por nombre..." 
+        <input
+          type="text"
+          v-model="searchTerm"
+          placeholder="Buscar por nombre..."
         />
         <button @click="executeSearch">Buscar</button>
       </div>
-      
-      <select v-model="selectedFilter" @change="executeSearch" class="filter-dropdown">
-        
+
+      <select
+        v-model="selectedFilter"
+        @change="executeSearch"
+        class="filter-dropdown"
+      >
         <option value="">Filtro</option>
         <option value="entradas">Precio Mayor</option>
         <option value="platos-fuertes">Precio Menor</option>
         <option value="bebidas">Orden Alfabético</option>
-
       </select>
     </section>
 
-    <hr>
-    
+    <hr />
+
     <section class="menu-list">
       <h2>Menú del Restaurante</h2>
-      
+
       <p v-if="isLoading">Cargando productos...</p>
       <p v-else-if="error" class="error-message">{{ error }}</p>
       <p v-else-if="products.length === 0">No se encontraron productos.</p>
-      
+
       <div v-else class="product-grid">
         <div v-for="product in products" :key="product.id" class="product-card">
-          <img :src="product.imageUrl" :alt="product.name" class="product-image">
+          <img
+            :src="product.imageUrl"
+            :alt="product.name"
+            class="product-image"
+          />
 
           <div class="product-info">
             <h3 class="product-name">{{ product.name }}</h3>
-            
           </div>
 
           <div class="product-qty">
-            
             <div class="qty-controls">
               <span class="qty-value"></span>
             </div>
-            <div class="product-subtotal">Precio: $ {{ formatPrice(product.price * 1) }}</div>
+            <div class="product-subtotal">
+              Precio: $ {{ formatPrice(product.price * 1) }}
+            </div>
           </div>
 
-          <button class="add-to-cart-button" @click="handleAddToCartWithQty(product)">
+          <button
+            class="add-to-cart-button"
+            @click="handleAddToCartWithQty(product)"
+          >
             + Agregar al carrito
           </button>
         </div>
@@ -69,32 +78,33 @@
         v-if="mostrarModal"
         :product="productoSeleccionado"
         @cerrar="cerrarModal"
-        />
+      />
     </section>
   </div>
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router';
+import { useRouter } from "vue-router";
 // Importa el ViewModel (Composable) que contiene la lógica
-import { useHomeViewModel } from '../composables/HomeVM';
+import { useHomeViewModel } from "../composables/HomeVM";
 //Importar el modal del carrito
-import CarritoModal from './CarritoModal.vue';
-import { ref } from 'vue';
+import CarritoModal from "./CarritoModal.vue";
+import { ref } from "vue";
+import { useAddToCartStore } from "../stores/addToCart";
 
 //ViewModel para acceder a todos los estados y funciones
 const { products, searchTerm, selectedFilter, isLoading, error, executeSearch, addToCart } = useHomeViewModel();
 
 const mostrarModal = ref(false);
 const productoSeleccionado = ref(null);
-
-// En la vista principal no hay controles +/-; la cantidad por defecto al agregar es 1.
+const cartStore = useAddToCartStore();
 
 const router = useRouter();
 
 const handleAddToCartWithQty = (product) => {
   const qty = 1; // cantidad fija desde la vista principal
-  addToCart(product, qty); // Lógica de carrito con cantidad
+  addToCart(product, qty); // Lógica de tu carrito con cantidad
+  cartStore.saveCart(); // guarda el carrito actualizado en localStorage
   productoSeleccionado.value = product;
   mostrarModal.value = true;
 };
@@ -102,26 +112,28 @@ const handleAddToCartWithQty = (product) => {
 // increment/decrement removed as requested
 
 function formatPrice(n) {
-  return Number(n).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return Number(n).toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 }
 
 const cerrarModal = () => {
-  mostrarModal.value = false
-  productoSeleccionado.value = null
-}
+  mostrarModal.value = false;
+  productoSeleccionado.value = null;
+};
 
 // Funciones para la navegación (Usando el router)
 const goToCart = () => {
-    // Esto debería abrir el sidebar o modal del carrito
-    router.push('/cart');    
+  // Esto debería abrir el sidebar o modal del carrito
+  router.push("/cart");
 };
 
 const goToAdminLogin = () => {
-    // Redirecciona al formulario de login de administrador
-    router.push('/login'); 
+  // Redirecciona al formulario de login de administrador
+  router.push("/login");
 };
 </script>
-
 
 <style scoped>
 /* Estilos básicos para la View */
@@ -155,17 +167,17 @@ const goToAdminLogin = () => {
 
 /* Estilos de Búsqueda y Filtros */
 .search-filter-section {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin-bottom: 30px;
-    align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 30px;
+  align-items: center;
 }
 
 .search-bar {
   display: flex;
   flex-grow: 1;
-  max-width: 600px; 
+  max-width: 600px;
 }
 
 .search-bar input {
@@ -185,9 +197,9 @@ const goToAdminLogin = () => {
 }
 
 .filter-dropdown {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
 /* Estilos de la Lista de Productos */
@@ -223,9 +235,6 @@ const goToAdminLogin = () => {
   margin-top: 0;
   font-size: 1.2em;
 }
-
-
-
 
 .add-to-cart-button {
   background-color: #ffc107;
