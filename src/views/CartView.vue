@@ -17,24 +17,41 @@
 
         <div v-else class="items-wrapper">
           <ul class="items" ref="itemsRef">
-            <li v-for="item in cartStore.productos" :key="item.id" class="item">
-              <img v-if="item.imageUrl" :src="item.imageUrl" alt="imagen" class="thumb" />
-              <div class="item-body">
-                <div class="item-top">
-                  <strong class="name">{{ item.nombre }}</strong>
-                  <div class="price-details">
-                    <div class="quantity">Cantidad: {{ item.cantidad }}</div>
-                    <div class="price">Precio Unitario: $ {{ formatNumber(item.precio) }}</div>
-                    <div class="subtotal">Subtotal: $ {{ formatNumber(item.subtotal) }}</div>
-                  </div>
+            <li
+              v-for="producto in cartStore.productos"
+              :key="producto.id"
+              class="item"
+            >
+              <img
+                v-if="producto.imageUrl"
+                :src="producto.imageUrl"
+                alt="imagen"
+                class="thumb"
+              />
+              <div class="item-details">
+                <strong class="name">{{ producto.nombre }}</strong>
+                <div class="price">
+                  Precio Unitario: $ {{ formatNumber(producto.precio) }}
                 </div>
-
-                <div class="item-controls">
-                  <div class="controls">
-                    <button class="edit-qty" aria-label="editar cantidad">Editar Cantidad</button>
-                    <button class="delete" aria-label="eliminar">Eliminar</button>
-                  </div>
-                </div>
+              </div>
+              <div class="item-controls">
+                <button @click="decreaseQuantity(producto)">-</button>
+                <input
+                  type="number"
+                  v-model.number="producto.cantidad"
+                  min="1"
+                  max="20"
+                  @change="updateQuantity(producto)"
+                />
+                <button @click="increaseQuantity(producto)">+</button>
+              </div>
+              <div class="item-subtotal">
+                $ {{ formatNumber(producto.subtotal) }}
+              </div>
+              <div class="item-actions">
+                <button class="delete" @click="remove(producto.id)">
+                  Eliminar
+                </button>
               </div>
             </li>
           </ul>
@@ -45,20 +62,24 @@
         <h3>Resumen de la compra</h3>
         <div class="summary-row">
           <span>Subtotal de productos</span>
-          <span>$ {{ formatNumber(subtotal) }}</span>
+          <span>$ {{ formatNumber(cartStore.subtotal) }}</span>
         </div>
         <div class="summary-row">
           <span>IVA (19%)</span>
-          <span>$ {{ formatNumber(taxes) }}</span>
+          <span>$ {{ formatNumber(cartStore.iva) }}</span>
         </div>
         <div class="summary-row total">
           <strong>Total a pagar</strong>
-          <strong>$ {{ formatNumber(total) }}</strong>
+          <strong>$ {{ formatNumber(cartStore.totalConIva) }}</strong>
         </div>
 
         <div class="summary-actions">
-          <button class="cancel" @click="cancelPurchase">Cancelar compra</button>
-          <button class="checkout" @click="finalizePurchase">Finalizar compra</button>
+          <button class="cancel" @click="cancelPurchase">
+            Cancelar compra
+          </button>
+          <button class="checkout" @click="finalizePurchase">
+            Finalizar compra
+          </button>
         </div>
       </aside>
     </main>
@@ -66,41 +87,60 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useAddToCartStore } from "../stores/addToCart";
-
-const TAX_RATE = 0.19; // IVA 19%
+import { onMounted } from "vue";
 
 const cartStore = useAddToCartStore();
 const router = useRouter();
 
-const itemsRef = ref(null);
-
-const subtotal = computed(() => {
-  return cartStore.total || 0;
+// Guarda los productos en el carrito aunque se refresque la página
+onMounted(() => {
+  cartStore.loadCart();
 });
 
-const taxes = computed(() => {
-  return +(subtotal.value * TAX_RATE).toFixed(2);
-});
-
-const total = computed(() => {
-  return +(subtotal.value + taxes.value).toFixed(2);
-});
-
-function formatNumber(n) {
-  return Number(n).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+// Calcula el subtotal de cada producto
+function actualizarSubtotal(product) {
+  product.subtotal = product.cantidad * product.precio;
 }
 
-// Función para editar la cantidad (a implementar)
-function editQuantity(id) {
-  // TODO: Implementar la edición de cantidad
+//Aumenta la cantidad del producto cuando se da clic "+"
+const increaseQuantity = (product) => {
+  if (product.cantidad < 20) {
+    product.cantidad++;
+    actualizarSubtotal(product);
+    cartStore.saveCart();
+  }
+};
+
+//Decrese la cantidad del producto cuando se da clic "-"
+const decreaseQuantity = (product) => {
+  if (product.cantidad > 1) {
+    product.cantidad--;
+    actualizarSubtotal(product);
+    cartStore.saveCart();
+  }
+};
+
+//Actualiza la cantidad del producto para que cumpla con las normas
+const updateQuantity = (product) => {
+  if (product.cantidad < 1) product.cantidad = 1;
+  if (product.cantidad > 20) product.cantidad = 20;
+  actualizarSubtotal(product);
+  cartStore.saveCart();
+};
+
+function formatNumber(n) {
+  return Number(n).toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 }
 
 // Función para eliminar producto (a implementar)
-function remove(id) {
-  // TODO: Implementar la eliminación de productos
+function remove(productId) {
+  cartStore.removerDelCarrito(productId);
+  cartStore.saveCart();
 }
 
 function cancelPurchase() {
@@ -119,6 +159,13 @@ function goBack() {
 </script>
 
 <style scoped>
+/* 🔽 Ocultar flechas en Chrome, Edge y Safari */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .cart-page {
   padding: 16px;
 }
@@ -162,7 +209,7 @@ function goBack() {
 }
 .item {
   display: flex;
-  gap: 20px;
+  gap: 16px;
   padding: 6px 0;
   border-bottom: 1px solid #eee;
 }
@@ -172,22 +219,21 @@ function goBack() {
   object-fit: cover;
   border-radius: 6px;
 }
-.item-body {
+.item-details {
   flex: 1;
-}
-.item-top {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
 }
 .controls {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-top: 12px;
+  margin-top: 0;
 }
 .controls button {
-  padding: 8px 16px;
+  padding: 0;
   border-radius: 6px;
   border: none;
   cursor: pointer;
@@ -195,6 +241,9 @@ function goBack() {
   transition: background-color 0.2s;
 }
 .controls .edit-qty {
+  width: 32px;
+  height: 32px;
+  font-size: 1.2em;
   background: #2b8aef;
   color: #ffffff;
 }
@@ -208,19 +257,32 @@ function goBack() {
 .controls .delete:hover {
   background: #3a3a3a;
 }
-.quantity {
-  margin-top: 8px;
-  color: #ffffff;
-  font-weight: 500;
-}
 .price {
-  margin-top: 4px;
-  color: #ffffff;
+  color: #a0a0a0;
+  font-size: 0.9em;
 }
-.subtotal {
-  margin-top: 4px;
-  color: #2b8aef;
+.item-actions {
+  display: flex;
+  align-items: center;
+}
+.item-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.item-subtotal {
+  min-width: 100px;
+  text-align: right;
+  font-size: 1.1em;
+  color: #ffffff;
   font-weight: bold;
+}
+.delete {
+  background: #bb3d3d;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
 }
 .cart-summary {
   background: #0c0b0b;
