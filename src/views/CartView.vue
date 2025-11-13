@@ -289,7 +289,7 @@ const goToAdminLogin = () => {
 .main-content,
 .footer-container,
 .footer-bottom {
-  max-width: 1200px;
+  max-width: 1800px;
   margin: 0 auto;
   padding: 0 20px;
   width: 100%;
@@ -321,6 +321,8 @@ const goToAdminLogin = () => {
 }
 
 .logo-img {
+  display: block;
+  align-items: left;
   height: 90px;
   width: auto;
   object-fit: contain;
@@ -365,11 +367,14 @@ const goToAdminLogin = () => {
 /* Título de la Página */
 .cart-title {
   text-align: left;
-  margin-bottom: 40px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+  width: 100%;
 }
 
 .cart-title h1 {
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 700;
   color: #d97706;
   margin: 0;
@@ -391,7 +396,8 @@ const goToAdminLogin = () => {
 
 /* Título de sección (Cart Items / Order Summary) */
 .section-title {
-  font-size: 1.5rem;
+  text-align: center;
+  font-size: 1rem;
   font-weight: 600;
   margin-bottom: 20px;
   color: #111827;

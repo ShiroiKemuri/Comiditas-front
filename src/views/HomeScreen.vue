@@ -9,7 +9,7 @@
         </div>
         <nav class="nav-links">
           <a href="#">Inicio</a>
-          <a href="#"></a>
+          
           <a @click="goToCart" class="nav-button-like">🛒 Carrito</a>
           <a @click="goToAdminLogin" class="nav-button-like">Admin</a>
         </nav>
@@ -187,7 +187,7 @@ const goToAdminLogin = () => {
 .main-content,
 .footer-container,
 .footer-bottom {
-  max-width: 1200px;
+  max-width: 1800px;
   margin: 0 auto;
   padding: 0 20px;
   width: 100%;
