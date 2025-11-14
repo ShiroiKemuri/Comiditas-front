@@ -99,5 +99,8 @@ export const useAddToCartStore = defineStore("addToCart", {
         this.productos = JSON.parse(saved);
       }
     },
+    removeItem(id) {
+    productos.value = productos.value.filter(p => p.id !== id);
+  }
   },
 });

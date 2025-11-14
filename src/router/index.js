@@ -1,77 +1,103 @@
 import { createRouter, createWebHistory } from "vue-router";
-import AdminView from "../views/adminCreate.vue";
-import AdminDeleteView from "../views/adminDelete.vue";
-import AdminUpdateView from "../views/adminUpdate.vue";
-import AdminSearch from "../views/adminSearch.vue";
-import Auth from "../views/Authentication.vue";
-import HomeScreen from "../views/HomeScreen.vue";
-import CartView from "../views/CartView.vue";
-import AdminDashboard from "../views/AdminDashboard.vue";
-import ProductManagement from "../views/ProductManagement.vue";
-import CategoryManagement from "../views/CategoryManagement.vue";
-import FinalizarCompra from "../views/FinalizarCompra.vue";
+import AdminView from "@/views/adminCreate.vue";
+import AdminDeleteView from "@/views/adminDelete.vue";
+import AdminUpdateView from "@/views/adminUpdate.vue";
+import AdminSearch from "@/views/adminSearch.vue";
+import Auth from "@/views/Authentication.vue";
+import HomeScreen from "@/views/HomeScreen.vue";
+import CartView from "@/views/CartView.vue";
+import FinalizarCompra from "@/views/FinalizarCompra.vue";
+import CatalogUpdate from "@/views/CatalogUpdate.vue";
+import AdminDashboard from "@/views/AdminDashboard.vue";
+import ProductManagement from "@/views/ProductManagement.vue";
+import CategoryManagement from "@/views/CategoryManagement.vue";
+import CategoryForm from "../views/CategoryForm.vue";
 
 const routes = [
   {
     path: "/",
-    name: "Home",
+    name: "home",
     component: HomeScreen,
   },
   {
     path: "/admin/create",
-    name: "AdminCreate",
+    name: "adminCreate",
     component: AdminView,
+    meta: { requiresAuth: true },
   },
   {
     path: "/admin/delete",
-    name: "AdminDelete",
+    name: "adminDelete",
     component: AdminDeleteView,
+    meta: { requiresAuth: true },
   },
   {
     path: "/admin/update",
-    name: "AdminUpdate",
+    name: "adminUpdate",
     component: AdminUpdateView,
+    meta: { requiresAuth: true },
   },
   {
     path: "/admin/search",
-    name: "AdminSearch",
+    name: "adminSearch",
     component: AdminSearch,
-  },
-  {
-    path: "/admin/dashboard",
-    name: "AdminDashboard",
-    component: AdminDashboard,
-  },
-  {
-    path: "/admin/products",
-    name: "ProductManagement",
-    component: ProductManagement,
-  },
-  {
-    path: "/admin/categories",
-    name: "CategoryManagement",
-    component: CategoryManagement,
+    meta: { requiresAuth: true },
   },
   {
     path: "/login",
-    name: "Authentication",
+    name: "authentication",
     component: Auth,
   },
   {
     path: "/cart",
-    name: "Cart",
+    name: "cart",
     component: CartView,
+    
   },
   {
-    path: "/finalizar/compra",
-    name: "FinalizarCompra",
-    component: FinalizarCompra,
+    path: "/admin/category/update/:id",
+    name: "catalogUpdate",
+    component: CatalogUpdate,
   },
+  {
+    path: "/admin/dashboard",
+    name: "adminDashboard",
+    component: AdminDashboard,
+  },
+  {
+    path: "/admin/category/management",
+    name: "categoryManagement",
+    component: CategoryManagement,
+  },
+  {
+    path: '/admin/categories/form',
+    name: 'categoryForm',
+    component: CategoryForm,
+  },
+  {
+    path: '/finalizar-compra',
+    name: 'FinalizarCompra',
+    component: FinalizarCompra
+  }
 ];
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
+});
+
+// Guard global para proteger rutas que requieren autenticación
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem('jwt_token');
+  // Si la ruta requiere auth y no hay token, redirigir al login
+  if (to.meta && to.meta.requiresAuth && !token) {
+    return next({ name: 'Authentication' });
+  }
+  // Si el usuario ya está autenticado y accede al login, redirigir al dashboard
+  if (to.name === 'Authentication' && token) {
+    return next({ name: 'AdminCreate' });
+  }
+  return next();
 });
 
 export default router;
