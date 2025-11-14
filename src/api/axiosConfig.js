@@ -10,8 +10,8 @@ apiClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('jwt_token');
     if (token) {
-      // No añadir el token para la ruta de login
-      if (config.url !== '/auth/login') {
+      // No añadir el token para la ruta de login, usando endsWith para más robustez
+      if (!config.url.endsWith('/auth/login')) {
         config.headers.Authorization = `Bearer ${token}`;
       }
     }

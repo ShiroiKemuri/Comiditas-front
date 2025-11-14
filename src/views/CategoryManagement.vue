@@ -68,7 +68,7 @@
 import { ref, computed, watch } from "vue";
 import { useRouter } from "vue-router";
 import CategoryForm from "./CategoryForm.vue";
-import { categories, getCategories } from '@/composables/CategoryVM'
+import { categories, getCategories, category as categoryModel } from '@/composables/CategoryVM'
 import { onMounted } from "vue";
 
 const router = useRouter();
@@ -77,16 +77,6 @@ const mostrarForm = ref(false);
 onMounted(() => {
   getCategories();
 });
-
-// Datos simulados (reemplazar con fetch al backend)
-/*const categories = ref([
-  { name: "Bebidas" },
-  { name: "Entradas" },
-  { name: "Platos Fuertes" },
-  { name: "Postres" },
-  { name: "Especiales" },
-]);
-*/
 
 const searchTerm = ref("");
 const searchError = ref("");
@@ -103,19 +93,33 @@ watch(searchTerm, (newValue) => {
 });
 
 // Filtra las categorías por búsqueda
-const filteredCategories = computed(() => !searchTerm.value ? categories.value :
-  categories.value.filter((cat) =>
+const filteredCategories = computed(() => {
+  if (!searchTerm.value) {
+    return categories.value;
+  }
+  return categories.value.filter((cat) =>
     cat.name.toLowerCase().includes(searchTerm.value.toLowerCase())
-  )
+  );
+}
 );
 
 // Funciones simuladas
-const addCategory = () => alert("Funcionalidad para añadir categoría");
+const addCategory = () => {
+  // Limpiamos el estado de la categoría antes de mostrar el formulario de creación
+  categoryModel.value.id = null;
+  categoryModel.value.name = '';
+  categoryModel.value.description = '';
+
+  mostrarForm.value = true;
+};
+const cerrarForm = () => {
+  mostrarForm.value = false;
+  getCategories(); // Recargar categorías cuando se cierra el modal
+};
 const editCategory = (category) => {
   router.push({ name: 'catalogUpdate', params: { id: category.id } });
 };
-const deleteCategory = (cat) =>
-  alert(`Eliminar categoría: ${cat.name}`);
+const deleteCategory = (cat) => alert(`Eliminar categoría: ${cat.name}`);
 const goBack = () => router.push("/admin/dashboard");
 </script>
 

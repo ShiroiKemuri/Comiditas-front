@@ -4,16 +4,13 @@
             <button @click="goToHome" class="back-button">← Volver</button>
             <div class="card-header">
                 <img src="https://cdn.discordapp.com/attachments/1212093127435755551/1438364149167034399/logo.png?ex=69169c80&is=69154b00&hm=98bbd0eaacf578d6c884a2c25d570483fbb876109b0c47907426907aa44e0b2a&" alt="Logo Comiditas" class="login-logo">
-                <h1 class="app-title">COMIDITAS</h1>
             </div>
             <h1>Inicio de Sesión</h1>
             <form @submit.prevent="handleLogin">
                 <input v-model="AuthModel.user" type="text" placeholder="Usuario"/>
                 <div class="input-wrapper password-wrapper">
                     <input 
-                        v-model="AuthModel.password" 
-                        :type="isPasswordVisible ? 'text' : 'password'" 
-                        placeholder="Password"/>
+                        v-model="AuthModel.password" :type="isPasswordVisible ? 'text' : 'password'" placeholder="Password"/>
                     <button type="button" @click="togglePasswordVisibility" class="toggle-button">
                         {{ isPasswordVisible ? 'Ocultar' : 'Mostrar' }}
                     </button>
@@ -29,6 +26,7 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { Auth as AuthModel, login, errorMessage } from '@/composables/AuthenticationVM'
+import { Auth } from '../composables/AuthenticationVM';
 
 const isPasswordVisible = ref(false);
 const router = useRouter(); // Importante para que el composable pueda usarlo
@@ -38,6 +36,9 @@ const togglePasswordVisibility = () => {
 };
 
 const goToHome = () => {
+  AuthModel.value.user = '';
+  AuthModel.value.password = '';
+  errorMessage.value = '';
   router.push('/');
 };
 
@@ -46,6 +47,7 @@ const handleLogin = () => {
 };
 
 onMounted(() => {
+
   document.body.style.backgroundImage = "url('https://tenor.com/view/vergil-sparda-vergil-dmc5-gif-26869378.gif')";
   document.body.style.backgroundSize = 'cover';
   document.body.style.backgroundPosition = 'center';

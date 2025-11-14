@@ -31,12 +31,13 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { category, getCategory, updateCategory } from '@/composables/CategoryVM.js'
 
 const categoriaCargada = ref(false);
 const mostrarModalConfirmacion = ref(false);
 const route = useRoute();
+const router = useRouter();
 
 onMounted(() => {
     const categoryId = route.params.id;
@@ -70,9 +71,10 @@ const solicitarConfirmacion = () => {
     mostrarModalConfirmacion.value = true;
 };
 
-const confirmarActualizacion = () => {
+const confirmarActualizacion = async () => {
     mostrarModalConfirmacion.value = false;
-    updateCategory();
+    const success = await updateCategory();
+    router.push('/admin/category/management');
 };
 
 const cancelarActualizacion = () => {

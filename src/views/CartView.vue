@@ -145,6 +145,7 @@ function remove(productId) {
 
 function cancelPurchase() {
   cartStore.limpiarCarrito();
+  cartStore.saveCart(); // Guardar el estado del carrito vacío en localStorage
   router.back();
 }
 

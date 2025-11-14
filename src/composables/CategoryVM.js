@@ -3,6 +3,7 @@ import Category from '@/models/Category';
 import apiClient from '@/api/axiosConfig';
 
 const category = ref({ ...Category });
+const categories = ref([]);
 
 const createCategory = async () => {
     try {
@@ -44,4 +45,14 @@ const updateCategory = async () => {
     }
 };
 
-export { category, createCategory, getCategory, deleteCategory, updateCategory };
+const getCategories = async () => {
+    try {
+        const response = await apiClient.get('/category/getAllCategories');
+        categories.value = response.data; // Asigna la respuesta a la referencia reactiva
+    } catch (error) {
+        console.error('Error al obtener categorías:', error);
+        categories.value = []; // En caso de error, asegura que sea un array vacío
+    }
+};
+
+export { category, categories, createCategory, getCategory, deleteCategory, updateCategory, getCategories };

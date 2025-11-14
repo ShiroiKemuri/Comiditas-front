@@ -31,7 +31,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import { category, createCategory, categories, getCategories } from '@/composables/CategoryVM'
+import { category, createCategory, getCategory } from '@/composables/CategoryVM'
 
 
 const emit = defineEmits(['cerrar'])
@@ -51,7 +51,7 @@ const enviarFormulario = async () => {
 
   try {
     await createCategory()
-    await getCategories()
+    await getCategory()
     cerrarModal()
   } catch (error) {
     console.error('Error al crear categoría:', error)

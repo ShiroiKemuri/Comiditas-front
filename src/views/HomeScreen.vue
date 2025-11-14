@@ -1,8 +1,10 @@
 <template>
   <div class="home-screen">
     <header class="header">
-      <h1 class="restaurant-name">COMIDITAS</h1>
-
+      <div class="header-brand">
+        <img src="https://cdn.discordapp.com/attachments/1212093127435755551/1438364149167034399/logo.png?ex=69169c80&is=69154b00&hm=98bbd0eaacf578d6c884a2c25d570483fbb876109b0c47907426907aa44e0b2a&" alt="Logo Comiditas" class="login-logo">
+        <h1 class="restaurant-name">COMIDITAS</h1>
+      </div>
       <div class="header-actions">
         <button class="icon-button cart-button" @click="goToCart">
           🛒 Carrito
@@ -135,7 +137,7 @@ const goToAdminLogin = () => {
 };
 
 onMounted(() => {
-  document.body.style.backgroundImage = "url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=2070&auto=format&fit=crop')";
+  document.body.style.backgroundImage = "linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=2070&auto=format&fit=crop')";
   document.body.style.backgroundSize = 'cover';
   document.body.style.backgroundPosition = 'center';
   document.body.style.backgroundAttachment = 'fixed';
@@ -163,9 +165,20 @@ onUnmounted(() => {
   padding-bottom: 15px;
   margin-bottom: 20px;
 }
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Espacio entre el logo y el nombre */
+}
+
+
+.login-logo {
+  width: 80px; /* Ancho del logo ajustado */
+  margin-bottom: 0; /* Se quita el margen inferior */
+}
 
 .restaurant-name {
-  color: #740065;
+  color: #141414;
 }
 
 .header-actions .icon-button {
@@ -198,8 +211,8 @@ onUnmounted(() => {
   padding: 10px;
   flex-grow: 1;
   border: 1px solid var(--color-border);
-  background-color: var(--color-card-bg);
-  color: var(--color-text);
+  background-color: #141414;
+  color: #444;
   border-radius: 8px 0 0 8px;
 }
 
@@ -212,7 +225,7 @@ onUnmounted(() => {
 .filter-dropdown {
     padding: 10px;
     border: 1px solid var(--color-border);
-    background-color: var(--color-card-bg);
+    background-color: #141414;
     color: var(--color-text);
     border-radius: 8px;
 }
