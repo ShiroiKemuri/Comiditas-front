@@ -115,7 +115,7 @@
 
     <div v-if="mostrarModalEliminar" class="modal">
       <div class="modal-contenido">
-        <p class="advertencia">¿Estás seguro de que deseas eliminar la Comidita?</p>
+        <p class="advertencia">¿Estás seguro de que deseas eliminar la Comidita 🥺?</p>
         <p class="modal-descripcion">Esta acción no se puede deshacer.</p>
         <div class="botones-modal">
           <button @click="remove" class="remove">Eliminar Comidita</button>
@@ -464,8 +464,12 @@ const goToAdminLogin = () => {
   color: #111827;
 }
 
+.price {
+  color: #706969;
+}
+
 .item-quantity {
-  color: #6b7280;
+  color: #000000;
   font-size: 0.95rem;
   margin-bottom: 8px;
 }
@@ -500,9 +504,13 @@ const goToAdminLogin = () => {
 .item-controls button {
   width: 30px;
   height: 30px;
-  border: 1px solid #ddd;
-  background-color: #f9f9f9;
+  border: none;
+  background-color: #f0f0f0; /* Fondo gris claro para contraste */
+  color: #000000; /* Color del ícono (texto) a negro */
   cursor: pointer;
+  display: flex; /* Activa flexbox */
+  align-items: center; /* Centra verticalmente */
+  justify-content: center; /* Centra horizontalmente */
 }
 
 .delete {

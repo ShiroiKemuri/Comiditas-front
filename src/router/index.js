@@ -55,11 +55,6 @@ const routes = [
     
   },
   {
-    path: "/finalizar/compra",
-    name: "finalizarCompra",
-    component: FinalizarCompra,
-  },
-  {
     path: "/admin/category/update/:id",
     name: "catalogUpdate",
     component: CatalogUpdate,
@@ -78,6 +73,11 @@ const routes = [
     path: '/admin/categories/form',
     name: 'categoryForm',
     component: CategoryForm,
+  },
+  {
+    path: '/finalizar-compra',
+    name: 'FinalizarCompra',
+    component: FinalizarCompra
   }
 ];
 

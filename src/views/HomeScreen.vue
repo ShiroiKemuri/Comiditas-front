@@ -18,26 +18,33 @@
 
     <main class="main-content">
       
-      <section class="category-section">
-        <div class="search-bar">
-          <input 
-            type="text" 
-            v-model="searchTerm" 
-            placeholder="Busca tus Comiditas favoritas..." 
-            @keyup.enter="executeSearch"
-          />
-          <button @click="executeSearch">Buscar</button>
+      <section class="hero">
+      <div class="hero-content">
+        <h1>Descubre Comiditas Deliciosas</h1>
+        <p>Explora frutas frescas, verduras, snacks y bebidas entregados directamente a la puerta de tu casa</p>
+
+        <div class="search-container">
+          <div class="search-bar">
+            <input 
+              type="text" 
+              v-model="searchTerm" 
+              placeholder="Busca tus Comiditas favoritas..." 
+              @keyup.enter="executeSearch"
+            />
+            <button @click="executeSearch">Buscar</button>
+          </div>
+          <select v-model="selectedFilter" @change="executeSearch" class="filter-select">
+            <option value="">Filtro</option>
+            <option value="entradas">Precio Mayor</option>
+            <option value="platos-fuertes">Precio Menor</option>
+            <option value="bebidas">Orden Alfabético</option>
+          </select>
         </div>
-        <select
-          v-model="selectedFilter"
-          @change="executeSearch"
-          class="filter-dropdown"
-        >
-          <option value="">Filtro</option>
-          <option value="entradas">Precio Mayor</option>
-          <option value="platos-fuertes">Precio Menor</option>
-          <option value="bebidas">Orden Alfabético</option>
-        </select>
+        </div>
+    </section>
+      <section class="category-section">
+        <h2>Categorías Populares</h2>
+        <p>Explora nuestras categorías más populares y encuentra tus Comiditas favoritas</p>
         </section>
 
       <section class="featured-products">
@@ -250,13 +257,29 @@ const goHome = () => {
   background-color: #e5e7eb;
   color: #374151;
 }
+
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
 .search-bar {
   display: flex;
+  flex-grow: 1;
   max-width: 500px;
-  margin: 0 auto;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.filter-select {
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background-color: white;
+  font-size: 1rem;
 }
 
 .search-bar input {
@@ -298,8 +321,8 @@ const goHome = () => {
 }
 
 .category-section {
-  display: flex;
-  justify-content: center;
+  /* display: flex; */
+  /* justify-content: flex-start; */
   gap: 1rem;
 }
 
@@ -462,5 +485,50 @@ const goHome = () => {
 .social-icons a {
   color: #6b7280;
   text-decoration: none;
+}
+/* --- 2. SECCIÓN HERO --- */
+.hero {
+  background: linear-gradient(100deg, #f9b17a, #f7941d);
+  color: white;
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.hero-content h1 {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.hero-content p {
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin: 0 auto 30px auto;
+  opacity: 0.9;
+}
+
+.search-bar input {
+  flex-grow: 1;
+  border: none;
+  padding: 15px 20px;
+  font-size: 1rem;
+}
+
+.search-bar input:focus {
+  outline: none;
+}
+
+.search-bar button {
+  border: none;
+  background-color: #ea580c;
+  color: white;
+  padding: 0 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.search-bar button:hover {
+  background-color: #d97706;
 }
 </style>

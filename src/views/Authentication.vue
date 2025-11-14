@@ -26,8 +26,7 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { Auth as AuthModel, login, errorMessage } from '@/composables/AuthenticationVM'
-import { Auth } from '../composables/AuthenticationVM';
-
+import backgroundImage from '@/assets/top-view-desk-concept-with-laptop.jpg';
 const isPasswordVisible = ref(false);
 const router = useRouter(); // Importante para que el composable pueda usarlo
  
@@ -48,7 +47,7 @@ const handleLogin = () => {
 
 onMounted(() => {
 
-  document.body.style.backgroundImage = "url('https://tenor.com/view/vergil-sparda-vergil-dmc5-gif-26869378.gif')";
+  document.body.style.backgroundImage = `url(${backgroundImage})`;
   document.body.style.backgroundSize = 'cover';
   document.body.style.backgroundPosition = 'center';
   document.body.style.backgroundAttachment = 'fixed';
