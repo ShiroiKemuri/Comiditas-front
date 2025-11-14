@@ -252,7 +252,7 @@ const updateQuantity = (product) => {
 // Función para eliminar un producto individual del carrito
 function remove() {
   if (!productoSeleccionadoId.value) return;
-  cartStore.removeItem(productoSeleccionadoId.value);
+  cartStore.removerDelCarrito(productoSeleccionadoId.value);
   // Cerrar modal y limpiar selección
   mostrarModalEliminar.value = false;
   productoSeleccionadoId.value = null;

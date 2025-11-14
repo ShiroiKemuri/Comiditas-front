@@ -3,23 +3,31 @@
     <div class="modal-content">
       <h3>Agregar Categoría</h3>
       <form class="categoria-form" @submit.prevent="enviarFormulario">
-        <input
-          v-model="category.name"
-          type="text"
-          placeholder="nombre de la categoría"
-          required
-          pattern="[A-Za-z\s]+"
-          title="'Solo se permiten letras en este apartado.'"
-          
-        />
-        <input
-          v-model="category.description"
-          type="text"
-          placeholder="Descripción de la categoría"
-          required
-          pattern="[A-Za-z\s]+"
-          title="'Solo se permiten letras en este apartado.'"
-        />
+        <div class="form-group">
+          <input
+            v-model="category.name"
+            type="text"
+            placeholder="nombre de la categoría"
+            maxlength="20"
+            required
+            pattern="[A-Za-z\s]+"
+            title="'Solo se permiten letras en este apartado.'"
+          />
+          <small class="char-counter">{{ category.name ? category.name.length : 0 }} / 20</small>
+        </div>
+        <div class="form-group">
+          <input
+            v-model="category.description"
+            type="text"
+            placeholder="Descripción de la categoría"
+            maxlength="20"
+            required
+            pattern="[A-Za-z\s]+"
+            title="'Solo se permiten letras en este apartado.'"
+          />
+          <small class="char-counter">{{ category.description ? category.description.length : 0 }} / 20</small>
+        </div>
+        <p v-if="errorMsg" class="error-message">{{ errorMsg }}</p>
         <div class="modal-actions">
           <button type="submit" class="btn-guardar">Guardar</button>
           <button type="button" class="btn-cancelar" @click="cerrarModal">Cancelar</button>
@@ -31,11 +39,12 @@
 
 <script setup>
 import { ref } from 'vue'
-import { category, createCategory, getCategory } from '@/composables/CategoryVM'
+import { category, createCategory, getCategories } from '@/composables/CategoryVM'
 
 
 const emit = defineEmits(['cerrar'])
 
+const errorMsg = ref('');
 const enviarFormulario = async () => {
   if (!category.value.name || !category.value.description) {
     errorMsg.value = 'Todos los campos son obligatorios.'
@@ -51,7 +60,7 @@ const enviarFormulario = async () => {
 
   try {
     await createCategory()
-    await getCategory()
+    await getCategories()
     cerrarModal()
   } catch (error) {
     console.error('Error al crear categoría:', error)
@@ -95,12 +104,32 @@ const cerrarModal = () => {
   gap: 1rem;
 }
 
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
 .categoria-form input {
   padding: 0.75rem;
   border-radius: 6px;
   border: 1px solid #555;
   background-color: #333;
   color: white;
+}
+
+.char-counter {
+  text-align: right;
+  font-size: 0.75rem;
+  color: #888;
+  margin-top: 4px;
+}
+
+.error-message {
+  color: #ffc107;
+  background-color: rgba(255, 193, 7, 0.1);
+  border: 1px solid #ffc107;
+  padding: 0.75rem;
+  border-radius: 6px;
 }
 
 .modal-actions {
@@ -137,5 +166,3 @@ const cerrarModal = () => {
   background-color: #555;
 }
 </style>
-
-
