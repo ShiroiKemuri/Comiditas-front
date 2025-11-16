@@ -79,7 +79,7 @@ function formatPrice(n) {
 
 /* Modal */
 .modalCarrito {
-  background-color: #000000;
+  background-color: #ffffff;
   border-radius: 12px;
   overflow: hidden;
   width: 90%;
@@ -106,19 +106,19 @@ function formatPrice(n) {
 .infoProducto h4 {
   margin-bottom: 10px;
   font-size: 1.2rem;
-  color: #ffffff;
+  color: #111827;
 }
 
 .infoProducto p {
   margin: 5px 0;
   font-size: 0.95rem;
-  color: #ffffff;
+  color: #111827;
 }
 
 .modal-price {
   margin-top: 10px;
   font-weight: 600;
-  color: #ffffff;
+  color: #111827;
 }
 .modal-actions {
   margin-top: 12px;
@@ -137,7 +137,7 @@ function formatPrice(n) {
 }
 
 .infoProducto button:hover {
-  background-color: #0067bb;
+  background-color: #ea580c;
 }
 
 /* Animación al abrir modal */

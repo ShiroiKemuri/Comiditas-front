@@ -1,239 +1,171 @@
 <template>
-  <div class="finalizar-compra">
-    <h2 class="titulo">Completa el siguiente formulario ✏️</h2>
-
-    <form @submit.prevent="confirmarEnvio" class="formulario">
-      <div class="campo">
-        <label for="nombre">Nombre:</label>
-        <input
-          id="nombre"
-          v-model="form.nombre"
-          type="text"
-          maxlength="20"
-          placeholder="Ingresa tu nombre"
-          required
-        />
-        <span v-if="!validarNombre && form.nombre">Solo letras (máx. 20)</span>
+  <div class="finalizar-compra-container">
+    <!-- Vista de agradecimiento (se muestra después de enviar el formulario) -->
+    <div v-if="pedidoConfirmado" class="card">
+      <div class="icon-container">
+        <span class="success-icon">✓</span>
       </div>
-
-      <div class="campo">
-        <label for="direccion">Dirección:</label>
-        <input
-          id="direccion"
-          v-model="form.direccion"
-          type="text"
-          maxlength="50"
-          placeholder="Ej: Calle 123 #45-67"
-          required
-        />
-        <span v-if="!validarDireccion && form.direccion"
-          >Solo letras y espacios (máx. 50)</span
-        >
-      </div>
-
-      <div class="campo">
-        <label for="telefono">Teléfono (WhatsApp):</label>
-        <input
-          id="telefono"
-          v-model="form.telefono"
-          type="text"
-          maxlength="15"
-          placeholder="Ej: 3001234567"
-          required
-        />
-        <span v-if="!validarTelefono && form.telefono"
-          >Solo números (máx. 15)</span
-        >
-      </div>
-
-      <div class="campo">
-        <label for="medioPago">Medio de pago:</label>
-        <select id="medioPago" v-model="form.medioPago" required>
-          <option disabled value="">Selecciona una opción</option>
-          <option value="Efectivo">Efectivo</option>
-          <option value="Transferencia">Transferencia</option>
-        </select>
-      </div>
-
-      <button type="submit" class="boton-enviar">Enviar</button>
-    </form>
-
-    <!-- Modal de confirmación -->
-    <div v-if="mostrarConfirmacion" class="modal">
-      <div class="modal-contenido">
-        <p>¿Continuar con tu orden?</p>
-        <div class="botones-modal">
-          <button @click="enviarPedido" class="confirmar">Sí</button>
-          <button @click="cancelarEnvio" class="cancelar">Cancelar</button>
-        </div>
-      </div>
+      <h1>¡Gracias por tu compra!</h1>
+      <p>
+        Tu pedido ha sido recibido y se está procesando. Nos pondremos en
+        contacto contigo.
+      </p>
+      <button @click="goHome" class="home-button">Volver al Inicio</button>
     </div>
 
-    <!-- Mensaje de éxito -->
-    <div v-if="pedidoEnviado" class="mensaje-exito">
-      <p>
-        ✅ Tu pedido fue enviado correctamente al restaurante vía WhatsApp
-        (simulado).
-      </p>
+    <!-- Formulario de checkout (se muestra inicialmente) -->
+    <div v-else class="card">
+      <h1>Finalizar Compra</h1>
+      <p>Completa tus datos para confirmar el pedido.</p>
+
+      <form @submit.prevent="confirmarPedido" class="checkout-form">
+        <div class="form-group">
+          <label for="nombre">Nombre</label>
+          <input id="nombre" v-model="datosPedido.nombre" type="text" required />
+        </div>
+        <div class="form-group">
+          <label for="apellido">Apellido</label>
+          <input id="apellido" v-model="datosPedido.apellido" type="text" required />
+        </div>
+        <div class="form-group">
+          <label for="telefono">Número de Teléfono</label>
+          <input id="telefono" v-model="datosPedido.telefono" type="tel" required />
+        </div>
+        <div class="form-group">
+          <label for="metodo-pago">Método de Pago</label>
+          <select id="metodo-pago" v-model="datosPedido.metodoPago" required>
+            <option value="" disabled>Selecciona una opción</option>
+            <option value="efectivo">Efectivo</option>
+            <option value="transferencia">Transferencia</option>
+          </select>
+        </div>
+        <button type="submit" class="home-button">Confirmar Pedido</button>
+      </form>
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  name: "FinalizarCompra",
-  data() {
-    return {
-      form: {
-        nombre: "",
-        direccion: "",
-        telefono: "",
-        medioPago: "",
-      },
-      mostrarConfirmacion: false,
-      pedidoEnviado: false,
-    };
-  },
-  computed: {
-    validarNombre() {
-      return /^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]{1,20}$/.test(this.form.nombre);
-    },
-    validarDireccion() {
-      return /^[A-Za-zÁÉÍÓÚáéíóúñÑ0-9\s#-]{1,50}$/.test(this.form.direccion);
-    },
-    validarTelefono() {
-      return /^[0-9]{1,15}$/.test(this.form.telefono);
-    },
-  },
-  methods: {
-    confirmarEnvio() {
-      if (
-        !this.validarNombre ||
-        !this.validarDireccion ||
-        !this.validarTelefono
-      ) {
-        alert("Por favor completa correctamente todos los campos.");
-        return;
-      }
+<script setup>
+import { useRouter } from "vue-router";
+import { ref, reactive } from "vue";
+import { useAddToCartStore } from "@/stores/addToCart";
 
-      // Simula verificación de cuenta WhatsApp
-      if (!this.form.telefono.startsWith("3")) {
-        alert(
-          "Debes tener un número válido de WhatsApp (inicia con 3 en Colombia)."
-        );
-        return;
-      }
+const router = useRouter();
+const cartStore = useAddToCartStore();
+const pedidoConfirmado = ref(false);
 
-      this.mostrarConfirmacion = true;
-    },
-    enviarPedido() {
-      this.mostrarConfirmacion = false;
-      this.pedidoEnviado = true;
-      console.log("Pedido enviado (simulado):", this.form);
-      this.form = { nombre: "", direccion: "", telefono: "", medioPago: "" };
-    },
-    cancelarEnvio() {
-      this.mostrarConfirmacion = false;
-    },
-  },
+const datosPedido = reactive({
+  nombre: "",
+  apellido: "",
+  telefono: "",
+  metodoPago: "",
+});
+
+const confirmarPedido = () => {
+  // Aquí podrías enviar los datos del pedido a un backend
+  console.log("Pedido confirmado con los siguientes datos:", datosPedido);
+
+  // Cambia a la vista de agradecimiento
+  pedidoConfirmado.value = true;
+
+  // Limpia el carrito
+  cartStore.limpiarCarrito();
+  cartStore.saveCart();
+};
+
+const goHome = () => {
+  router.push("/");
 };
 </script>
 
 <style scoped>
-.finalizar-compra {
-  max-width: 400px;
-  margin: 40px auto;
-  padding: 20px;
-  border-radius: 12px;
-  background-color: #fff;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.titulo {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #333;
-}
-
-.formulario .campo {
-  margin-bottom: 15px;
-  display: flex;
-  flex-direction: column;
-}
-
-.campo label {
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-.campo input,
-.campo select {
-  padding: 8px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-}
-
-.campo span {
-  color: red;
-  font-size: 12px;
-}
-
-.boton-enviar {
-  background-color: #28a745;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  padding: 10px;
-  width: 100%;
-  cursor: pointer;
-}
-
-.boton-enviar:hover {
-  background-color: #218838;
-}
-
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
+.finalizar-compra-container {
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: 100vh;
+  background-color: #f3f4f6;
+  padding: 2rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
 }
 
-.modal-contenido {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
+.card {
+  background: #ffffff;
+  padding: 3rem;
+  border-radius: 12px;
   text-align: center;
-  color: black;
+  max-width: 500px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
-.botones-modal button {
-  margin: 10px;
-  padding: 8px 15px;
+.icon-container {
+  margin-bottom: 1.5rem;
+}
+
+.success-icon {
+  display: inline-block;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #22c55e;
+  color: white;
+  font-size: 2.5rem;
+  line-height: 60px;
+}
+
+.card h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 1rem;
+}
+
+.card p {
+  color: #6b7280;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.home-button {
+  background-color: #ea580c;
+  color: white;
+  padding: 12px 24px;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
+  font-weight: 600;
+  width: 100%;
+  font-size: 1rem;
 }
 
-.confirmar {
-  background-color: #007bff;
-  color: white;
+.checkout-form {
+  margin-top: 2rem;
+  text-align: left;
 }
 
-.cancelar {
-  background-color: #dc3545;
-  color: white;
+.form-group {
+  margin-bottom: 1.5rem;
 }
 
-.mensaje-exito {
-  text-align: center;
-  margin-top: 20px;
-  color: green;
-  font-weight: bold;
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline-color: #ea580c;
 }
 </style>

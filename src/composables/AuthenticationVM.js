@@ -7,7 +7,7 @@ const Auth = ref({ ...AuthModel });
 
 const errorMessage = ref('');
 
-const login = async () => {
+const login = async (router) => {
     errorMessage.value = '';
 
     // Validar que no haya espacios en blanco
@@ -51,11 +51,15 @@ const login = async () => {
 
     try {
         // Usamos la URL completa aquí para asegurar la conexión, asumiendo que el backend corre en el puerto 8080
-        const response = await apiClient.post('http://localhost:8080/api/auth/login', Auth.value);
+        const response = await apiClient.post('/auth/login', Auth.value);
 
         if (response.data && response.data.token) {
             localStorage.setItem('jwt_token', response.data.token);
-            console.log('Login successful, token stored.');
+            console.log('Login successful, token stored.');        
+            Auth.value.user = '';
+            Auth.value.password = '';
+            errorMessage.value = '';
+            router.push({ name: 'adminDashboard' });
             return true;
         }
         // Si no hay token, es un error inesperado
@@ -67,11 +71,10 @@ const login = async () => {
             // Muestra el mensaje de error específico del backend (ej: "Cuenta bloqueada...")
             errorMessage.value = error.response.data;
         } else {
-            // Este es el error más común si el backend no está corriendo o la URL es incorrecta
-            errorMessage.value = 'Error de conexión. Verifique que el servidor esté activo y la URL sea correcta.';
-        }
+            errorMessage.value = 'Error de conexión. Por favor, intente más tarde.';
+        }        
         return false;
-    }
+    };
 }
 
 

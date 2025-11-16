@@ -34,7 +34,8 @@ export const useAddToCartStore = defineStore("addToCart", {
       // revisa si el producto ya existe en el carrito
       const existing = this.productos.find((p) => p.id === producto.id);
       if (existing) {
-        existing.cantidad += qty;
+        const nuevaCantidad = existing.cantidad + qty;
+        existing.cantidad = Math.min(nuevaCantidad, 20); // Limita la cantidad a 20
         existing.subtotal = existing.precio * existing.cantidad;
       } else {
         this.productos.push({
@@ -61,8 +62,10 @@ export const useAddToCartStore = defineStore("addToCart", {
     incrementarCantidad(productoId) {
       const p = this.productos.find((x) => x.id === productoId);
       if (!p) return;
-      p.cantidad += 1;
-      p.subtotal = p.precio * p.cantidad;
+      if (p.cantidad < 20) { // Solo incrementa si es menor a 20
+        p.cantidad += 1;
+        p.subtotal = p.precio * p.cantidad;
+      }
     },
 
     decrementarCantidad(productoId) {
@@ -84,7 +87,7 @@ export const useAddToCartStore = defineStore("addToCart", {
         this.removerDelCarrito(productoId);
         return;
       }
-      p.cantidad = Math.floor(nuevaCantidad);
+      p.cantidad = Math.min(Math.floor(nuevaCantidad), 20); // Limita la cantidad a 20
       p.subtotal = p.precio * p.cantidad;
     },
 
@@ -98,6 +101,6 @@ export const useAddToCartStore = defineStore("addToCart", {
       if (saved) {
         this.productos = JSON.parse(saved);
       }
-    },
+    }
   },
 });
