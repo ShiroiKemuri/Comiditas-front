@@ -198,7 +198,7 @@ const goHome = () => {
 .footer-bottom {
   max-width: 1800px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 auto;
   width: 100%;
 }
 

@@ -39,7 +39,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import { category, createCategory, getCategories } from '@/composables/CategoryVM'
+import { category, categories, createCategory, getCategories } from '@/composables/CategoryVM'
 
 
 const emit = defineEmits(['cerrar'])
@@ -55,6 +55,12 @@ const enviarFormulario = async () => {
   if (!regex.test(category.value.name) || !regex.test(category.value.description)) {
     errorMsg.value = 'Solo se permiten letras en este apartado.'
     return
+  }
+
+  // Comprobar si la categoría ya existe (insensible a mayúsculas/minúsculas)
+  if (categories.value.some(cat => cat.name.toLowerCase() === category.value.name.toLowerCase())) {
+    errorMsg.value = 'Ya existe una categoría con este nombre.';
+    return;
   }
 
 
