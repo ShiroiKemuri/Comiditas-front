@@ -1,5 +1,5 @@
 <template>
-  <div class="product-management">
+  <div class="product-management"> 
     <!-- Contenedor principal -->
     <div class="layout">
       <!-- Sección izquierda: formulario -->
@@ -69,18 +69,32 @@
               <td>{{ p.category }}</td>
               <td class="actions">
                 <button class="edit-btn" @click="editProduct(p)">✏️</button>
-                <button class="delete-btn" @click="deleteProduct(p)">🗑️</button>
+                <button class="delete-btn" @click="confirmDelete(p)">🗑️</button>
               </td>
             </tr>
           </tbody>
         </table>
       </section>
     </div>
+
+    <!-- Modal de Confirmación para Eliminar -->
+    <div v-if="showDeleteModal" class="modal">
+      <div class="modal-contenido">
+        <p>¿Estás seguro de que deseas eliminar este producto?</p>
+        <p v-if="productToDelete" class="product-name-modal">
+          <strong>{{ productToDelete.name }}</strong>
+        </p>
+        <div class="botones-modal">
+          <button @click="deleteProduct" class="eliminar">Eliminar</button>
+          <button @click="cancelDelete" class="cancelar">Cancelar</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -121,6 +135,10 @@ const product = ref({
   image: "",
 });
 
+// Estado para el modal de eliminación
+const showDeleteModal = ref(false);
+const productToDelete = ref(null);
+
 // Computed
 const filteredProducts = computed(() =>
   products.value.filter((p) =>
@@ -142,10 +160,24 @@ const editProduct = (p) => {
   product.value = { ...p };
 };
 
-const deleteProduct = (p) => {
-  if (confirm(`¿Eliminar ${p.name}?`)) {
-    products.value = products.value.filter((prod) => prod !== p);
+const confirmDelete = (p) => {
+  productToDelete.value = p;
+  showDeleteModal.value = true;
+};
+
+const cancelDelete = () => {
+  showDeleteModal.value = false;
+  productToDelete.value = null;
+};
+
+const deleteProduct = () => {
+  if (productToDelete.value) {
+    const index = products.value.findIndex(p => p.name === productToDelete.value.name); // Usando nombre como ID temporal
+    if (index !== -1) {
+      products.value.splice(index, 1);
+    }
   }
+  cancelDelete(); // Cierra el modal y resetea
 };
 
 const clearForm = () => {
@@ -326,4 +358,44 @@ th {
   font-size: 1.1rem;
   color: #fff;
 }
+
+/* Estilos del Modal */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-contenido {
+  background: #2c2525;
+  padding: 25px;
+  border-radius: 10px;
+  text-align: center;
+  color: #fff;
+  width: 90%;
+  max-width: 400px;
+}
+
+.product-name-modal {
+  margin: 10px 0;
+  font-size: 1.1rem;
+  color: #ffc107;
+}
+
+.botones-modal {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.eliminar { background: #cc2a1e; color: #ffffff; }
+.cancelar { background: #555; color: #ffffff; }
 </style>

@@ -78,7 +78,13 @@ const routes = [
     path: '/finalizar-compra',
     name: 'FinalizarCompra',
     component: FinalizarCompra
+  },
+  {
+    path: '/admin/product/management',
+    name: 'productManagement',
+    component: ProductManagement
   }
+
 ];
 
 const router = createRouter({
