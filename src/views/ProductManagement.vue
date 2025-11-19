@@ -1,54 +1,46 @@
 <template>
   <div class="product-management">
-    <!-- Contenedor principal -->
     <div class="layout">
-      <!-- Sección izquierda: formulario -->
+      
       <aside class="form-section">
-        <h2>Agregar/Editar Producto</h2>
+        <h2>{{ product.id ? 'Editar Producto' : 'Agregar Producto' }}</h2>
 
-        <form @submit.prevent="saveProduct">
+        <form @submit.prevent="handleSubmit">
           <label>Nombre del Producto</label>
-          <input v-model="product.name" type="text" placeholder="Ej: Hamburguesa Clásica" />
+          <input v-model="product.name" type="text" placeholder="Ej: Hamburguesa Clásica" required />
 
           <label>Descripción</label>
-          <textarea v-model="product.description" placeholder="Deliciosa hamburguesa con carne, lechuga, tomate y queso."></textarea>
+          <textarea v-model="product.description" placeholder="Ingredientes..." required></textarea>
 
           <label>Precio</label>
-          <input v-model="product.price" type="number" step="0.01" placeholder="9.99" />
+          <input v-model="product.price" type="number" step="0.01" placeholder="0.00" required />
 
-          <label>Imagen</label>
-          <input type="file" @change="handleImageUpload" />
+          <label>URL de la Imagen</label>
+          <input v-model="product.image" type="text" placeholder="https://example.com/image.jpg" />
+          <img v-if="product.image" :src="product.image" style="width:50px; margin-top:5px;"/>
 
           <label>Categoría</label>
-          <select v-model="product.category">
-            <option disabled value="">Seleccione una categoría</option>
-            <option v-for="(cat, index) in categories" :key="index">{{ cat }}</option>
+          <select v-model="product.category" required>
+            <option :value="null" disabled>Seleccione una categoría</option>
+            <option 
+                v-for="cat in categories" 
+                :key="cat.id" 
+                :value="{ id: cat.id }" 
+            >
+              {{ cat.name }}
+            </option>
           </select>
 
           <div class="form-actions">
-            <button type="button" class="btn-cancel" @click="clearForm">Cancelar</button>
-            <button type="submit" class="btn-save">Guardar Producto</button>
+            <button type="button" class="btn-cancel" @click="resetForm">Cancelar</button>
+            <button type="submit" class="btn-save">
+               {{ product.id ? 'Actualizar' : 'Guardar' }}
+            </button>
           </div>
         </form>
       </aside>
 
-      <!-- Sección derecha: tabla de productos -->
       <section class="product-list">
-        <header class="list-header">
-          <div class="header-title">
-            <h1>Gestión de Productos</h1>
-            <h2 class="brand">COMIDITAS</h2>
-          </div>
-          <button class="btn-back" @click="goBack">← Volver al Dashboard</button>
-        </header>
-
-        <input
-          v-model="searchTerm"
-          type="text"
-          placeholder="Buscar por nombre de producto"
-          class="search-input"
-        />
-
         <table>
           <thead>
             <tr>
@@ -60,16 +52,16 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(p, index) in filteredProducts" :key="index">
+            <tr v-for="p in products" :key="p.id">
               <td>
-                <img :src="p.image" alt="producto" class="product-img" />
+                <img :src="p.image || 'https://via.placeholder.com/50'" class="product-img" />
               </td>
               <td>{{ p.name }}</td>
               <td>$ {{ formatPrice(p.price) }}</td>
-              <td>{{ p.category }}</td>
+              <td>{{ p.category ? p.category.name : 'Sin categoría' }}</td>
               <td class="actions">
-                <button class="edit-btn" @click="editProduct(p)">✏️</button>
-                <button class="delete-btn" @click="deleteProduct(p)">🗑️</button>
+                <button class="edit-btn" @click="prepareEdit(p)">✏️</button>
+                <button class="delete-btn" @click="deleteProduct(p.id)">🗑️</button>
               </td>
             </tr>
           </tbody>
@@ -80,99 +72,45 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
-import { useRouter } from 'vue-router';
+import { onMounted } from "vue";
+// Importamos todo desde el ViewModel
+import { 
+    product, 
+    products, 
+    categories, 
+    createProduct, 
+    getAllProductos, 
+    updateProduct, 
+    deleteProduct, 
+    getCategoriesForSelect,
+    resetForm,
+    prepareEdit
+} from '@/composables/ProductVM.js';
 
-const router = useRouter();
-
-// Productos simulados
-const products = ref([
-  {
-    name: "Hamburguesa Clásica",
-    description: "Con carne, lechuga, tomate y queso.",
-    price: 9.99,
-    category: "Hamburguesas",
-    image: "https://via.placeholder.com/50",
-  },
-  {
-    name: "Pizza de Pepperoni",
-    description: "Pizza con pepperoni y queso.",
-    price: 12.5,
-    category: "Pizzas",
-    image: "https://via.placeholder.com/50",
-  },
-  {
-    name: "Ensalada César",
-    description: "Lechuga, pollo, queso y aderezo césar.",
-    price: 8.0,
-    category: "Ensaladas",
-    image: "https://via.placeholder.com/50",
-  },
-]);
-
-const categories = ref(["Hamburguesas", "Pizzas", "Bebidas", "Postres", "Ensaladas"]);
-
-const searchTerm = ref("");
-const product = ref({
-  name: "",
-  description: "",
-  price: "",
-  category: "",
-  image: "",
+// Ciclo de vida: Cargar datos al entrar
+onMounted(async () => {
+    await Promise.all([
+        getAllProductos(),      // Cargar tabla productos
+        getCategoriesForSelect() // Cargar combo categorías
+    ]);
 });
 
-// Computed
-const filteredProducts = computed(() =>
-  products.value.filter((p) =>
-    p.name.toLowerCase().includes(searchTerm.value.toLowerCase())
-  )
-);
-
-// Funciones CRUD simuladas
-const saveProduct = () => {
-  if (!product.value.name || !product.value.category) {
-    alert("Completa todos los campos obligatorios");
-    return;
-  }
-  products.value.push({ ...product.value });
-  clearForm();
-};
-
-const editProduct = (p) => {
-  product.value = { ...p };
-};
-
-const deleteProduct = (p) => {
-  if (confirm(`¿Eliminar ${p.name}?`)) {
-    products.value = products.value.filter((prod) => prod !== p);
-  }
-};
-
-const clearForm = () => {
-  product.value = { name: "", description: "", price: "", category: "", image: "" };
-};
-
-const handleImageUpload = (event) => {
-  const file = event.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = (e) => (product.value.image = e.target.result);
-    reader.readAsDataURL(file);
-  }
-};
-
-const goBack = () => {
-  router.push('/admin/dashboard');
+// Lógica de UI (manejador de submit)
+const handleSubmit = async () => {
+    if (product.value.id) {
+        await updateProduct();
+    } else {
+        await createProduct();
+    }
 };
 
 const formatPrice = (value) => {
-  const number = Number(value);
-  if (isNaN(number)) {
-    return '0,00';
-  }
-  return number.toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const number = Number(value);
+    return isNaN(number) ? '0,00' : number.toLocaleString('es-CO', { minimumFractionDigits: 2 });
 };
 </script>
+
+
 
 <style scoped>
 .product-management {
