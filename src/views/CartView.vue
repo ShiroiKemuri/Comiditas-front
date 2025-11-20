@@ -1,6 +1,5 @@
 <template>
   <div class="cart-container">
-
     <header class="navbar">
       <div class="nav-container">
         <div class="logo">
@@ -9,29 +8,32 @@
         </div>
         <nav class="nav-links">
           <a @click="goHome">Inicio</a>
-         
+
           <a href="#" class="nav-button-like">🛒 Carrito</a>
           <a @click="goToAdminLogin" class="nav-button-like">Admin</a>
         </nav>
       </div>
     </header>
-    
+
     <div class="cart-title">
       <h1>Tu Carrito</h1>
       <p>Revisa tus Comiditas y procede al pago cuando estés listo</p>
     </div>
 
     <div class="cart-layout">
-      
       <section class="cart-items-section">
         <h2 class="section-title">Comiditas en el Carrito</h2>
 
         <div v-if="cartStore.productos.length === 0" class="empty-cart">
           <div class="empty-illustration">
-            <img src="@/assets/triste.png" alt="Logo triste" class="triste-img" />
+            <img
+              src="@/assets/triste.png"
+              alt="Logo triste"
+              class="triste-img"
+            />
           </div>
           <h2 class="empty-cart-title">Tu carrito está vacío</h2>
-          <p class="empty-cart-description">Empieza a agregar Comiditas.</p>          
+          <p class="empty-cart-description">Empieza a agregar Comiditas.</p>
         </div>
 
         <div v-else class="items-wrapper">
@@ -54,7 +56,9 @@
                 </div>
               </div>
               <div class="item-controls">
-                <button @click="cartStore.decrementarCantidad(producto.id)">-</button>
+                <button @click="cartStore.decrementarCantidad(producto.id)">
+                  -
+                </button>
                 <input
                   type="number"
                   :value="producto.cantidad"
@@ -68,7 +72,10 @@
                 $ {{ formatPrice(producto.subtotal) }}
               </div>
               <div class="item-actions">
-                <button class="delete" @click="mostrarConfirmacionEliminar(producto.id)">
+                <button
+                  class="delete"
+                  @click="mostrarConfirmacionEliminar(producto.id)"
+                >
                   Eliminar
                 </button>
               </div>
@@ -80,7 +87,7 @@
       <aside class="order-summary-wrapper">
         <div class="order-summary">
           <h2 class="section-title">Resumen de la orden</h2>
-          
+
           <div class="summary-row">
             <span>Subtotal de productos</span>
             <span>$ {{ formatPrice(cartStore.subtotal) }}</span>
@@ -94,20 +101,22 @@
             <strong>$ {{ formatPrice(cartStore.totalConIva) }}</strong>
           </div>
 
-          <button 
-            class="btn-checkout" 
-            @click="finalizePurchase" 
-            :disabled="cartStore.productos.length === 0">
+          <button
+            class="btn-checkout"
+            @click="finalizePurchase"
+            :disabled="cartStore.productos.length === 0"
+          >
             Proceder al Pago
           </button>
-          
-          <button 
+
+          <button
             class="btn-cancel"
-            @click="mostrarConfirmacionCancelar" 
-            :disabled="cartStore.productos.length === 0">
+            @click="mostrarConfirmacionCancelar"
+            :disabled="cartStore.productos.length === 0"
+          >
             Cancelar Compra
           </button>
-          
+
           <a class="continue-shopping" @click="goHome">Continuar Comprando</a>
         </div>
       </aside>
@@ -115,22 +124,34 @@
 
     <div v-if="mostrarModalEliminar" class="modal">
       <div class="modal-contenido">
-        <p class="advertencia">¿Estás seguro de que deseas eliminar la Comidita 🥺?</p>
+        <p class="advertencia">
+          ¿Estás seguro de que deseas eliminar la Comidita 🥺?
+        </p>
         <p class="modal-descripcion">Esta acción no se puede deshacer.</p>
         <div class="botones-modal">
           <button @click="remove" class="remove">Eliminar Comidita</button>
-          <button @click="cancelarEliminar" class="cancelar">Mantener Comidita</button>
+          <button @click="cancelarEliminar" class="cancelar">
+            Mantener Comidita
+          </button>
         </div>
       </div>
     </div>
 
     <div v-if="mostrarModalCancelarCompra" class="modal">
       <div class="modal-contenido">
-        <p class="advertencia">¿Estás seguro de que deseas cancelar toda la compra?</p>
-        <p class="modal-descripcion">Se eliminarán todas las Comiditas del carrito.</p>
+        <p class="advertencia">
+          ¿Estás seguro de que deseas cancelar toda la compra?
+        </p>
+        <p class="modal-descripcion">
+          Se eliminarán todas las Comiditas del carrito.
+        </p>
         <div class="botones-modal">
-          <button @click="cancelPurchase" class="remove">Eliminar Comiditas</button>
-          <button @click="cancelarModal" class="cancelar">No, Volver al pago</button>
+          <button @click="cancelPurchase" class="remove">
+            Eliminar Comiditas
+          </button>
+          <button @click="cancelarModal" class="cancelar">
+            No, Volver al pago
+          </button>
         </div>
       </div>
     </div>
@@ -141,47 +162,49 @@
         Comidita eliminada
       </div>
     </div>
-
   </div>
   <footer class="site-footer">
-      <div class="footer-container">
-        <div class="footer-about">
-          <h3 class="footer-logo">Comiditas</h3>
-          <p>Tus deliciosas Comiditas entregadas directamente a la puerta de tu casa</p>
-        </div>
-        <div class="footer-links">
-          <h4>Enlaces Rápidos</h4>
-          <ul>
-            <li><a @click="goHome">Inicio</a></li>
-            
-            <li><a href="#">Mi Carrito</a></li>
-          </ul>
-        </div>
-        <div class="footer-links">
-          <h4>Para Vendedores</h4>
-          <ul>
-            <li><a @click="goToAdminLogin">Admin Dashboard</a></li>
-          </ul>
-        </div>
-        <div class="footer-links">
-          <h4>Categorías</h4>
-          <ul>
-            <li><a href="#">Frutas</a></li>
-            <li><a href="#">Verduras</a></li>
-            <li><a href="#">Snacks</a></li>
-            <li><a href="#">Bebidas</a></li>
-          </ul>
-        </div>
+    <div class="footer-container">
+      <div class="footer-about">
+        <h3 class="footer-logo">Comiditas</h3>
+        <p>
+          Tus deliciosas Comiditas entregadas directamente a la puerta de tu
+          casa
+        </p>
       </div>
-      <div class="footer-bottom">
-        <p>© 2025 Comiditas. All rights reserved.</p>
-        <div class="social-icons">
-          <a href="#">F</a>
-          <a href="#">T</a>
-          <a href="#">I</a>
-        </div>
+      <div class="footer-links">
+        <h4>Enlaces Rápidos</h4>
+        <ul>
+          <li><a @click="goHome">Inicio</a></li>
+
+          <li><a href="#">Mi Carrito</a></li>
+        </ul>
       </div>
-    </footer>
+      <div class="footer-links">
+        <h4>Para Vendedores</h4>
+        <ul>
+          <li><a @click="goToAdminLogin">Admin Dashboard</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Categorías</h4>
+        <ul>
+          <li><a href="#">Frutas</a></li>
+          <li><a href="#">Verduras</a></li>
+          <li><a href="#">Snacks</a></li>
+          <li><a href="#">Bebidas</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Comiditas. All rights reserved.</p>
+      <div class="social-icons">
+        <a href="#">F</a>
+        <a href="#">T</a>
+        <a href="#">I</a>
+      </div>
+    </div>
+  </footer>
 </template>
 
 <script setup>
@@ -233,7 +256,10 @@ const increaseQuantity = (product) => {
 };
 
 function formatPrice(n) {
-  return Number(n).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return Number(n).toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 }
 
 // Función para editar la cantidad (a implementar)
@@ -277,23 +303,23 @@ function finalizePurchase() {
 }
 
 function goHome() {
-  router.push('/');
+  router.push("/");
 }
 
 const goToAdminLogin = () => {
-    router.push('/login'); 
+  router.push("/login");
 };
 </script>
 
 <style scoped>
-  
 /* Estilos Globales del Componente */
 .cart-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   background-color: #ffffff;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
 }
 
 /* Contenedor principal para centrar contenido */
@@ -374,8 +400,6 @@ const goToAdminLogin = () => {
   color: #374151;
 }
 
-
-
 /* Título de la Página */
 .cart-title {
   text-align: left;
@@ -403,7 +427,6 @@ const goToAdminLogin = () => {
   flex-direction: column;
   gap: 1rem;
 }
-
 
 /* Layout Principal */
 .cart-layout {
@@ -564,11 +587,10 @@ const goToAdminLogin = () => {
   background-color: var(--color-orange-dark);
 }
 
-
 /* Columna Derecha: Resumen */
 .order-summary-wrapper {
   position: sticky; /* Hace que el resumen se quede fijo al hacer scroll */
-  top: 150px; 
+  top: 150px;
 }
 
 .order-summary {
@@ -576,7 +598,7 @@ const goToAdminLogin = () => {
   padding: 25px;
   border-radius: 12px;
   border: 1px solid var(--color-border);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .summary-row {
@@ -596,7 +618,8 @@ const goToAdminLogin = () => {
 }
 
 /* Botones del Resumen */
-.btn-checkout, .btn-cancel {
+.btn-checkout,
+.btn-cancel {
   width: 100%;
   padding: 15px;
   border: none;
@@ -632,7 +655,6 @@ const goToAdminLogin = () => {
   cursor: not-allowed;
 }
 
-
 .continue-shopping {
   display: block;
   text-align: center;
@@ -646,35 +668,34 @@ const goToAdminLogin = () => {
   text-decoration: underline;
 }
 
-
 /* --- Estilos para los Modales (Tema Claro) --- */
-.modal { 
-  position: fixed; 
-  top: 0; 
-  left: 0; 
-  width: 100%; 
-  height: 100%; 
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background: rgba(0, 0, 0, 0.6);
-  display: flex; 
-  align-items: center; 
+  display: flex;
+  align-items: center;
   justify-content: center;
   z-index: 1000;
 }
 
-.modal-contenido { 
+.modal-contenido {
   background: #ffffff;
-  padding: 30px; 
-  border-radius: 12px; 
-  text-align: center; 
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
   color: #111827;
   max-width: 400px;
   width: 90%;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
-.advertencia { 
+.advertencia {
   font-size: 1.25rem;
-  font-weight: 700; 
+  font-weight: 700;
   margin-bottom: 12px;
   color: var(--color-text); /*  advertencia */
 }
@@ -691,17 +712,17 @@ const goToAdminLogin = () => {
   justify-content: center;
 }
 
-.botones-modal button { 
-  padding: 12px 24px; 
-  border-radius: 8px; 
-  border: none; 
+.botones-modal button {
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
   cursor: pointer;
   font-weight: 600;
   transition: all 0.2s;
 }
 
 /* Botón "Cancelar" / "Mantener" (Gris) */
-.cancelar { 
+.cancelar {
   background: #ea580c;
   color: #ffffff;
 }
@@ -710,8 +731,8 @@ const goToAdminLogin = () => {
 }
 
 /* Botón "Eliminar" / "Sí, cancelar" (Rojo) */
-.remove { 
-  background: #b91c1c; 
+.remove {
+  background: #b91c1c;
   color: #ffffff;
 }
 .remove:hover {
@@ -744,8 +765,6 @@ const goToAdminLogin = () => {
 .toast-icon {
   font-size: 1.2rem;
 }
-
-
 
 /* --- 6. FOOTER --- */
 .site-footer {
@@ -785,27 +804,28 @@ const goToAdminLogin = () => {
   list-style: none;
   padding: 0;
   margin: 0;
-.footer-links a:hover {
-  color: #d97706;
-}
+  .footer-links a:hover {
+    color: #d97706;
+  }
 
-.footer-bottom {
-  border-top: 1px solid #e5e7eb;
-  padding: 20px 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.9rem;
-  color: #6b7280;
-}
+  .footer-bottom {
+    border-top: 1px solid #e5e7eb;
+    padding: 20px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #6b7280;
+  }
 
-.social-icons {
-  display: flex;
-  gap: 15px;
-}
+  .social-icons {
+    display: flex;
+    gap: 15px;
+  }
 
-.social-icons a {
-  color: #6b7280;
-  text-decoration: none;
-}}
+  .social-icons a {
+    color: #6b7280;
+    text-decoration: none;
+  }
+}
 </style>

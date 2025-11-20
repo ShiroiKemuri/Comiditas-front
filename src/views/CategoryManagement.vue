@@ -55,12 +55,16 @@
         <h3>{{ category.name }}</h3>
         <div class="actions">
           <button class="edit-btn" @click="editCategory(category)">✏️</button>
-          <button class="delete-btn" @click="deleteCategory(category)">🗑️</button>
+          <button
+            class="desactivate-btn"
+            @click="desactivateCategory(category)"
+          >
+            🚫
+          </button>
         </div>
       </div>
     </main>
-    <CategoryForm v-if="mostrarForm" @cerrar="cerrarForm"/>
-
+    <CategoryForm v-if="mostrarForm" @cerrar="cerrarForm" />
   </div>
 </template>
 
@@ -68,7 +72,12 @@
 import { ref, computed, watch } from "vue";
 import { useRouter } from "vue-router";
 import CategoryForm from "./CategoryForm.vue";
-import { categories, getCategories, category as categoryModel } from '@/composables/CategoryVM'
+import {
+  categories,
+  getCategories,
+  category as categoryModel,
+  desactivateCategory as desactivateCategoryAPI,
+} from "@/composables/CategoryVM";
 import { onMounted } from "vue";
 
 const router = useRouter();
@@ -86,7 +95,8 @@ watch(searchTerm, (newValue) => {
   // Permite letras, números y espacios.
   const allowedCharsRegex = /^[a-zA-Z0-9\s]*$/;
   if (!allowedCharsRegex.test(newValue)) {
-    searchError.value = "Solo se permiten caracteres alfanuméricos, sin signos especiales.";
+    searchError.value =
+      "Solo se permiten caracteres alfanuméricos, sin signos especiales.";
   } else {
     searchError.value = "";
   }
@@ -100,15 +110,14 @@ const filteredCategories = computed(() => {
   return categories.value.filter((cat) =>
     cat.name.toLowerCase().includes(searchTerm.value.toLowerCase())
   );
-}
-);
+});
 
 // Funciones simuladas
 const addCategory = () => {
   // Limpiamos el estado de la categoría antes de mostrar el formulario de creación
   categoryModel.value.id = null;
-  categoryModel.value.name = '';
-  categoryModel.value.description = '';
+  categoryModel.value.name = "";
+  categoryModel.value.description = "";
 
   mostrarForm.value = true;
 };
@@ -117,9 +126,37 @@ const cerrarForm = () => {
   getCategories(); // Recargar categorías cuando se cierra el modal
 };
 const editCategory = (category) => {
-  router.push({ name: 'catalogUpdate', params: { id: category.id } });
+  router.push({ name: "catalogUpdate", params: { id: category.id } });
 };
-const deleteCategory = (cat) => alert(`Eliminar categoría: ${cat.name}`);
+
+// deleteCategory ya no se podrá usar, se cambia por desactivateCategory
+/*const deleteCategory = async (cat) => {
+  if (
+    confirm(`¿Estás seguro de que deseas eliminar la categoría "${cat.name}"?`)
+  ) {
+    // Asigna el ID de la categoría a eliminar al modelo compartido
+    categoryModel.value.id = cat.id;
+    await deleteCategoryAPI(); // Llama a la función de la API
+    alert(`Categoría "${cat.name}" eliminada.`);
+    await getCategories(); // Recarga la lista de categorías
+  }
+};
+*/
+
+const desactivateCategory = async (cat) => {
+  if (
+    confirm(
+      `¿Estás seguro de que deseas desactivar la categoría "${cat.name}"?`
+    )
+  ) {
+    // Asigna el ID de la categoría a eliminar al modelo compartido
+    categoryModel.value.id = cat.id;
+    await desactivateCategoryAPI(); // Llama a la función de la API
+    alert(`Categoría "${cat.name}" desactivada.`);
+    await getCategories(); // Recarga la lista de categorías
+  }
+};
+
 const goBack = () => router.push("/admin/dashboard");
 </script>
 
@@ -236,7 +273,7 @@ const goBack = () => router.push("/admin/dashboard");
 }
 
 .edit-btn,
-.delete-btn {
+.desactivate-btn {
   border: none;
   background: none;
   cursor: pointer;

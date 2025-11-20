@@ -1,5 +1,6 @@
 export default {
-    id: null,
-    name: "",
-    description: "",
-}
+  id: null,
+  name: "",
+  description: "",
+  active: true,
+};
