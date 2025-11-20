@@ -49,7 +49,7 @@ const router = useRouter();
 const logout = () => {
   localStorage.removeItem('jwt_token');
   console.log('Cerrando sesión...');
-  router.push({ name: 'login' }); // Usar el nombre de la ruta es más robusto.
+  router.push({ name: 'login' });
 };
 
 const goToProductManagement = () => {
