@@ -61,13 +61,8 @@
               <td>$ {{ formatPrice(p.price) }}</td>
               <td>{{ p.category ? p.category.name : 'Sin categoría' }}</td>
               <td class="actions">
-<<<<<<< HEAD
                 <button class="edit-btn" @click="editProduct(p)">✏️</button>
                 <button class="delete-btn" @click="confirmDelete(p)">🗑️</button>
-=======
-                <button class="edit-btn" @click="prepareEdit(p)">✏️</button>
-                <button class="delete-btn" @click="deleteProduct(p.id)">🗑️</button>
->>>>>>> bacf1df59a1a77a194c48c80c9853b24eab89cab
               </td>
             </tr>
           </tbody>
@@ -92,91 +87,38 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, onMounted } from "vue";
 import { useRouter } from 'vue-router';
-import { onMounted } from "vue";
-// Importamos todo desde el ViewModel
+
+// --- IMPORTS ---
+// Se importan todas las funciones y estados reactivos necesarios desde el composable.
 import { 
     product, 
     products, 
-    categories, 
     createProduct, 
-    getAllProductos, 
+    getAllProducts, 
     updateProduct, 
-    deleteProduct, 
-    getCategoriesForSelect,
+    deleteProduct as deleteProductFromVM, // Renombramos para evitar conflictos
     resetForm,
     prepareEdit
 } from '@/composables/ProductVM.js';
 
-// Ciclo de vida: Cargar datos al entrar
+// Se importa la lógica de categorías desde su propio composable.
+import { categories, getCategories } from '@/composables/CategoryVM.js';
+
+// --- CICLO DE VIDA ---
 onMounted(async () => {
     await Promise.all([
-        getAllProductos(),      // Cargar tabla productos
-        getCategoriesForSelect() // Cargar combo categorías
+        getAllProducts(),      // Cargar tabla productos
+        getCategories()         // Cargar combo categorías desde su VM correcto
     ]);
 });
 
-// Estado para el modal de eliminación
+// --- ESTADO LOCAL DEL COMPONENTE ---
 const showDeleteModal = ref(false);
 const productToDelete = ref(null);
+const router = useRouter();
 
-// Computed
-const filteredProducts = computed(() =>
-  products.value.filter((p) =>
-    p.name.toLowerCase().includes(searchTerm.value.toLowerCase())
-  )
-);
-
-// Funciones CRUD simuladas
-const saveProduct = () => {
-  if (!product.value.name || !product.value.category) {
-    alert("Completa todos los campos obligatorios");
-    return;
-  }
-  products.value.push({ ...product.value });
-  clearForm();
-};
-
-const editProduct = (p) => {
-  product.value = { ...p };
-};
-
-const confirmDelete = (p) => {
-  productToDelete.value = p;
-  showDeleteModal.value = true;
-};
-
-const cancelDelete = () => {
-  showDeleteModal.value = false;
-  productToDelete.value = null;
-};
-
-const deleteProduct = () => {
-  if (productToDelete.value) {
-    const index = products.value.findIndex(p => p.name === productToDelete.value.name); // Usando nombre como ID temporal
-    if (index !== -1) {
-      products.value.splice(index, 1);
-    }
-  }
-  cancelDelete(); // Cierra el modal y resetea
-};
-
-const clearForm = () => {
-  product.value = { name: "", description: "", price: "", category: "", image: "" };
-};
-
-const handleImageUpload = (event) => {
-  const file = event.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = (e) => (product.value.image = e.target.result);
-    reader.readAsDataURL(file);
-  }
-};
-
-const goBack = () => {
-  router.push('/admin/dashboard');
 // Lógica de UI (manejador de submit)
 const handleSubmit = async () => {
     if (product.value.id) {
@@ -186,6 +128,34 @@ const handleSubmit = async () => {
     }
 };
 
+// --- FUNCIONES DE LA VISTA ---
+
+// Prepara el formulario para editar un producto existente.
+const editProduct = (p) => {
+    prepareEdit(p); // Usa la función del composable para una copia profunda.
+};
+
+// Abre el modal de confirmación para eliminar.
+const confirmDelete = (p) => {
+  productToDelete.value = p;
+  showDeleteModal.value = true;
+};
+
+// Cierra el modal de confirmación.
+const cancelDelete = () => {
+  showDeleteModal.value = false;
+  productToDelete.value = null;
+};
+
+// Ejecuta la eliminación del producto.
+const deleteProduct = async () => {
+    if (productToDelete.value) {
+        await deleteProductFromVM(productToDelete.value.id);
+        cancelDelete(); // Cierra el modal y limpia la selección.
+    }
+};
+
+// Formatea el precio para mostrarlo correctamente.
 const formatPrice = (value) => {
     const number = Number(value);
     return isNaN(number) ? '0,00' : number.toLocaleString('es-CO', { minimumFractionDigits: 2 });

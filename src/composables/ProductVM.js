@@ -16,7 +16,7 @@ const createProduct = async () => {
 
         console.log('Producto creado:', response.data);
         // Actualizamos la tabla localmente o recargamos
-        await getAllProductos(); 
+        await getAllProducts(); 
         resetForm();
     } catch (error) {
         console.error('Error al crear producto:', error);
@@ -38,10 +38,19 @@ const getProduct = async (estadoCarga) => {
 };
 
 // 2. Obtener todos los productos (para la tabla)
-const getAllProductos = async () => {
+const getAllProducts = async () => {
     try {
-        // Hacemos la petición GET al endpoint del backend.
-        const response = await apiClient.get('/product/getAllProducts');
+        // --- SOLUCIÓN DEFINITIVA ---
+        // Leemos el token directamente desde localStorage justo antes de la petición.
+        // Esto garantiza que se use el token más reciente, incluso después de un login inmediato.
+        const token = localStorage.getItem('jwt_token');
+        const config = {
+            headers: {
+                // Añadimos la cabecera de autorización manualmente.
+                Authorization: `Bearer ${token}`
+            }
+        };
+        const response = await apiClient.get('/product/getAllProductos', config);
         products.value = response.data;
     } catch (error) {
         console.error('Error al obtener la lista de productos:', error);
@@ -56,7 +65,7 @@ const updateProduct = async () => {
     try {
         await apiClient.put(`/product/updateProduct/${product.value.id}`, product.value);
         console.log('Producto actualizado');
-        await getAllProductos();
+        await getAllProducts();
         resetForm();
     } catch (error) {
         console.error('Error al actualizar:', error);
@@ -95,7 +104,7 @@ export {
     products, 
     createProduct, 
     getProduct,
-    getAllProductos, 
+    getAllProducts, 
     updateProduct, 
     deleteProduct, 
     resetForm,

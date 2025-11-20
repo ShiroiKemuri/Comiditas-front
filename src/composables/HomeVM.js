@@ -1,6 +1,6 @@
 import { ref, onMounted } from 'vue';
-import  ProductModel  from '@/models/ProductModel';
-import { useAddToCartStore } from '@/stores/addToCart';
+import { ProductModel } from '../models/ProductModel'; // Corregido: Se usan llaves para la importación con nombre
+import { useAddToCartStore } from '../stores/addToCart';
 // Simulación de una API de backend
 
 

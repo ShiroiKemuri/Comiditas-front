@@ -167,7 +167,7 @@ const goToCart = () => {
 };
 
 const goToAdminLogin = () => {
-    router.push('/login'); 
+    router.push({ name: 'login' }); // Usar el nombre de la ruta es más robusto.
 };
 
 const goHome = () => {
