@@ -49,11 +49,11 @@ const router = useRouter();
 const logout = () => {
   localStorage.removeItem('jwt_token');
   console.log('Cerrando sesión...');
-  router.push({ name: 'login' });
+  router.push('/login');
 };
 
 const goToProductManagement = () => {
-  router.push('/admin/product/management');
+  router.push('/admin/products');
 };
 
 const goToCategoryManagement = () => {
