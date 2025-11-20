@@ -74,7 +74,6 @@ const updateProduct = async () => {
 
 // 4. Eliminar Producto
 const deleteProduct = async (id) => {
-    if (!confirm('¿Estás seguro de eliminar este producto?')) return;
     try {
         await apiClient.delete(`/product/deleteProducto/${id}`);
         // Filtramos localmente para no tener que recargar todo
