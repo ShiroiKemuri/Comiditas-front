@@ -53,7 +53,7 @@ const logout = () => {
 };
 
 const goToProductManagement = () => {
-  router.push('/admin/product/management');
+  router.push('/admin/products');
 };
 
 const goToCategoryManagement = () => {
