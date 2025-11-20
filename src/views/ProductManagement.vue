@@ -1,5 +1,11 @@
 <template>
   <div class="product-management"> 
+    <!-- Encabezado superior -->
+    <header class="top-bar">
+      <h2 class="brand">COMIDITAS</h2>
+      <button class="btn-back" @click="goBack">← Volver al Dashboard</button>
+    </header>
+
     <!-- Contenedor principal -->
     <div class="layout">
       
@@ -160,6 +166,11 @@ const formatPrice = (value) => {
     const number = Number(value);
     return isNaN(number) ? '0,00' : number.toLocaleString('es-CO', { minimumFractionDigits: 2 });
 };
+
+// Navegación
+const goBack = () => {
+  router.push('/admin/dashboard');
+};
 </script>
 
 
@@ -167,6 +178,22 @@ const formatPrice = (value) => {
 <style scoped>
 .product-management {
   padding: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Barra superior */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.brand {
+  font-weight: bold;
+  font-size: 1.3rem;
+  color: #ffffff;
 }
 
 .layout {
@@ -244,19 +271,6 @@ textarea {
   flex-grow: 1;
 }
 
-.list-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-  border-bottom: 2px solid #444;
-  padding-bottom: 1rem;
-}
-
-.list-header h1 {
-  margin: 0;
-}
-
 .brand {
   font-size: 1rem;
   color: #ccc;
@@ -290,6 +304,12 @@ td {
   text-align: left;
   padding: 0.8rem;
   border-bottom: 1px solid #444;
+  vertical-align: middle;
+}
+
+/* Centrar la columna de acciones */
+th:last-child, td.actions {
+  text-align: center;
 }
 
 th {
@@ -306,6 +326,7 @@ th {
 .actions {
   display: flex;
   gap: 0.5rem;
+  justify-content: center; /* Centra los botones horizontalmente */
 }
 
 .edit-btn,

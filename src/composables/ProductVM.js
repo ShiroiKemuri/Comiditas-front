@@ -76,7 +76,7 @@ const updateProduct = async () => {
 const deleteProduct = async (id) => {
     if (!confirm('¿Estás seguro de eliminar este producto?')) return;
     try {
-        await apiClient.delete(`/product/deleteProduct/${id}`);
+        await apiClient.delete(`/product/deleteProducto/${id}`);
         // Filtramos localmente para no tener que recargar todo
         products.value = products.value.filter(p => p.id !== id);
     } catch (error) {
@@ -88,7 +88,7 @@ const deleteProduct = async (id) => {
 
 // Limpiar formulario
 const resetForm = () => {
-    product.value = { ...Product };
+    product.value = { ...Product, category: { id: null } };
 };
 
 // Cargar datos en el formulario para editar
