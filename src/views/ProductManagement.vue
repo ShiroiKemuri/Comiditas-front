@@ -1,10 +1,6 @@
 <template>
-<<<<<<< HEAD
   <div class="product-management"> 
     <!-- Contenedor principal -->
-=======
-  <div class="product-management">
->>>>>>> bacf1df59a1a77a194c48c80c9853b24eab89cab
     <div class="layout">
       
       <aside class="form-section">
@@ -350,7 +346,6 @@ th {
   font-size: 1.1rem;
   color: #fff;
 }
-<<<<<<< HEAD
 
 /* Estilos del Modal */
 .modal {
@@ -392,6 +387,3 @@ th {
 .eliminar { background: #cc2a1e; color: #ffffff; }
 .cancelar { background: #555; color: #ffffff; }
 </style>
-=======
-</style>
->>>>>>> bacf1df59a1a77a194c48c80c9853b24eab89cab
