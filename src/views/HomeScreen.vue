@@ -167,7 +167,7 @@ const goToCart = () => {
 };
 
 const goToAdminLogin = () => {
-    router.push('/login'); 
+    router.push({name: 'login'}); 
 };
 
 const goHome = () => {
