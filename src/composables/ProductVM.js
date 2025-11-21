@@ -10,17 +10,25 @@ const products = ref([]);
 //Crear Producto
 const createProduct = async () => {
     try {
-        // El backend espera { ..., category: { id: X } }
-        // Nos aseguramos de que product.value tenga esa estructura antes de enviar
-        const response = await apiClient.post('/product/createProduct', product.value);
+        // Se crea un objeto 'payload' solo con los campos necesarios para el backend.
+        // Esto evita enviar campos extra como 'status' o 'stock'.
+        const payload = {
+            name: product.value.name,
+            description: product.value.description,
+            price: product.value.price,
+            image: product.value.image,
+            category_id: product.value.category_id
+        };
+        const response = await apiClient.post('/product/createProduct', payload);
 
         console.log('Producto creado:', response.data);
         // Actualizamos la tabla localmente o recargamos
-        await getAllProducts(); 
+        await getAllProducts();
         resetForm();
+        return { success: true, message: 'Producto guardado exitosamente.' };
     } catch (error) {
         console.error('Error al crear producto:', error);
-        alert('Error al guardar el producto');
+        return { success: false, message: 'Error al guardar el producto. Inténtalo de nuevo.' };
     }
 };
 
@@ -63,12 +71,18 @@ const getAllProducts = async () => {
 const updateProduct = async () => {
     if (!product.value.id) return;
     try {
-        await apiClient.put(`/product/updateProduct/${product.value.id}`, product.value);
+        await apiClient.put(`/product/updateProduct/${product.value.id}`, product.value); // Asegúrate que el payload sea el correcto
         console.log('Producto actualizado');
         await getAllProducts();
         resetForm();
+        return { success: true, message: 'Producto actualizado exitosamente.' };
     } catch (error) {
+        if (error.response && error.response.status === 404) {
+            await getAllProducts(); // Refresca la lista para remover el producto que ya no existe
+            return { success: false, message: `El producto '${product.value.name}' no fue encontrado. Pudo haber sido eliminado.` };
+        }
         console.error('Error al actualizar:', error);
+        return { success: false, message: 'Error al actualizar el producto. Inténtalo de nuevo.' };
     }
 };
 
@@ -78,8 +92,14 @@ const deleteProduct = async (id) => {
         await apiClient.delete(`/product/deleteProducto/${id}`);
         // Filtramos localmente para no tener que recargar todo
         products.value = products.value.filter(p => p.id !== id);
+        return { success: true, message: 'Producto eliminado.' }; // Devuelve éxito para posible notificación
     } catch (error) {
+        if (error.response && error.response.status === 404) {
+            await getAllProducts(); // Sincroniza la lista
+            return { success: false, message: `El producto no fue encontrado y no se pudo eliminar.` };
+        }
         console.error('Error al eliminar:', error);
+        return { success: false, message: 'Error al eliminar el producto.' };
     }
 };
 
