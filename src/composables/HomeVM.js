@@ -1,6 +1,8 @@
 import { ref, onMounted } from 'vue';
-import { ProductModel } from '../models/ProductModel'; // Corregido: Se usan llaves para la importación con nombre
+import { ProductModel } from '../models/ProductModel';
 import { useAddToCartStore } from '../stores/addToCart';
+import apiClient from '../api/axiosConfig';
+
 // Simulación de una API de backend
 
 
@@ -21,48 +23,19 @@ export function useHomeViewModel() {
     error.value = null;
 
     try {
-      // Simulación de llamada a RestController (Backend)
-      
-      const mockData = [
-        new ProductModel(
-          'Hamburguesa Clásica', 
-          'Hamburguesa Clásica', 
-          15000, 
-          'Carne, queso, lechuga, tomate.', 
-          'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&q=80&w=500'
-        ),
-        new ProductModel(
-          'Papas Fritas', 
-          'Papas Fritas', 
-          6000, 
-          'Porción de papas grandes.', 
-          'https://images.unsplash.com/photo-1585109649139-366815a0d713?auto=format&fit=crop&q=80&w=500'
-        ),
-        new ProductModel(
-          'Pizza Margherita', 
-          'Pizza Margherita', 
-          18000, 
-          'Pizza con salsa de tomate, mozzarella y albahaca.', 
-          'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&q=80&w=500'
-        ),
-        new ProductModel(
-          'Ensalada César',
-          'Ensalada César',
-          12000,
-          'Lechuga romana, crutones, pollo y aderezo césar.',
-          'https://images.unsplash.com/photo-1550304943-4f24f54ddde9?auto=format&fit=crop&q=80&w=500'
-        ),
-        new ProductModel(
-          'Pasta Alfredo',
-          'Pasta Alfredo',
-          16000,
-          'Fettuccine en salsa cremosa con parmesano.',
-          'https://images.unsplash.com/photo-1563379926898-05f4575a45d8?auto=format&fit=crop&q=80&w=500'
-        )
-      ];
+      // Llamada real a la API, pero sin enviar el token de autenticación.
+      // Se pasa un objeto de configuración vacío para evitar que axios intercepte
+      // y añada la cabecera 'Authorization' de forma automática.
+      const response = await apiClient.get('/product/getAllProductos', {
+        headers: {}
+      });
+      const apiData = response.data;
+
+      // Mapear los datos de la API a instancias de ProductModel
+      let realData = apiData.map(p => new ProductModel(p.id, p.name, p.price, p.description, p.image));
 
       // Aplicar búsqueda y filtro aquí (Lógica de negocio del Service)
-      let filtered = mockData.filter(p => 
+      let filtered = realData.filter(p => 
         p.name.toLowerCase().includes(searchTerm.value.toLowerCase())
       );
       
