@@ -45,7 +45,7 @@ const routes = [
   },
   {
     path: "/login",
-    name: "authentication",
+    name: "login", // 1. Corregido: El nombre debe ser simple y consistente con la ruta.
     component: Auth,
   },
   {
@@ -78,7 +78,14 @@ const routes = [
     path: '/finalizar-compra',
     name: 'FinalizarCompra',
     component: FinalizarCompra
+  },
+  {
+    path: '/admin/product/management',
+    name: 'productManagement',
+    component: ProductManagement,
+    meta: { requiresAuth: true } // <-- ¡ESTA ES LA CORRECCIÓN!
   }
+
 ];
 
 const router = createRouter({
@@ -90,12 +97,12 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('jwt_token');
   // Si la ruta requiere auth y no hay token, redirigir al login
-  if (to.meta && to.meta.requiresAuth && !token) {
-    return next({ name: 'Authentication' });
+  if (to.meta.requiresAuth && !token) {
+    return next({ name: 'login' }); // 2. Corregido: Redirige al nombre de ruta correcto.
   }
   // Si el usuario ya está autenticado y accede al login, redirigir al dashboard
-  if (to.name === 'Authentication' && token) {
-    return next({ name: 'AdminCreate' });
+  if (to.name === 'login' && token) {
+    return next({ name: 'adminDashboard' }); // 3. Corregido: Redirige al dashboard principal.
   }
   return next();
 });
