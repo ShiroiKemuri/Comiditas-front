@@ -23,7 +23,7 @@
 <script setup>
 import { useRouter } from "vue-router";
 import { defineProps, defineEmits, computed } from "vue";
-import { useAddToCartStore } from "../stores/addToCart";
+import { useAddToCartStore } from "../../stores/addToCart";
 
 //Recibe la informacion del producto de la pagina principal
 const props = defineProps({

@@ -210,7 +210,7 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
-import { useAddToCartStore } from "../stores/addToCart";
+import { useAddToCartStore } from "../../stores/addToCart";
 import { onMounted } from "vue";
 
 const cartStore = useAddToCartStore();
