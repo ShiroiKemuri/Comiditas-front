@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import Product from '@/models/ProductModel';
+import Product, { ProductModel } from '@/models/ProductModel';
 import apiClient from '@/api/axiosConfig';
 
 const product = ref({ ...Product, category: { id: null } });
@@ -8,7 +8,17 @@ const products = ref([]);
 
 const createProduct = async () => {
     try {
-        const response = await apiClient.post('/product/createProduct', product.value);
+        
+        const payload = {
+            id: 0, 
+            name: product.value.name,
+            description: product.value.description,
+            price: Number(product.value.price),
+            imageUrl: product.value.imageUrl,
+            category: product.value.category
+        };
+
+        const response = await apiClient.post('/product/createProduct', payload);
         console.log('Producto creado:', response.data);
         await getAllProducts(); 
         resetForm();
@@ -40,7 +50,9 @@ const getAllProducts = async () => {
             }
         };
         const response = await apiClient.get('/product/getAllProductos', config);
-        products.value = response.data;
+        products.value = response.data.map(p => 
+            new ProductModel(p.id, p.name, p.price, p.description, p.imageUrl, p.stock, p.category)
+        );
     } catch (error) {
         console.error('Error al obtener la lista de productos:', error);
         products.value = [];
@@ -51,7 +63,11 @@ const getAllProducts = async () => {
 const updateProduct = async () => {
     if (!product.value.id) return;
     try {
-        await apiClient.put(`/product/updateProduct/${product.value.id}`, product.value);
+        const payload = { ...product.value };
+        if (payload.image) {
+            delete payload.image;
+        }
+        await apiClient.put(`/product/updateProduct/${product.value.id}`, payload);
         console.log('Producto actualizado');
         await getAllProducts();
         resetForm();

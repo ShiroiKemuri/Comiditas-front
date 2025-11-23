@@ -91,12 +91,12 @@ watch(searchTerm, (newValue) => {
 });
 
 const filteredCategories = computed(() => {
+  const activeCats = categories.value.filter(cat => cat.active);
+
   if (!searchTerm.value) {
-    return categories.value;
+    return activeCats;
   }
-  return categories.value.filter((cat) =>
-    cat.name.toLowerCase().includes(searchTerm.value.toLowerCase())
-  );
+  return activeCats.filter(cat => cat.name.toLowerCase().includes(searchTerm.value.toLowerCase()));
 });
 
 const addCategory = () => {

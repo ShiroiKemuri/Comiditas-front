@@ -21,14 +21,14 @@
           <input v-model="product.price" type="number" step="0.01" placeholder="0.00" required />
 
           <label>URL de la Imagen</label>
-          <input v-model="product.image" type="text" placeholder="https://example.com/image.jpg" />
-          <img v-if="product.image" :src="product.image" style="width:50px; margin-top:5px;"/>
+          <input v-model="product.imageUrl" type="text" placeholder="https://example.com/image.jpg" />
+          <img v-if="product.imageUrl" :src="product.imageUrl" style="width:50px; margin-top:5px;"/>
 
           <label>Categoría</label>
           <select v-model="product.category" required>
             <option :value="null" disabled>Seleccione una categoría</option>
             <option 
-                v-for="cat in categories" 
+                v-for="cat in activeCategories" 
                 :key="cat.id" 
                 :value="{ id: cat.id }" 
             >
@@ -59,7 +59,7 @@
           <tbody>
             <tr v-for="p in products" :key="p.id">
               <td>
-                <img :src="p.image || 'https://via.placeholder.com/50'" class="product-img" />
+                <img :src="p.imageUrl || 'https://via.placeholder.com/50'" class="product-img" />
               </td>
               <td>{{ p.name }}</td>
               <td>$ {{ formatPrice(p.price) }}</td>
@@ -91,7 +91,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useRouter } from 'vue-router';
 
 import { 
@@ -114,6 +114,10 @@ onMounted(async () => {
     ]);
 });
 
+const activeCategories = computed(() => {
+    return categories.value.filter(cat => cat.active);
+});
+
 const showDeleteModal = ref(false);
 const productToDelete = ref(null);
 const router = useRouter();
@@ -127,7 +131,7 @@ const handleSubmit = async () => {
 };
 
 const editProduct = (p) => {
-    prepareEdit(p); // Usa la función del composable para una copia profunda.
+    prepareEdit(p);
 };
 const confirmDelete = (p) => {
   productToDelete.value = p;
