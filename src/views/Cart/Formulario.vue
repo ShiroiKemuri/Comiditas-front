@@ -1,8 +1,6 @@
 <template>
   <div class="cart-container">
     <h1>Tu Carrito</h1>
-
-    <!-- Lista de productos -->
     <div v-if="cart.length > 0">
       <ul>
         <li v-for="(item, index) in cart" :key="index">
@@ -45,7 +43,6 @@
 <script setup>
 import { ref, computed } from "vue";
 
-// 🛒 Carrito de ejemplo (más adelante se conectará al backend)
 const cart = ref([
   { nombre: "Hamburguesa", cantidad: 2, precio: 12000 },
   { nombre: "Gaseosa", cantidad: 1, precio: 4000 },
@@ -69,14 +66,11 @@ const confirmarPedido = () => {
 🍔 *Nuevo pedido:*
 ${cart.value.map((i) => `${i.nombre} x${i.cantidad}`).join("\n")}
 💰 Total: $${total.value}
-
 👤 Cliente: ${cliente.value.nombre}
 🏠 Dirección: ${cliente.value.direccion}
 📞 Tel: ${cliente.value.telefono}
 💳 Pago: ${cliente.value.medioPago}
 `;
-
-    // 👉 Aquí iría la lógica para enviar al backend o abrir WhatsApp
     const url = `https://wa.me/573001112233?text=${encodeURIComponent(
       mensaje
     )}`;

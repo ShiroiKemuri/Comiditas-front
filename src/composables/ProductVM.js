@@ -1,21 +1,15 @@
 import { ref } from 'vue';
 import Product from '@/models/Product';
-import apiClient from '@/api/axiosConfig'; // Tu configuración de axios
+import apiClient from '@/api/axiosConfig';
 
-// Estado reactivo
-// Se inicializa con la estructura anidada para evitar errores de "cannot read 'id' of null" en el v-model.
 const product = ref({ ...Product, category: { id: null } });
 const products = ref([]); 
 
-//Crear Producto
+
 const createProduct = async () => {
     try {
-        // El backend espera { ..., category: { id: X } }
-        // Nos aseguramos de que product.value tenga esa estructura antes de enviar
         const response = await apiClient.post('/product/createProduct', product.value);
-
         console.log('Producto creado:', response.data);
-        // Actualizamos la tabla localmente o recargamos
         await getAllProducts(); 
         resetForm();
     } catch (error) {
@@ -29,24 +23,19 @@ const getProduct = async (estadoCarga) => {
         const response = await apiClient.get(`/product/getProductById/${product.value.id}`);
         product.value = response.data;
         if (estadoCarga) {
-            estadoCarga.value = true; // Actualiza el estado en la vista a true
+            estadoCarga.value = true; 
         }
     } catch (error) {
-        if (estadoCarga) estadoCarga.value = false; // Asegura que el form no se muestre si hay error
+        if (estadoCarga) estadoCarga.value = false;
         console.error('Error al obtener producto:', error);
     }
 };
 
-// 2. Obtener todos los productos (para la tabla)
 const getAllProducts = async () => {
     try {
-        // --- SOLUCIÓN DEFINITIVA ---
-        // Leemos el token directamente desde localStorage justo antes de la petición.
-        // Esto garantiza que se use el token más reciente, incluso después de un login inmediato.
         const token = localStorage.getItem('jwt_token');
         const config = {
             headers: {
-                // Añadimos la cabecera de autorización manualmente.
                 Authorization: `Bearer ${token}`
             }
         };
@@ -59,7 +48,6 @@ const getAllProducts = async () => {
 };
 
 
-// 3. Actualizar Producto
 const updateProduct = async () => {
     if (!product.value.id) return;
     try {
@@ -72,11 +60,9 @@ const updateProduct = async () => {
     }
 };
 
-// 4. Eliminar Producto
 const deleteProduct = async (id) => {
     try {
         await apiClient.delete(`/product/deleteProducto/${id}`);
-        // Filtramos localmente para no tener que recargar todo
         products.value = products.value.filter(p => p.id !== id);
     } catch (error) {
         console.error('Error al eliminar:', error);
@@ -85,12 +71,10 @@ const deleteProduct = async (id) => {
 
 // --- ACCIONES AUXILIARES ---
 
-// Limpiar formulario
 const resetForm = () => {
     product.value = { ...Product, category: { id: null } };
 };
 
-// Cargar datos en el formulario para editar
 const prepareEdit = (productToEdit) => {
     product.value = JSON.parse(JSON.stringify(productToEdit));
     if (!product.value.category) {

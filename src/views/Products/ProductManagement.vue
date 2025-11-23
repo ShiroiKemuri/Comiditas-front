@@ -1,12 +1,10 @@
 <template>
   <div class="product-management"> 
-    <!-- Encabezado superior -->
     <header class="top-bar">
       <h2 class="brand">COMIDITAS</h2>
       <button class="btn-back" @click="goBack">← Volver al Dashboard</button>
     </header>
 
-    <!-- Contenedor principal -->
     <div class="layout">
       
       <aside class="form-section">
@@ -96,36 +94,30 @@
 import { ref, onMounted } from "vue";
 import { useRouter } from 'vue-router';
 
-// --- IMPORTS ---
-// Se importan todas las funciones y estados reactivos necesarios desde el composable.
 import { 
     product, 
     products, 
     createProduct, 
     getAllProducts, 
     updateProduct, 
-    deleteProduct as deleteProductFromVM, // Renombramos para evitar conflictos
+    deleteProduct as deleteProductFromVM,
     resetForm,
     prepareEdit
 } from '@/composables/ProductVM.js';
 
-// Se importa la lógica de categorías desde su propio composable.
 import { categories, getCategories } from '@/composables/CategoryVM.js';
 
-// --- CICLO DE VIDA ---
 onMounted(async () => {
     await Promise.all([
-        getAllProducts(),      // Cargar tabla productos
-        getCategories()         // Cargar combo categorías desde su VM correcto
+        getAllProducts(),      
+        getCategories()         
     ]);
 });
 
-// --- ESTADO LOCAL DEL COMPONENTE ---
 const showDeleteModal = ref(false);
 const productToDelete = ref(null);
 const router = useRouter();
 
-// Lógica de UI (manejador de submit)
 const handleSubmit = async () => {
     if (product.value.id) {
         await updateProduct();
@@ -134,40 +126,30 @@ const handleSubmit = async () => {
     }
 };
 
-// --- FUNCIONES DE LA VISTA ---
-
-// Prepara el formulario para editar un producto existente.
 const editProduct = (p) => {
     prepareEdit(p); // Usa la función del composable para una copia profunda.
 };
-
-// Abre el modal de confirmación para eliminar.
 const confirmDelete = (p) => {
   productToDelete.value = p;
   showDeleteModal.value = true;
 };
-
-// Cierra el modal de confirmación.
 const cancelDelete = () => {
   showDeleteModal.value = false;
   productToDelete.value = null;
 };
 
-// Ejecuta la eliminación del producto.
 const deleteProduct = async () => {
     if (productToDelete.value) {
         await deleteProductFromVM(productToDelete.value.id);
-        cancelDelete(); // Cierra el modal y limpia la selección.
+        cancelDelete();
     }
 };
 
-// Formatea el precio para mostrarlo correctamente.
 const formatPrice = (value) => {
     const number = Number(value);
     return isNaN(number) ? '0,00' : number.toLocaleString('es-CO', { minimumFractionDigits: 2 });
 };
 
-// Navegación
 const goBack = () => {
   router.push('/admin/dashboard');
 };
@@ -182,7 +164,6 @@ const goBack = () => {
   margin: 0 auto;
 }
 
-/* Barra superior */
 .top-bar {
   display: flex;
   justify-content: space-between;
@@ -201,7 +182,6 @@ const goBack = () => {
   gap: 2rem;
 }
 
-/* Formulario */
 .form-section {
   width: 30%;
   min-width: 300px;
@@ -266,7 +246,6 @@ textarea {
   color: white;
 }
 
-/* Lista de productos */
 .product-list {
   flex-grow: 1;
 }
@@ -282,7 +261,6 @@ textarea {
   color: #fff;
 }
 
-/* Buscador */
 .search-input {
   width: 100%;
   padding: 0.7rem;
@@ -293,7 +271,6 @@ textarea {
   color: #fff;
 }
 
-/* Tabla */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -307,7 +284,6 @@ td {
   vertical-align: middle;
 }
 
-/* Centrar la columna de acciones */
 th:last-child, td.actions {
   text-align: center;
 }
@@ -326,7 +302,7 @@ th {
 .actions {
   display: flex;
   gap: 0.5rem;
-  justify-content: center; /* Centra los botones horizontalmente */
+  justify-content: center;
 }
 
 .edit-btn,
@@ -338,7 +314,6 @@ th {
   color: #fff;
 }
 
-/* Estilos del Modal */
 .modal {
   position: fixed;
   top: 0;

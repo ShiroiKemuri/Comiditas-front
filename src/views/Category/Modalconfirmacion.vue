@@ -34,48 +34,36 @@
 <script setup>
 import { ref } from 'vue';
 
-// Estado para el nombre de la categoría y los modales
 const nombreCategoria = ref('');
 const mostrarModalConfirmacion = ref(false); 
 const mostrarModalExito = ref(false);
 
-// 1. Se llama al enviar el formulario
 function guardarCambios() {
-  // Aquí puedes agregar validaciones antes de mostrar la confirmación
   if (nombreCategoria.value.trim() === '') {
     alert('El nombre de la categoría no puede estar vacío.');
     return;
   }
-  // Muestra el modal de confirmación
   mostrarModalConfirmacion.value = true;
 }
 
-// 2. Si el usuario confirma los cambios
 async function confirmarCambios() {
   mostrarModalConfirmacion.value = false;
   
   console.log('Guardando la categoría:', nombreCategoria.value);
-  // Aquí iría tu lógica para llamar a la API y guardar los cambios.
-  // Ejemplo: await api.updateCategory(id, { name: nombreCategoria.value });
-
-  // Muestra el mensaje de éxito
   mostrarModalExito.value = true;
 }
 
-// 3. Si el usuario cancela
 function cancelarCambios() {
   mostrarModalConfirmacion.value = false;
   console.log('Modificación cancelada.');
 }
 
-// 4. Para cerrar el modal de éxito
 function cerrarModalExito() {
   mostrarModalExito.value = false;
 }
 </script>
 
 <style scoped>
-/* Puedes reutilizar los estilos de modal de tu archivo FinalizarCompra.vue */
 .modal {
   position: fixed;
   top: 0;

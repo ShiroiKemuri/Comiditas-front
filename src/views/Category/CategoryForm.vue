@@ -57,7 +57,6 @@ const enviarFormulario = async () => {
     return
   }
 
-  // Comprobar si la categoría ya existe (insensible a mayúsculas/minúsculas)
   if (categories.value.some(cat => cat.name.toLowerCase() === category.value.name.toLowerCase())) {
     errorMsg.value = 'Ya existe una categoría con este nombre.';
     return;

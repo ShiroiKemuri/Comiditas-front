@@ -124,15 +124,11 @@
 
 <script setup>
 import { useRouter } from "vue-router";
-// Importa el ViewModel (Composable) que contiene la lógica
 import { useHomeViewModel } from '../composables/HomeVM';
-// Importar el modal del carrito
 import CarritoModal from './CarritoModal.vue';
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useAddToCartStore } from "../stores/addToCart";
 
-// Usa el ViewModel para acceder a todos los estados y funciones
-// ESTO SE MANTIENE EXACTAMENTE IGUAL
 const { products, searchTerm, selectedFilter, isLoading, error, executeSearch, addToCart } = useHomeViewModel();
 
 const mostrarModal = ref(false);
@@ -142,9 +138,9 @@ const cartStore = useAddToCartStore();
 const router = useRouter();
 
 const handleAddToCartWithQty = (product) => {
-  const qty = 1; // cantidad fija desde la vista principal
-  addToCart(product, qty); // Lógica de tu carrito con cantidad
-  cartStore.saveCart(); // guarda el carrito actualizado en localStorage
+  const qty = 1;
+  addToCart(product, qty);
+  cartStore.saveCart();
   productoSeleccionado.value = product;
   mostrarModal.value = true;
 };
@@ -161,7 +157,6 @@ const cerrarModal = () => {
   productoSeleccionado.value = null;
 };
 
-// Funciones para la navegación (Usando el router)
 const goToCart = () => {
   router.push("/cart");
 };
@@ -177,21 +172,14 @@ const goHome = () => {
 </script>
 
 <style scoped>
-/* --- ESTILOS GLOBALES --- */
-/* Quitamos los estilos anteriores y aplicamos
-  los nuevos que coinciden con el diseño de "Comiditas".
-*/
-
-/* Asegura que el contenedor principal ocupe todo */
 .home-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #f9f9f9; /* Un fondo blanco-hueso */
+  background-color: #f9f9f9; 
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
-/* Contenedor principal para centrar contenido */
 .nav-container,
 .main-content,
 .footer-container,
@@ -202,7 +190,6 @@ const goHome = () => {
   width: 100%;
 }
 
-/* --- 1. BARRA DE NAVEGACIÓN --- */
 .navbar {
   background-color: #ffffff;
   border-bottom: 1px solid #eee;
@@ -224,7 +211,7 @@ const goHome = () => {
   gap: 10px;
   font-size: 1.5rem;
   font-weight: bold;
-  color: #d97706; /* Naranja oscuro */
+  color: #d97706; 
 }
 .logo-img {
   height: 90px;
@@ -239,7 +226,7 @@ const goHome = () => {
 
 .nav-links a {
   text-decoration: none;
-  color: #374151; /* Gris oscuro */
+  color: #374151; 
   font-weight: 500;
   cursor: pointer;
 }
@@ -295,7 +282,7 @@ const goHome = () => {
 
 .search-bar button {
   border: none;
-  background-color: #ea580c; /* Naranja fuerte */
+  background-color: #ea580c; 
   color: white;
   padding: 0 25px;
   font-size: 1rem;
@@ -313,7 +300,6 @@ const goHome = () => {
   background-color: #ffffff;
 }
 
-/* --- 4. SECCIÓN DE PRODUCTOS --- */
 .category-section,
 .featured-products {
   text-align: center;
@@ -321,8 +307,6 @@ const goHome = () => {
 }
 
 .category-section {
-  /* display: flex; */
-  /* justify-content: flex-start; */
   gap: 1rem;
 }
 
@@ -369,7 +353,7 @@ const goHome = () => {
   padding: 20px;
   display: flex;
   flex-direction: column;
-  flex-grow: 1; /* Hace que el .product-info ocupe el espacio */
+  flex-grow: 1;
 }
 
 .product-name {
@@ -383,14 +367,14 @@ const goHome = () => {
   font-size: 0.9rem;
   color: #6b7280;
   margin: 0 0 15px 0;
-  flex-grow: 1; /* Empuja el .product-footer hacia abajo */
+  flex-grow: 1;
 }
 
 .product-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: auto; /* Se asegura de estar al fondo */
+  margin-top: auto;
 }
 
 .product-price {
@@ -413,7 +397,6 @@ const goHome = () => {
   background-color: #d97706;
 }
 
-/* --- 6. FOOTER --- */
 .site-footer {
   background-color: #ffffff;
   padding-top: 60px;
@@ -486,7 +469,7 @@ const goHome = () => {
   color: #6b7280;
   text-decoration: none;
 }
-/* --- 2. SECCIÓN HERO --- */
+
 .hero {
   background: linear-gradient(100deg, #f9b17a, #f7941d);
   color: white;
@@ -531,4 +514,5 @@ const goHome = () => {
 .search-bar button:hover {
   background-color: #d97706;
 }
+
 </style>

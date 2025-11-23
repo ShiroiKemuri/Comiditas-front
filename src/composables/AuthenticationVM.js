@@ -10,47 +10,26 @@ const errorMessage = ref('');
 const login = async (router) => {
     errorMessage.value = '';
 
-    // Validar que no haya espacios en blanco
-    const whitespaceRegex = /\s/;
-    if (whitespaceRegex.test(Auth.value.user)) {
-        errorMessage.value = 'El nombre de usuario no puede contener espacios en blanco.';
-        return false;
-    }
-    if (whitespaceRegex.test(Auth.value.password)) {
-        errorMessage.value = 'La contraseña no puede contener espacios en blanco.';
-        return false;
-    }
+    const { user, password } = Auth.value;
 
-    // 1. Validar que los campos no estén vacíos
-    if (!Auth.value.user || !Auth.value.password) {
-        errorMessage.value = 'Por favor, ingresa usuario y contraseña.';
-        return false;
-    }
+    const validations = [
+        { check: !user || !password, message: 'Por favor, ingresa usuario y contraseña.' },
+        { check: user.length > 15, message: 'El usuario no puede exceder los 15 caracteres.' },
+        { check: password.length > 15, message: 'La contraseña no puede exceder los 15 caracteres.' },
+        { check: /\s/.test(user), message: 'El nombre de usuario no puede contener espacios en blanco.' },
+        { check: /\s/.test(password), message: 'La contraseña no puede contener espacios en blanco.' },
+        { check: !/^[a-zA-Z0-9]+$/.test(user), message: 'El nombre de usuario solo puede contener letras y números.' },
+        { check: !/^[a-zA-Z0-9]+$/.test(password), message: 'La contraseña solo puede contener letras y números.' }
+    ];
 
-    // 2. Validar la longitud de los campos
-    if (Auth.value.user.length > 15) {
-        errorMessage.value = 'El usuario no puede exceder los 15 caracteres.';
-        return false;
+    for (const rule of validations) {
+        if (rule.check) {
+            errorMessage.value = rule.message;
+            return false;
+        }
     }
-    if (Auth.value.password.length > 15) {
-        errorMessage.value = 'La contraseña no puede exceder los 15 caracteres.';
-        return false;
-    }
-
-    // 3. Validar que no haya caracteres especiales (solo letras y números)
-    const alphanumericRegex = /^[a-zA-Z0-9]+$/;
-    if (!alphanumericRegex.test(Auth.value.user)) {
-        errorMessage.value = 'El nombre de usuario solo puede contener letras y números.';
-        return false;
-    }
-    if (!alphanumericRegex.test(Auth.value.password)) {
-        errorMessage.value = 'La contraseña solo puede contener letras y números.';
-        return false;
-    }
-
 
     try {
-        // Usamos la URL completa aquí para asegurar la conexión, asumiendo que el backend corre en el puerto 8080
         const response = await apiClient.post('/auth/login', Auth.value);
 
         if (response.data && response.data.token) {
@@ -62,13 +41,11 @@ const login = async (router) => {
             router.push({ name: 'adminDashboard' });
             return true;
         }
-        // Si no hay token, es un error inesperado
         errorMessage.value = 'Respuesta inesperada del servidor.';
-        return false; // Retornar false si no hay token
+        return false;
     } catch (error) {
         console.error('Error during login:', error);
         if (error.response && error.response.data) {
-            // Muestra el mensaje de error específico del backend (ej: "Cuenta bloqueada...")
             errorMessage.value = error.response.data;
         } else {
             errorMessage.value = 'Error de conexión. Por favor, intente más tarde.';

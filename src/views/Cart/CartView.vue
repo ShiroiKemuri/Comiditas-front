@@ -216,19 +216,16 @@ import { onMounted } from "vue";
 const cartStore = useAddToCartStore();
 const router = useRouter();
 const itemsRef = ref(null);
+const mostrarModalEliminar = ref(false); 
+const mostrarModalCancelarCompra = ref(false); 
+const productoSeleccionadoId = ref(null); 
+const mostrarToast = ref(false);
 
-// Estados para los diferentes modales de confirmación
-const mostrarModalEliminar = ref(false); // Modal para eliminar un producto individual
-const mostrarModalCancelarCompra = ref(false); // Modal para cancelar toda la compra
-const productoSeleccionadoId = ref(null); // ID del producto a eliminar
-const mostrarToast = ref(false); // Estado para mostrar/ocultar el mensaje de confirmación
 
-// Guarda los productos en el carrito aunque se refresque la página
 onMounted(() => {
   cartStore.loadCart();
 });
 
-// Funciones para manejar el modal de eliminar producto
 function mostrarConfirmacionEliminar(id) {
   productoSeleccionadoId.value = id;
   mostrarModalEliminar.value = true;
@@ -239,7 +236,6 @@ function cancelarEliminar() {
   productoSeleccionadoId.value = null;
 }
 
-// Funciones para manejar el modal de cancelar compra
 function mostrarConfirmacionCancelar() {
   mostrarModalCancelarCompra.value = true;
 }
@@ -262,27 +258,17 @@ function formatPrice(n) {
   });
 }
 
-// Función para editar la cantidad (a implementar)
-function editQuantity(id) {
-  // TODO: Implementar la edición de cantidad
-  // (Esta función ya existía como TODO en tu script original)
-  alert("Función 'Editar Cantidad' aún no implementada.");
-}
-
 const updateQuantity = (product) => {
   const newQty = parseInt(event.target.value, 10);
   cartStore.actualizarCantidad(product.id, newQty);
   cartStore.saveCart();
 };
 
-// Función para eliminar un producto individual del carrito
 function remove() {
   if (!productoSeleccionadoId.value) return;
   cartStore.removerDelCarrito(productoSeleccionadoId.value);
-  // Cerrar modal y limpiar selección
   mostrarModalEliminar.value = false;
   productoSeleccionadoId.value = null;
-  // Mostrar toast de confirmación breve
   mostrarToast.value = true;
   setTimeout(() => {
     mostrarToast.value = false;
@@ -290,15 +276,13 @@ function remove() {
   cartStore.saveCart();
 }
 
-// Función para cancelar toda la compra
 function cancelPurchase() {
   cartStore.limpiarCarrito();
-  cartStore.saveCart(); // Guardar el estado del carrito vacío en localStorage
+  cartStore.saveCart();
   router.back();
 }
 
 function finalizePurchase() {
-  // Redirigir a la vista de finalizar compra si existe
   router.push({ name: "FinalizarCompra" });
 }
 
@@ -312,7 +296,6 @@ const goToAdminLogin = () => {
 </script>
 
 <style scoped>
-/* Estilos Globales del Componente */
 .cart-container {
   display: flex;
   flex-direction: column;
@@ -322,7 +305,6 @@ const goToAdminLogin = () => {
     Arial, sans-serif;
 }
 
-/* Contenedor principal para centrar contenido */
 .nav-container,
 .main-content,
 .footer-container,
@@ -333,7 +315,6 @@ const goToAdminLogin = () => {
   width: 100%;
 }
 
-/* --- 1. BARRA DE NAVEGACIÓN --- */
 .navbar {
   background-color: #ffffff;
   border-bottom: 1px solid #eee;
@@ -355,7 +336,7 @@ const goToAdminLogin = () => {
   gap: 10px;
   font-size: 1.5rem;
   font-weight: bold;
-  color: #d97706; /* Naranja oscuro */
+  color: #d97706;
 }
 
 .logo-img {
@@ -381,7 +362,7 @@ const goToAdminLogin = () => {
 
 .nav-links a {
   text-decoration: none;
-  color: #374151; /* Gris oscuro */
+  color: #374151;
   font-weight: 500;
   cursor: pointer;
 }
@@ -400,7 +381,6 @@ const goToAdminLogin = () => {
   color: #374151;
 }
 
-/* Título de la Página */
 .cart-title {
   text-align: left;
   max-width: 1100px;
@@ -428,15 +408,13 @@ const goToAdminLogin = () => {
   gap: 1rem;
 }
 
-/* Layout Principal */
 .cart-layout {
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 30px;
-  align-items: flex-start; /* Alinea las columnas arriba */
+  align-items: flex-start; 
 }
 
-/* Título de sección (Cart Items / Order Summary) */
 .section-title {
   text-align: center;
   font-size: 1rem;
@@ -445,7 +423,6 @@ const goToAdminLogin = () => {
   color: #111827;
 }
 
-/* Columna Izquierda: Lista de Items */
 .items {
   list-style: none;
   padding: 0;
@@ -509,7 +486,6 @@ const goToAdminLogin = () => {
   flex-shrink: 0;
 }
 
-/* Botones de Item */
 .item-controls {
   display: flex;
   align-items: center;
@@ -528,12 +504,12 @@ const goToAdminLogin = () => {
   width: 30px;
   height: 30px;
   border: none;
-  background-color: #f0f0f0; /* Fondo gris claro para contraste */
-  color: #000000; /* Color del ícono (texto) a negro */
+  background-color: #f0f0f0;
+  color: #000000; 
   cursor: pointer;
-  display: flex; /* Activa flexbox */
-  align-items: center; /* Centra verticalmente */
-  justify-content: center; /* Centra horizontalmente */
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
 }
 
 .delete {
@@ -552,7 +528,6 @@ const goToAdminLogin = () => {
   background-color: #991b1b;
 }
 
-/* Caso: Carrito Vacío */
 .empty-cart {
   text-align: center;
   padding: 40px;
@@ -587,9 +562,8 @@ const goToAdminLogin = () => {
   background-color: var(--color-orange-dark);
 }
 
-/* Columna Derecha: Resumen */
 .order-summary-wrapper {
-  position: sticky; /* Hace que el resumen se quede fijo al hacer scroll */
+  position: sticky; 
   top: 150px;
 }
 
@@ -617,7 +591,6 @@ const goToAdminLogin = () => {
   color: #111827;
 }
 
-/* Botones del Resumen */
 .btn-checkout,
 .btn-cancel {
   width: 100%;
@@ -668,7 +641,6 @@ const goToAdminLogin = () => {
   text-decoration: underline;
 }
 
-/* --- Estilos para los Modales (Tema Claro) --- */
 .modal {
   position: fixed;
   top: 0;
@@ -697,11 +669,11 @@ const goToAdminLogin = () => {
   font-size: 1.25rem;
   font-weight: 700;
   margin-bottom: 12px;
-  color: var(--color-text); /*  advertencia */
+  color: var(--color-text); 
 }
 
 .modal-descripcion {
-  color: var(--color-text); /* texto claro */
+  color: var(--color-text); 
   margin-bottom: 25px;
   font-size: 0.95rem;
 }
@@ -721,7 +693,6 @@ const goToAdminLogin = () => {
   transition: all 0.2s;
 }
 
-/* Botón "Cancelar" / "Mantener" (Gris) */
 .cancelar {
   background: #ea580c;
   color: #ffffff;
@@ -730,7 +701,6 @@ const goToAdminLogin = () => {
   background: #d1d5db;
 }
 
-/* Botón "Eliminar" / "Sí, cancelar" (Rojo) */
 .remove {
   background: #b91c1c;
   color: #ffffff;
@@ -739,7 +709,6 @@ const goToAdminLogin = () => {
   background: #991b1b;
 }
 
-/* --- Estilos para el Toast (Tema Claro) --- */
 .toast {
   position: fixed;
   bottom: 24px;
@@ -750,7 +719,7 @@ const goToAdminLogin = () => {
 }
 
 .toast-content {
-  background: #22c55e; /* Verde éxito */
+  background: #22c55e;
   color: white;
   padding: 14px 24px;
   border-radius: 8px;
@@ -766,7 +735,6 @@ const goToAdminLogin = () => {
   font-size: 1.2rem;
 }
 
-/* --- 6. FOOTER --- */
 .site-footer {
   background-color: #ffffff;
   padding-top: 60px;
