@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import Product from '@/models/Product';
+import Product from '@/models/ProductModel';
 import apiClient from '@/api/axiosConfig';
 
 const product = ref({ ...Product, category: { id: null } });

@@ -1,7 +1,7 @@
 import { ref, onMounted } from 'vue';
-import { ProductModel } from '../models/ProductModel';
-import { useAddToCartStore } from '../stores/addToCart';
-import apiClient from '../api/axiosConfig';
+import Product from '@/models/ProductModel';
+import { useAddToCartStore } from '@/stores/addToCart';
+import apiClient from '@/api/axiosConfig';
 
 // Simulación de una API de backend
 
@@ -27,7 +27,7 @@ export function useHomeViewModel() {
       });
       const apiData = response.data;
 
-      let realData = apiData.map(p => new ProductModel(p.id, p.name, p.price, p.description, p.image));
+      let realData = apiData.map(p => new Product(p.id, p.name, p.price, p.description, p.image));
 
       let filtered = realData.filter(p => 
         p.name.toLowerCase().includes(searchTerm.value.toLowerCase())

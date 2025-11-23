@@ -125,7 +125,7 @@
 <script setup>
 import { useRouter } from "vue-router";
 import { useHomeViewModel } from '../composables/HomeVM';
-import CarritoModal from './CarritoModal.vue';
+import CarritoModal from '@/views/Cart/CarritoModal.vue';
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useAddToCartStore } from "../stores/addToCart";
 

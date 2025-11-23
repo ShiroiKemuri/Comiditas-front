@@ -1,17 +1,27 @@
 import { createRouter, createWebHistory } from "vue-router";
-import AdminView from "@/views/adminCreate.vue";
-import AdminDeleteView from "@/views/adminDelete.vue";
-import AdminUpdateView from "@/views/adminUpdate.vue";
-import AdminSearch from "@/views/adminSearch.vue";
+
+// Admin Imports
+import AdminView from "@/views/Admin/adminCreate.vue";
+import AdminDeleteView from "@/views/Admin/adminDelete.vue";
+import AdminUpdateView from "@/views/Admin/adminUpdate.vue";
+import AdminSearch from "@/views/Admin/adminSearch.vue";
+import AdminDashboard from "@/views/Admin/AdminDashboard.vue";
+
+// category imports
+import CategoryManagement from "@/views/Category/CategoryManagement.vue";
+import CategoryForm from "@/views/Category/CategoryForm.vue";
+import CatalogUpdate from "@/views/Category/CategoryUpdate.vue";
+
+// product imports
+import ProductManagement from "@/views/Product/ProductManagement.vue";
+
+//Cart import
+import CartView from "@/views/Cart/CartView.vue";
+import FinalizarCompra from "@/views/Cart/FinalizarCompra.vue";
+
+// HomeScreen y Login Imports
 import Auth from "@/views/Authentication.vue";
 import HomeScreen from "@/views/HomeScreen.vue";
-import CartView from "@/views/CartView.vue";
-import FinalizarCompra from "@/views/FinalizarCompra.vue";
-import CatalogUpdate from "@/views/CatalogUpdate.vue";
-import AdminDashboard from "@/views/AdminDashboard.vue";
-import ProductManagement from "@/views/ProductManagement.vue";
-import CategoryManagement from "@/views/CategoryManagement.vue";
-import CategoryForm from "../views/CategoryForm.vue";
 
 const routes = [
   {
