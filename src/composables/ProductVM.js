@@ -22,9 +22,10 @@ const createProduct = async () => {
         console.log('Producto creado:', response.data);
         await getAllProducts(); 
         resetForm();
+        return { success: true, message: 'Producto guardado exitosamente.' };
     } catch (error) {
         console.error('Error al crear producto:', error);
-        alert('Error al guardar el producto');
+        return { success: false, message: 'Error al guardar el producto. Inténtalo de nuevo.' };
     }
 };
 
@@ -71,8 +72,14 @@ const updateProduct = async () => {
         console.log('Producto actualizado');
         await getAllProducts();
         resetForm();
+        return { success: true, message: 'Producto actualizado exitosamente.' };
     } catch (error) {
+        if (error.response && error.response.status === 404) {
+            await getAllProducts(); // Refresca la lista para remover el producto que ya no existe
+            return { success: false, message: `El producto '${product.value.name}' no fue encontrado. Pudo haber sido eliminado.` };
+        }
         console.error('Error al actualizar:', error);
+        return { success: false, message: 'Error al actualizar el producto. Inténtalo de nuevo.' };
     }
 };
 
@@ -80,8 +87,14 @@ const deleteProduct = async (id) => {
     try {
         await apiClient.delete(`/product/deleteProducto/${id}`);
         products.value = products.value.filter(p => p.id !== id);
+        return { success: true, message: 'Producto eliminado.' }; // Devuelve éxito para posible notificación
     } catch (error) {
+        if (error.response && error.response.status === 404) {
+            await getAllProducts(); // Sincroniza la lista
+            return { success: false, message: `El producto no fue encontrado y no se pudo eliminar.` };
+        }
         console.error('Error al eliminar:', error);
+        return { success: false, message: 'Error al eliminar el producto.' };
     }
 };
 
