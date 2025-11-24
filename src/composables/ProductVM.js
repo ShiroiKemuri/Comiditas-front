@@ -1,29 +1,26 @@
 import { ref } from 'vue';
-import Product from '@/models/Product';
-import apiClient from '@/api/axiosConfig'; // Tu configuración de axios
+import Product, { ProductModel } from '@/models/ProductModel';
+import apiClient from '@/api/axiosConfig';
 
-// Estado reactivo
-// Se inicializa con la estructura anidada para evitar errores de "cannot read 'id' of null" en el v-model.
 const product = ref({ ...Product, category: { id: null } });
 const products = ref([]); 
 
-//Crear Producto
+
 const createProduct = async () => {
     try {
-        // Se crea un objeto 'payload' solo con los campos necesarios para el backend.
-        // Esto evita enviar campos extra como 'status' o 'stock'.
+        
         const payload = {
+            id: 0, 
             name: product.value.name,
             description: product.value.description,
-            price: product.value.price,
-            image: product.value.image,
-            category_id: product.value.category_id
+            price: Number(product.value.price),
+            imageUrl: product.value.imageUrl,
+            category: product.value.category
         };
-        const response = await apiClient.post('/product/createProduct', payload);
 
+        const response = await apiClient.post('/product/createProduct', payload);
         console.log('Producto creado:', response.data);
-        // Actualizamos la tabla localmente o recargamos
-        await getAllProducts();
+        await getAllProducts(); 
         resetForm();
         return { success: true, message: 'Producto guardado exitosamente.' };
     } catch (error) {
@@ -37,29 +34,26 @@ const getProduct = async (estadoCarga) => {
         const response = await apiClient.get(`/product/getProductById/${product.value.id}`);
         product.value = response.data;
         if (estadoCarga) {
-            estadoCarga.value = true; // Actualiza el estado en la vista a true
+            estadoCarga.value = true; 
         }
     } catch (error) {
-        if (estadoCarga) estadoCarga.value = false; // Asegura que el form no se muestre si hay error
+        if (estadoCarga) estadoCarga.value = false;
         console.error('Error al obtener producto:', error);
     }
 };
 
-// 2. Obtener todos los productos (para la tabla)
 const getAllProducts = async () => {
     try {
-        // --- SOLUCIÓN DEFINITIVA ---
-        // Leemos el token directamente desde localStorage justo antes de la petición.
-        // Esto garantiza que se use el token más reciente, incluso después de un login inmediato.
         const token = localStorage.getItem('jwt_token');
         const config = {
             headers: {
-                // Añadimos la cabecera de autorización manualmente.
                 Authorization: `Bearer ${token}`
             }
         };
         const response = await apiClient.get('/product/getAllProductos', config);
-        products.value = response.data;
+        products.value = response.data.map(p => 
+            new ProductModel(p.id, p.name, p.price, p.description, p.imageUrl, p.stock, p.category)
+        );
     } catch (error) {
         console.error('Error al obtener la lista de productos:', error);
         products.value = [];
@@ -67,11 +61,14 @@ const getAllProducts = async () => {
 };
 
 
-// 3. Actualizar Producto
 const updateProduct = async () => {
     if (!product.value.id) return;
     try {
-        await apiClient.put(`/product/updateProduct/${product.value.id}`, product.value); // Asegúrate que el payload sea el correcto
+        const payload = { ...product.value };
+        if (payload.image) {
+            delete payload.image;
+        }
+        await apiClient.put(`/product/updateProduct/${product.value.id}`, payload);
         console.log('Producto actualizado');
         await getAllProducts();
         resetForm();
@@ -86,11 +83,9 @@ const updateProduct = async () => {
     }
 };
 
-// 4. Eliminar Producto
 const deleteProduct = async (id) => {
     try {
         await apiClient.delete(`/product/deleteProducto/${id}`);
-        // Filtramos localmente para no tener que recargar todo
         products.value = products.value.filter(p => p.id !== id);
         return { success: true, message: 'Producto eliminado.' }; // Devuelve éxito para posible notificación
     } catch (error) {
@@ -105,12 +100,10 @@ const deleteProduct = async (id) => {
 
 // --- ACCIONES AUXILIARES ---
 
-// Limpiar formulario
 const resetForm = () => {
     product.value = { ...Product, category: { id: null } };
 };
 
-// Cargar datos en el formulario para editar
 const prepareEdit = (productToEdit) => {
     product.value = JSON.parse(JSON.stringify(productToEdit));
     if (!product.value.category) {

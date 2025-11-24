@@ -5,7 +5,7 @@
       <button @click="confirmarEliminacion" class="eliminar">Eliminar</button>
       <button @click="cancelarEliminacion" class="cancelar">Cancelar</button>
     </div>
-    <!-- Modal de Éxito -->
+
     <div v-if="mostrarModalExito" class="modal">
         <div class="modal-contenido">
             <p>¡Producto eliminado con éxito!</p>
@@ -14,7 +14,7 @@
             </div>
         </div>
     </div>
-    <!-- Modal de Error -->
+    
     <div v-if="mostrarModalError" class="modal">
         <div class="modal-contenido">
             <p>Error al eliminar el producto. Por favor, inténtalo de nuevo.</p>
@@ -47,7 +47,6 @@ const cancelarEliminacion = () => {
 };
 </script>
 <style scoped>
-/* Puedes reutilizar los estilos de modal de tu archivo FinalizarCompra.vue */
 .modal {
   position: fixed;
   top: 0;

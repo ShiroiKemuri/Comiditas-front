@@ -1,18 +1,15 @@
 <template>
   <div class="category-management">
-    <!-- Encabezado superior -->
     <header class="top-bar">
       <h2 class="brand">COMIDITAS</h2>
       <button class="btn-back" @click="goBack">← Volver al Dashboard</button>
     </header>
 
-    <!-- Título principal -->
     <section class="header-section">
       <h1>Gestionar Categorías</h1>
       <p>Crea, modifica o elimina las categorías de productos para tu menú.</p>
     </section>
 
-    <!-- Barra de búsqueda -->
     <div class="search-bar">
       <input
         type="text"
@@ -22,14 +19,10 @@
       />
     </div>
 
-    <!-- Contenedor para mensajes de estado con altura fija para evitar saltos de layout -->
     <div class="status-message-container">
-      <!-- Mensaje de error para caracteres no permitidos -->
       <div v-if="searchError" class="search-error-message">
         <p>{{ searchError }}</p>
       </div>
-
-      <!-- Mensaje si no hay resultados (se muestra solo si no hay error de caracteres) -->
       <div
         v-else-if="filteredCategories.length === 0 && searchTerm"
         class="no-results-message"
@@ -38,15 +31,12 @@
       </div>
     </div>
 
-    <!-- Grid de categorías -->
     <main class="categories-grid">
-      <!-- Tarjeta para añadir nueva categoría -->
       <div class="category-card add-card" @click="addCategory">
         <span class="add-icon">+</span>
         <p>Añadir nueva categoría</p>
       </div>
 
-      <!-- Tarjetas dinámicas -->
       <div
         v-for="(category, index) in filteredCategories"
         :key="index"
@@ -90,9 +80,7 @@ onMounted(() => {
 const searchTerm = ref("");
 const searchError = ref("");
 
-// Observador para validar la entrada de búsqueda
 watch(searchTerm, (newValue) => {
-  // Permite letras, números y espacios.
   const allowedCharsRegex = /^[a-zA-Z0-9\s]*$/;
   if (!allowedCharsRegex.test(newValue)) {
     searchError.value =
@@ -102,19 +90,16 @@ watch(searchTerm, (newValue) => {
   }
 });
 
-// Filtra las categorías por búsqueda
 const filteredCategories = computed(() => {
+  const activeCats = categories.value.filter(cat => cat.active);
+
   if (!searchTerm.value) {
-    return categories.value;
+    return activeCats;
   }
-  return categories.value.filter((cat) =>
-    cat.name.toLowerCase().includes(searchTerm.value.toLowerCase())
-  );
+  return activeCats.filter(cat => cat.name.toLowerCase().includes(searchTerm.value.toLowerCase()));
 });
 
-// Funciones simuladas
 const addCategory = () => {
-  // Limpiamos el estado de la categoría antes de mostrar el formulario de creación
   categoryModel.value.id = null;
   categoryModel.value.name = "";
   categoryModel.value.description = "";
@@ -123,25 +108,11 @@ const addCategory = () => {
 };
 const cerrarForm = () => {
   mostrarForm.value = false;
-  getCategories(); // Recargar categorías cuando se cierra el modal
+  getCategories(); 
 };
 const editCategory = (category) => {
   router.push({ name: "catalogUpdate", params: { id: category.id } });
 };
-
-// deleteCategory ya no se podrá usar, se cambia por desactivateCategory
-/*const deleteCategory = async (cat) => {
-  if (
-    confirm(`¿Estás seguro de que deseas eliminar la categoría "${cat.name}"?`)
-  ) {
-    // Asigna el ID de la categoría a eliminar al modelo compartido
-    categoryModel.value.id = cat.id;
-    await deleteCategoryAPI(); // Llama a la función de la API
-    alert(`Categoría "${cat.name}" eliminada.`);
-    await getCategories(); // Recarga la lista de categorías
-  }
-};
-*/
 
 const desactivateCategory = async (cat) => {
   if (
@@ -149,11 +120,10 @@ const desactivateCategory = async (cat) => {
       `¿Estás seguro de que deseas desactivar la categoría "${cat.name}"?`
     )
   ) {
-    // Asigna el ID de la categoría a eliminar al modelo compartido
     categoryModel.value.id = cat.id;
-    await desactivateCategoryAPI(); // Llama a la función de la API
+    await desactivateCategoryAPI();
     alert(`Categoría "${cat.name}" desactivada.`);
-    await getCategories(); // Recarga la lista de categorías
+    await getCategories(); 
   }
 };
 
@@ -167,7 +137,6 @@ const goBack = () => router.push("/admin/dashboard");
   padding: 2rem;
 }
 
-/* Barra superior */
 .top-bar {
   display: flex;
   justify-content: space-between;
@@ -186,7 +155,6 @@ const goBack = () => router.push("/admin/dashboard");
   color: #fff;
 }
 
-/* Encabezado */
 .header-section h1 {
   font-size: 1.8rem;
   margin-bottom: 0.3rem;
@@ -196,7 +164,6 @@ const goBack = () => router.push("/admin/dashboard");
   font-size: 0.95rem;
 }
 
-/* Buscador */
 .search-bar {
   margin: 1.5rem 0;
   display: flex;
@@ -211,20 +178,17 @@ const goBack = () => router.push("/admin/dashboard");
   color: #fff;
 }
 
-/* Contenedor de mensajes para estabilizar el layout */
 .status-message-container {
-  min-height: 2.5rem; /* Altura suficiente para un mensaje, reserva el espacio */
+  min-height: 2.5rem; 
   margin-bottom: 1.5rem;
 }
 
-/* Mensaje de error del buscador */
 .search-error-message {
-  color: #ffc107; /* Un color de advertencia */
+  color: #ffc107;
   font-size: 0.85rem;
-  text-align: right; /* Alineado con el input */
+  text-align: right;
 }
 
-/* Mensaje de no resultados */
 .no-results-message {
   text-align: center;
   padding: 1rem;
@@ -232,14 +196,12 @@ const goBack = () => router.push("/admin/dashboard");
   font-style: italic;
 }
 
-/* Rejilla de categorías */
 .categories-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 1.5rem;
 }
 
-/* Tarjetas */
 .category-card {
   border: 1px solid #444;
   border-radius: 10px;
@@ -254,7 +216,6 @@ const goBack = () => router.push("/admin/dashboard");
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* Tarjeta "Agregar" */
 .add-card {
   border: 2px dashed #555;
   cursor: pointer;
@@ -264,7 +225,6 @@ const goBack = () => router.push("/admin/dashboard");
   display: block;
 }
 
-/* Botones de acción */
 .actions {
   display: flex;
   justify-content: center;

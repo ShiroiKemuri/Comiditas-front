@@ -1,6 +1,6 @@
 <template>
+  <!-- Vista de agradecimiento (se muestra después de enviar el formulario) -->
   <div class="finalizar-compra-container">
-    <!-- Vista de agradecimiento (se muestra después de enviar el formulario) -->
     <div v-if="pedidoConfirmado" class="card">
       <div class="icon-container">
         <span class="success-icon">✓</span>
@@ -62,13 +62,8 @@ const datosPedido = reactive({
 });
 
 const confirmarPedido = () => {
-  // Aquí podrías enviar los datos del pedido a un backend
   console.log("Pedido confirmado con los siguientes datos:", datosPedido);
-
-  // Cambia a la vista de agradecimiento
   pedidoConfirmado.value = true;
-
-  // Limpia el carrito
   cartStore.limpiarCarrito();
   cartStore.saveCart();
 };

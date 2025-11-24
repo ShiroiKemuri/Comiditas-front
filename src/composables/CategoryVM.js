@@ -24,10 +24,10 @@ const getCategory = async (estadoCarga) => {
     );
     category.value = response.data;
     if (estadoCarga) {
-      estadoCarga.value = true; // Actualiza el estado en la vista a true
+      estadoCarga.value = true;
     }
   } catch (error) {
-    if (estadoCarga) estadoCarga.value = false; // Asegura que el form no se muestre si hay error
+    if (estadoCarga) estadoCarga.value = false;
     console.error("Error al obtener categoría:", error);
   }
 };
@@ -40,17 +40,6 @@ const desactivateCategory = async () => {
     console.error("Error al desactivar categoría:", error);
   }
 };
-
-// deleteCategory ya no se podrá usar, se cambia por desactivateCategory
-/*const deleteCategory = async () => {
-  try {
-    await apiClient.delete(`/category/deleteCategory/${category.value.id}`);
-    console.log("Categoría eliminada");
-  } catch (error) {
-    console.error("Error al eliminar categoría:", error);
-  }
-};
-*/
 
 const updateCategory = async () => {
   try {
@@ -67,10 +56,10 @@ const updateCategory = async () => {
 const getCategories = async () => {
   try {
     const response = await apiClient.get("/category/getAllCategories");
-    categories.value = response.data; // Asigna la respuesta a la referencia reactiva
+    categories.value = response.data;
   } catch (error) {
     console.error("Error al obtener categorías:", error);
-    categories.value = []; // En caso de error, asegura que sea un array vacío
+    categories.value = [];
   }
 };
 

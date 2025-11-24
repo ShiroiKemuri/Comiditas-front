@@ -2,12 +2,6 @@
     <div class="catalog-update">
         <h1>Actualizar Categoría</h1>
         <div class="form-container">
-            <!-- La búsqueda manual se elimina, ahora es automática -->
-            <!-- <div class="form-section">
-                <input v-model="category.id" type="text" placeholder="ID de la categoria" />
-                <button @click="buscarCategoria()">Buscar</button>
-            </div> -->
-
             <div v-if="categoriaCargada" class="form-section">
                 <h2>Actualizar categoria</h2>
                 <input v-model="category.name" type="text" placeholder="Nombre de la categoria" />
@@ -45,8 +39,6 @@ onMounted(() => {
         category.value.id = categoryId;
         buscarCategoria();
     }
-
-    // Añadir fondo a la página
     document.body.style.backgroundImage = "url('https://images.unsplash.com/photo-1504754524776-8f4f37790774?q=80&w=2070&auto=format&fit=crop')";
     document.body.style.backgroundSize = 'cover';
     document.body.style.backgroundPosition = 'center';
@@ -54,11 +46,10 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-    document.body.style.backgroundImage = ''; // Limpiar el fondo al salir
+    document.body.style.backgroundImage = '';
 });
 
 const buscarCategoria = async () => {
-    // Limpiamos los datos antes de la nueva búsqueda
     categoriaCargada.value = false; 
     await getCategory(categoriaCargada)
 };
@@ -89,7 +80,7 @@ const cancelarActualizacion = () => {
   align-items: center;
   padding: 2rem;
   text-align: center;
-  min-height: 100vh; /* Ocupa toda la altura para centrar correctamente */
+  min-height: 100vh; 
   box-sizing: border-box;
 }
 
@@ -105,10 +96,9 @@ const cancelarActualizacion = () => {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  /* Estilo mejorado para la tarjeta */
   padding: 2.5rem 2rem;
   border-radius: 12px;
-  background-color: rgba(44, 44, 44, 0.75); /* Fondo oscuro semitransparente */
+  background-color: rgba(44, 44, 44, 0.75); 
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -128,7 +118,6 @@ input[type="text"] {
   font-size: 1em;
 }
 
-/* Estilos del Modal (reutilizados de FinalizarCompra.vue) */
 .modal { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center }
 .modal-contenido { background:#2c2525; padding:20px; border-radius:8px; text-align:center; color: #fff }
 .botones-modal button { margin: 6px; padding: 8px 14px; border-radius:6px; border:none; cursor:pointer }
