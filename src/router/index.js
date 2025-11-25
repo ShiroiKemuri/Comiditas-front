@@ -23,6 +23,9 @@ import FinalizarCompra from "@/views/Cart/FinalizarCompra.vue";
 import Auth from "@/views/Authentication.vue";
 import HomeScreen from "@/views/HomeScreen.vue";
 
+// Order imports
+import OrderManagement from "@/views/Order/OrderManagement.vue";
+
 const routes = [
   {
     path: "/",
@@ -55,14 +58,13 @@ const routes = [
   },
   {
     path: "/login",
-    name: "login", 
+    name: "login",
     component: Auth,
   },
   {
     path: "/cart",
     name: "cart",
     component: CartView,
-    
   },
   {
     path: "/admin/category/update/:id",
@@ -80,21 +82,25 @@ const routes = [
     component: CategoryManagement,
   },
   {
-    path: '/admin/categories/form',
-    name: 'categoryForm',
+    path: "/admin/categories/form",
+    name: "categoryForm",
     component: CategoryForm,
   },
   {
-    path: '/finalizar-compra',
-    name: 'FinalizarCompra',
-    component: FinalizarCompra
+    path: "/finalizar-compra",
+    name: "FinalizarCompra",
+    component: FinalizarCompra,
   },
   {
-    path: '/admin/product/management',
-    name: 'productManagement',
-    component: ProductManagement
-  }
-
+    path: "/admin/product/management",
+    name: "productManagement",
+    component: ProductManagement,
+  },
+  {
+    path: "/api/orders/today",
+    name: "orderManagement",
+    component: OrderManagement,
+  },
 ];
 
 const router = createRouter({
@@ -103,13 +109,13 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const token = localStorage.getItem('jwt_token');
+  const token = localStorage.getItem("jwt_token");
   if (to.meta.requiresAuth && !token) {
-    return next({ name: 'login' });
+    return next({ name: "login" });
   }
 
-  if (to.name === 'login' && token) {
-    return next({ name: 'adminDashboard' });
+  if (to.name === "login" && token) {
+    return next({ name: "adminDashboard" });
   }
   return next();
 });

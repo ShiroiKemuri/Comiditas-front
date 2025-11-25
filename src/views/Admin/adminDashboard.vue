@@ -4,9 +4,7 @@
     <header class="dashboard-header">
       <div class="header-left">
         <h1>Panel de Administrador</h1>
-        <p class="welcome-text">
-          Bienvenido al panel de administración
-        </p>
+        <p class="welcome-text">Bienvenido al panel de administración</p>
       </div>
       <div class="header-actions">
         <button class="icon-button store-button" @click="goToHomeScreen">
@@ -16,13 +14,13 @@
       </div>
     </header>
 
-    
     <!-- Módulo para Gestionar Productos -->
     <main class="modules-container">
       <section class="module-card">
         <h2>Gestión de Productos</h2>
         <p class="module-description">
-          Aquí puedes añadir, modificar, consultar y eliminar los productos del menú.
+          Aquí puedes añadir, modificar, consultar y eliminar los productos del
+          menú.
         </p>
         <button @click="goToProductManagement" class="module-button">
           Ir a Productos
@@ -33,10 +31,19 @@
       <section class="module-card">
         <h2>Gestión de Categorías</h2>
         <p class="module-description">
-          Define tu menú paso a paso, creando una historia para cada categoría. 
+          Define tu menú paso a paso, creando una historia para cada categoría.
         </p>
         <button @click="goToCategoryManagement" class="module-button">
           Iniciar configuración
+        </button>
+      </section>
+
+      <!-- Módulo para Gestionar Órdenes -->
+      <section class="module-card">
+        <h2>Visualización de Órdenes</h2>
+        <p class="module-description">¡Hazle seguimiento a tus pedidos!</p>
+        <button @click="goToOrderManagement" class="module-button">
+          Ver Órdenes
         </button>
       </section>
     </main>
@@ -44,25 +51,29 @@
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router';
+import { useRouter } from "vue-router";
 const router = useRouter();
 
 const logout = () => {
-  localStorage.removeItem('jwt_token');
-  console.log('Cerrando sesión...');
-  router.push({name: 'login'});
+  localStorage.removeItem("jwt_token");
+  console.log("Cerrando sesión...");
+  router.push({ name: "login" });
 };
 
 const goToProductManagement = () => {
-  router.push('/admin/product/management');
+  router.push("/admin/product/management");
 };
 
 const goToCategoryManagement = () => {
-  router.push('/admin/category/management');
+  router.push("/admin/category/management");
+};
+
+const goToOrderManagement = () => {
+  router.push("/api/orders/today");
 };
 
 const goToHomeScreen = () => {
-  router.push('/');
+  router.push("/");
 };
 </script>
 
@@ -88,9 +99,10 @@ const goToHomeScreen = () => {
   margin-bottom: 2rem;
 }
 
-.header-left { /* apila título y subtítulo verticalmente */
+.header-left {
+  /* apila título y subtítulo verticalmente */
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
 }
 
 .welcome-text {
