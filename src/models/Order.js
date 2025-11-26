@@ -2,10 +2,10 @@ export class Order {
   constructor(
     orderNumber = null,
     customerNumber = null,
-    items = [],
+    items = OrderItems,
     totalToPay = 0,
-    date = LocalDate.now().toString(),
-    time = LocalTime.now().toString()
+    date = LocalDate.now(),
+    time = LocalTime.now()
   ) {
     this.orderNumber = orderNumber;
     this.customerNumber = customerNumber;

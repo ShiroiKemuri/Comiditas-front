@@ -9,44 +9,49 @@
     <div v-if="loading" class="loading">Cargando órdenes...</div>
     <div v-if="error" class="error">{{ error }}</div>
 
-    <div v-if="!loading && !error" class="orders-table-wrapper">
-      <!-- 4 y 5. Mostrar todas las órdenes con sus detalles -->
-      <table class="orders-table">
-        <thead>
-          <tr>
-            <th># Orden</th>
-            <th># Cliente</th>
-            <th>Platos Solicitados</th>
-            <th>Total a Pagar</th>
-            <th>Fecha y Hora</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-if="orders.length === 0">
-            <td colspan="5">No hay órdenes registradas para el día de hoy.</td>
-          </tr>
-          <!-- 6. Las órdenes ya vienen ordenadas desde el backend -->
-          <tr v-for="order in orders" :key="order.id">
-            <td>{{ order.id }}</td>
-            <td>{{ order.customerId }}</td>
-            <td>
-              <ul>
-                <li v-for="item in order.items" :key="item.id">
-                  {{ item.dishName }} (x{{ item.quantity }})
-                </li>
-              </ul>
-            </td>
-            <td>{{ formatCurrency(order.total) }}</td>
-            <td>{{ formatDateTime(order.createdAt) }}</td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="bg-page">
+      <div v-if="!loading && !error" class="orders-table-wrapper">
+        <!-- 4 y 5. Mostrar todas las órdenes con sus detalles -->
+        <table class="orders-table">
+          <thead>
+            <tr>
+              <th>Id_Orden</th>
+              <th>Id_Cliente</th>
+              <th>Platos Solicitados</th>
+              <th>Total a Pagar</th>
+              <th>Fecha y Hora</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-if="orders.length === 0">
+              <td colspan="5">
+                No hay órdenes registradas para el día de hoy.
+              </td>
+            </tr>
+            <!-- 6. Las órdenes ya vienen ordenadas desde el backend -->
+            <tr v-for="order in orders" :key="order.id">
+              <td>{{ order.id }}</td>
+              <td>{{ order.customerId }}</td>
+              <td>
+                <ul>
+                  <li v-for="item in order.items" :key="item.id">
+                    {{ item.dishName }} (x{{ item.quantity }})
+                  </li>
+                </ul>
+              </td>
+              <td>{{ formatCurrency(order.total) }}</td>
+              <td>{{ formatDateTime(order.createdAt) }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import axios from "axios"; // Asegúrate de tener axios instalado
+import apiClient from "@/api/axiosConfig.js"; // Importa el cliente API configurado
 
 export default {
   name: "VerOrdenes",
@@ -85,8 +90,17 @@ export default {
       }).format(value);
     },
     formatDateTime(dateTimeString) {
+      // Si el valor de la fecha no es válido, retorna un texto alternativo.
+      if (!dateTimeString) {
+        return "Fecha no disponible";
+      }
       // Formatea la fecha y hora
       const date = new Date(dateTimeString);
+      // Comprueba si el objeto de fecha es válido.
+      if (isNaN(date.getTime())) {
+        console.error("Valor de fecha y hora inválido:", dateTimeString);
+        return "Fecha inválida";
+      }
       const options = {
         year: "numeric",
         month: "2-digit",
@@ -127,19 +141,33 @@ export default {
 .orders-table {
   width: 100%;
   border-collapse: collapse;
+  color: black;
 }
-.orders-table th,
+.orders-table th {
+  border: 1px solid black;
+  padding: 12px;
+  background-color: white;
+  color: black;
+}
 .orders-table td {
-  border: 1px solid #ddd;
+  border: 1px solid black;
   padding: 8px;
   text-align: left;
 }
 .orders-table th {
-  background-color: #f2f2f2;
+  background-color: yellow;
 }
 .orders-table ul {
   padding-left: 20px;
   margin: 0;
+}
+.bg-page {
+  background: linear-gradient(to bottom right, #fafafa, #f0f0f0);
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 100vh; /* Alto completo */
 }
 .loading,
 .error {
