@@ -11,7 +11,8 @@ export class Order {
     this.customerNumber = customerNumber;
     this.items = items; // platos solicitados
     this.totalToPay = totalToPay;
-    this.creationTimestamp = creationTimestamp;
+    this.date = date;
+    this.time = time;
   }
 }
 
