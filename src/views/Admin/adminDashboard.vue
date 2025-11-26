@@ -54,11 +54,11 @@ const logout = () => {
 };
 
 const goToProductManagement = () => {
-  router.push('/admin/product/management');
+  router.push({ name: 'productManagement' });
 };
 
 const goToCategoryManagement = () => {
-  router.push('/admin/category/management');
+  router.push({ name: 'categoryManagement' });
 };
 
 const goToHomeScreen = () => {

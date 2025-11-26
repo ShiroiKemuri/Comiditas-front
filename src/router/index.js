@@ -5,7 +5,7 @@ import AdminView from "@/views/Admin/adminCreate.vue";
 import AdminDeleteView from "@/views/Admin/adminDelete.vue";
 import AdminUpdateView from "@/views/Admin/adminUpdate.vue";
 import AdminSearch from "@/views/Admin/adminSearch.vue";
-import AdminDashboard from "@/views/Admin/AdminDashboard.vue";
+import AdminDashboard from "@/views/Admin/adminDashboard.vue";
 
 // category imports
 import CategoryManagement from "@/views/Category/CategoryManagement.vue";
@@ -95,7 +95,7 @@ const routes = [
     component: ProductManagement
   }
 
-];
+];;
 
 const router = createRouter({
   history: createWebHistory(),
