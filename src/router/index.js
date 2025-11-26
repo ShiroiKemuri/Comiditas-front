@@ -5,7 +5,7 @@ import AdminView from "@/views/Admin/adminCreate.vue";
 import AdminDeleteView from "@/views/Admin/adminDelete.vue";
 import AdminUpdateView from "@/views/Admin/adminUpdate.vue";
 import AdminSearch from "@/views/Admin/adminSearch.vue";
-import AdminDashboard from "@/views/Admin/AdminDashboard.vue";
+import AdminDashboard from "@/views/Admin/adminDashboard.vue";
 
 // category imports
 import CategoryManagement from "@/views/Category/CategoryManagement.vue";
@@ -80,11 +80,13 @@ const routes = [
     path: "/admin/category/management",
     name: "categoryManagement",
     component: CategoryManagement,
+    meta: { requiresAuth: true },
   },
   {
     path: "/admin/categories/form",
     name: "categoryForm",
     component: CategoryForm,
+    meta: { requiresAuth: true },
   },
   {
     path: "/finalizar-compra",
@@ -92,14 +94,15 @@ const routes = [
     component: FinalizarCompra,
   },
   {
-    path: "/admin/product/management",
-    name: "productManagement",
-    component: ProductManagement,
-  },
-  {
     path: "/api/orders/today",
     name: "orderManagement",
     component: OrderManagement,
+  },
+  {
+    path: "/admin/product/management",
+    name: "productManagement",
+    component: ProductManagement,
+    meta: { requiresAuth: true },
   },
 ];
 
@@ -109,6 +112,16 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  // Se comenta la lógica de autenticación para desactivarla temporalmente.
+  // const token = localStorage.getItem('jwt_token');
+  // if (to.meta.requiresAuth && !token) {
+  //   return next({ name: 'login' });
+  // }
+  //
+  // if (to.name === 'login' && token) {
+  //   return next({ name: 'adminDashboard' });
+  // }
+  return next();
   const token = localStorage.getItem("jwt_token");
   if (to.meta.requiresAuth && !token) {
     return next({ name: "login" });
@@ -117,7 +130,7 @@ router.beforeEach((to, from, next) => {
   if (to.name === "login" && token) {
     return next({ name: "adminDashboard" });
   }
-  return next();
+  return next(); // Asegúrate de que esta línea esté presente
 });
 
 export default router;
