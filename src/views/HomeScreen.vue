@@ -34,7 +34,6 @@
             <button @click="executeSearch">Buscar</button>
           </div>
           <div class="sort-wrapper">
-            <label for="sortMode" class="sort-label">Ordenar:</label>
             <select id="sortMode" v-model="sortMode" class="filter-select">
               <option value="name-asc">Nombre A-Z</option>
               <option value="name-desc">Nombre Z-A</option>
@@ -43,7 +42,6 @@
             </select>
           </div>
           <div class="sort-wrapper">
-            <label for="categoryFilter" class="sort-label">Categoría:</label>
             <select id="categoryFilter" v-model="selectedCategoryId" class="filter-select">
               <option :value="null">Todas</option>
               <option v-for="cat in activeCategories" :key="cat.id" :value="cat.id">

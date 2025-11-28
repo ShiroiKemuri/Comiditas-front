@@ -50,6 +50,17 @@
           Ver Ventas
         </button>
       </section>
+
+      <!-- Módulo para Gestionar Pedidos -->
+      <section class="module-card">
+        <h2>Gestión de Ordenes</h2>
+        <p class="module-description">
+          Consulta el historial de Ordenes de los clientes y gestiona su estado.
+        </p>
+        <button @click="goToOrderManagement" class="module-button">
+          Ver Pedidos
+        </button>
+      </section>
     </main>
   </div>
 </template>
@@ -78,6 +89,10 @@ const goToHomeScreen = () => {
 
 const goToSellsInformation = () => {
   router.push('/admin/sells/management');
+};
+
+const goToOrderManagement = () => {
+  router.push('/admin/orders/management');
 };
 </script>
 

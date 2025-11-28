@@ -21,6 +21,7 @@ import FinalizarCompra from "@/views/Cart/FinalizarCompra.vue";
 
 // Sell import
 import SellsManagement from "@/views/Sells/SellsManagement.vue";
+import OrderManagement from "@/views/Sells/OrderManagement.vue";
 
 // HomeScreen y Login Imports
 import Auth from "@/views/Authentication.vue";
@@ -100,7 +101,14 @@ const routes = [
   {
     path: '/admin/sells/management',
     name: 'sellsManagement',
-    component: SellsManagement
+    component: SellsManagement,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/admin/orders/management',
+    name: 'orderManagement',
+    component: OrderManagement,
+    meta: { requiresAuth: true }
   }
 ];
 
