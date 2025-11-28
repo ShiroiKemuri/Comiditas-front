@@ -85,11 +85,11 @@
               </td>
               <td>{{ p.name }}</td>
               <td>$ {{ formatPrice(p.price) }}</td>
-              <td>{{ p.category ? p.category.name : 'Sin categoría' }}</td>
-              <td>{{ p.status || 'Disponible' }}</td>
+              <td>{{ p.category ? p.category.name : "Sin categoría" }}</td>
+              <td>{{ p.active ? "Disponible" : "No Disponible" }}</td>
               <td class="actions">
                 <button class="edit-btn" @click="editProduct(p)">✏️</button>
-                <button class="delete-btn" @click="confirmDelete(p)">🗑️</button>
+                <button class="delete-btn" @click="confirmDeactivate(p)">🚫</button>
               </td>
             </tr>
             <!-- Mensaje para cuando no hay productos -->
@@ -101,16 +101,16 @@
       </section>
     </div>
 
-    <!-- Modal de Confirmación para Eliminar -->
-    <div v-if="showDeleteModal" class="modal">
+    <!-- Modal de Confirmación para Desactivar -->
+    <div v-if="showDeactivateModal" class="modal">
       <div class="modal-contenido">
-        <p>¿Estás seguro de que deseas eliminar este producto?</p>
-        <p v-if="productToDelete" class="product-name-modal">
-          <strong>{{ productToDelete.name }}</strong>
+        <p>¿Estás seguro de que deseas desactivar este producto?</p>
+        <p v-if="productToDeactivate" class="product-name-modal">
+          <strong>{{ productToDeactivate.name }}</strong>
         </p>
         <div class="botones-modal">
-          <button @click="deleteProduct" class="eliminar">Eliminar</button>
-          <button @click="cancelDelete" class="cancelar">Cancelar</button>
+          <button @click="desactivateProduct" class="eliminar">Desactivar</button>
+          <button @click="cancelDeactivate" class="cancelar">Cancelar</button>
         </div>
       </div>
     </div>
@@ -127,7 +127,7 @@ import {
     createProduct, 
     getAllProducts, 
     updateProduct, 
-    deleteProduct as deleteProductFromVM,
+    desactivateProducto as deactivateProductFromVM,
     resetForm,
     prepareEdit
 } from '@/composables/ProductVM.js';
@@ -147,13 +147,14 @@ const activeCategories = computed(() => {
 
 // Lista filtrada de productos por nombre
 const filteredProducts = computed(() => {
+  const activeProducts = products.value.filter(p => p.active);
   const query = (searchQuery.value || '').toLowerCase().trim();
-  if (!query) return products.value;
-  return products.value.filter(p => (p.name || '').toLowerCase().includes(query));
+  if (!query) return activeProducts;
+  return activeProducts.filter(p => (p.name || '').toLowerCase().includes(query));
 });
 
-const showDeleteModal = ref(false);
-const productToDelete = ref(null);
+const showDeactivateModal = ref(false);
+const productToDeactivate = ref(null);
 const searchQuery = ref('');
 const router = useRouter();
 const searchError = ref('');
@@ -230,19 +231,20 @@ const validatePrice = () => {
 const editProduct = (p) => {
     prepareEdit(p);
 };
-const confirmDelete = (p) => {
-  productToDelete.value = p;
-  showDeleteModal.value = true;
+const confirmDeactivate = (p) => {
+  productToDeactivate.value = p;
+  showDeactivateModal.value = true;
 };
-const cancelDelete = () => {
-  showDeleteModal.value = false;
-  productToDelete.value = null;
+const cancelDeactivate = () => {
+  showDeactivateModal.value = false;
+  productToDeactivate.value = null;
 };
 
-const deleteProduct = async () => {
-    if (productToDelete.value) {
-        await deleteProductFromVM(productToDelete.value.id);
-        cancelDelete();
+const desactivateProduct = async () => {
+    if (productToDeactivate.value) {
+        await deactivateProductFromVM(productToDeactivate.value.id);
+        await getAllProducts(); // Recargamos los productos
+        cancelDeactivate();
     }
 };
 

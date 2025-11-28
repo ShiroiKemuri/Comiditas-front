@@ -64,7 +64,7 @@ const getAllProducts = async () => {
         };
         const response = await apiClient.get('/product/getAllProductos', config);
         products.value = response.data.map(p => 
-            new ProductModel(p.id, p.name, p.price, p.description, p.imageUrl, p.stock, p.category)
+            new ProductModel(p.id, p.name, p.price, p.description, p.imageUrl, p.active, p.stock, p.category)
         );
     } catch (error) {
         console.error('Error al obtener la lista de productos:', error);
@@ -80,6 +80,7 @@ const updateProduct = async () => {
         if (payload.image) {
             delete payload.image;
         }
+        payload.active = product.value.active; // Asegurarse de enviar el estado 'active'
         await apiClient.put(`/product/updateProduct/${product.value.id}`, payload);
         console.log('Producto actualizado');
         await getAllProducts();
@@ -94,6 +95,24 @@ const updateProduct = async () => {
         return { success: false, message: 'Error al actualizar el producto. Inténtalo de nuevo.' };
     }
 };
+
+const desactivateProducto = async (id) => {
+  try {
+    if (!id) {
+      console.error("Error: Se intentó desactivar un producto sin ID.");
+      return { success: false, message: 'No se proporcionó ID para desactivar.' };
+    }
+    await apiClient.put(`/product/desactivateProduct/${id}`);
+    return { success: true, message: 'Producto desactivado exitosamente.' };
+  } catch (error) {
+    console.error(`Error al desactivar el Producto con id ${id}:`, error);
+    return { success: false, message: 'Error al desactivar el producto.' };
+  }
+};
+
+
+
+
 
 const deleteProduct = async (id) => {
     try {
@@ -133,6 +152,7 @@ export {
     getProduct,
     getAllProducts, 
     updateProduct, 
+    desactivateProducto,
     deleteProduct, 
     resetForm,
     prepareEdit
