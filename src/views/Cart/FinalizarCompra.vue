@@ -49,6 +49,7 @@
 import { useRouter } from "vue-router";
 import { ref, reactive } from "vue";
 import { useAddToCartStore } from "@/stores/addToCart";
+import { createSell } from "@/composables/SellsVM";
 
 const router = useRouter();
 const cartStore = useAddToCartStore();
@@ -61,8 +62,20 @@ const datosPedido = reactive({
   metodoPago: "",
 });
 
-const confirmarPedido = () => {
+const confirmarPedido = async () => {
   console.log("Pedido confirmado con los siguientes datos:", datosPedido);
+
+  const items = cartStore.productos.map(item => ({
+    productId: item.id,
+    quantity: item.cantidad,
+  }));
+
+  const totalAmountPaid = cartStore.productos.reduce((total, item) => total + item.subtotal, 0);
+
+  const venta = { items, totalAmountPaid };
+
+  await createSell(venta);
+
   pedidoConfirmado.value = true;
   cartStore.limpiarCarrito();
   cartStore.saveCart();
