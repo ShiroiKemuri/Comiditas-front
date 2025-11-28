@@ -76,13 +76,6 @@ const goToHomeScreen = () => {
   router.push("/");
 };
 
-const goToSellsInformation = () => {
-  router.push('/admin/sells/management');
-};
-
-const goToOrderManagement = () => {
-  router.push('/admin/orders/management');
-};
 </script>
 
 <style scoped>

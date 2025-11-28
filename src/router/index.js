@@ -21,14 +21,13 @@ import FinalizarCompra from "@/views/Cart/FinalizarCompra.vue";
 
 // Sell import
 import SellsManagement from "@/views/Sells/SellsManagement.vue";
-import OrderManagement from "@/views/Sells/OrderManagement.vue";
 
 // HomeScreen y Login Imports
 import Auth from "@/views/Authentication.vue";
 import HomeScreen from "@/views/HomeScreen.vue";
 
 // Order imports
-import OrderManagement from "@/views/Order/OrderManagement.vue";
+import OrderManagement from "@/views/Sells/OrderManagement.vue";
 
 const routes = [
   {
@@ -116,16 +115,6 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  // Se comenta la lógica de autenticación para desactivarla temporalmente.
-  // const token = localStorage.getItem('jwt_token');
-  // if (to.meta.requiresAuth && !token) {
-  //   return next({ name: 'login' });
-  // }
-  //
-  // if (to.name === 'login' && token) {
-  //   return next({ name: 'adminDashboard' });
-  // }
-  return next();
   const token = localStorage.getItem("jwt_token");
   if (to.meta.requiresAuth && !token) {
     return next({ name: "login" });
