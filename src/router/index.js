@@ -39,25 +39,21 @@ const routes = [
     path: "/admin/create",
     name: "adminCreate",
     component: AdminView,
-    meta: { requiresAuth: true },
   },
   {
     path: "/admin/delete",
     name: "adminDelete",
     component: AdminDeleteView,
-    meta: { requiresAuth: true },
   },
   {
     path: "/admin/update",
     name: "adminUpdate",
     component: AdminUpdateView,
-    meta: { requiresAuth: true },
   },
   {
     path: "/admin/search",
     name: "adminSearch",
     component: AdminSearch,
-    meta: { requiresAuth: true },
   },
   {
     path: "/login",
@@ -83,13 +79,11 @@ const routes = [
     path: "/admin/category/management",
     name: "categoryManagement",
     component: CategoryManagement,
-    meta: { requiresAuth: true },
   },
   {
     path: "/admin/categories/form",
     name: "categoryForm",
     component: CategoryForm,
-    meta: { requiresAuth: true },
   },
   {
     path: "/finalizar-compra",
@@ -105,7 +99,6 @@ const routes = [
     path: "/admin/product/management",
     name: "productManagement",
     component: ProductManagement,
-    meta: { requiresAuth: true },
   },
 ];
 
@@ -114,16 +107,6 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
-  const token = localStorage.getItem("jwt_token");
-  if (to.meta.requiresAuth && !token) {
-    return next({ name: "login" });
-  }
-
-  if (to.name === "login" && token) {
-    return next({ name: "adminDashboard" });
-  }
-  return next(); // Asegúrate de que esta línea esté presente
-});
+router.beforeEach((to, from, next) => next());
 
 export default router;
