@@ -39,6 +39,17 @@
           Iniciar configuración
         </button>
       </section>
+
+      <!-- Módulo para Información de Ventas -->
+      <section class="module-card">
+        <h2>Información de ventas</h2>
+        <p class="module-description">
+          Visualiza el historial de ventas, los totales y los productos más vendidos.
+        </p>
+        <button @click="goToSellsInformation" class="module-button">
+          Ver Ventas
+        </button>
+      </section>
     </main>
   </div>
 </template>
@@ -63,6 +74,10 @@ const goToCategoryManagement = () => {
 
 const goToHomeScreen = () => {
   router.push('/');
+};
+
+const goToSellsInformation = () => {
+  router.push('/admin/sells/management');
 };
 </script>
 

@@ -5,7 +5,7 @@ import AdminView from "@/views/Admin/adminCreate.vue";
 import AdminDeleteView from "@/views/Admin/adminDelete.vue";
 import AdminUpdateView from "@/views/Admin/adminUpdate.vue";
 import AdminSearch from "@/views/Admin/adminSearch.vue";
-import AdminDashboard from "@/views/Admin/AdminDashboard.vue";
+import adminDashboard from "@/views/Admin/adminDashboard.vue";
 
 // category imports
 import CategoryManagement from "@/views/Category/CategoryManagement.vue";
@@ -18,6 +18,9 @@ import ProductManagement from "@/views/Product/ProductManagement.vue";
 //Cart import
 import CartView from "@/views/Cart/CartView.vue";
 import FinalizarCompra from "@/views/Cart/FinalizarCompra.vue";
+
+// Sell import
+import SellsManagement from "@/views/Sells/SellsManagement.vue";
 
 // HomeScreen y Login Imports
 import Auth from "@/views/Authentication.vue";
@@ -72,7 +75,7 @@ const routes = [
   {
     path: "/admin/dashboard",
     name: "adminDashboard",
-    component: AdminDashboard,
+    component: adminDashboard,
   },
   {
     path: "/admin/category/management",
@@ -93,8 +96,12 @@ const routes = [
     path: '/admin/product/management',
     name: 'productManagement',
     component: ProductManagement
+  },
+  {
+    path: '/admin/sells/management',
+    name: 'sellsManagement',
+    component: SellsManagement
   }
-
 ];
 
 const router = createRouter({
