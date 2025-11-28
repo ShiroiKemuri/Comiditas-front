@@ -55,7 +55,13 @@ const updateCategory = async () => {
 
 const getCategories = async () => {
   try {
-    const response = await apiClient.get("/category/getAllCategories");
+    const token = localStorage.getItem('jwt_token');
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    };
+    const response = await apiClient.get("/category/getAllCategories", config);
     categories.value = response.data;
   } catch (error) {
     console.error("Error al obtener categorías:", error);

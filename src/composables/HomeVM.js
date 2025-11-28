@@ -1,4 +1,4 @@
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onActivated } from 'vue';
 import { ProductModel } from '@/models/ProductModel';
 import { useAddToCartStore } from '@/stores/addToCart';
 import apiClient from '@/api/axiosConfig';
@@ -15,21 +15,15 @@ export function useHomeViewModel() {
     error.value = null;
 
     try {
-      const response = await apiClient.get('/product/getAllProductos', {
-        headers: {}
-      });
+      const token = localStorage.getItem('jwt_token');
+      const config = {
+        headers: { Authorization: `Bearer ${token}` }
+      };
+      const response = await apiClient.get('/product/getAllProductos', config);
       const apiData = response.data;
 
-      let realData = apiData.map(p => new ProductModel(p.id, p.name, p.price, p.description, p.imageUrl, p.stock, p.category));
-
-      let filtered = realData.filter(p => 
-        p.name.toLowerCase().includes(searchTerm.value.toLowerCase())
-      );
-      
-      if (selectedFilter.value) {
-      }
-      
-      products.value = filtered;
+      // Asigna todos los productos. El filtrado se hará en el componente.
+      products.value = apiData.map(p => new ProductModel(p.id, p.name, p.price, p.description, p.imageUrl, p.stock, p.category));
 
     } catch (err) {
       error.value = 'Error al cargar los productos: ' + err.message;
@@ -45,6 +39,9 @@ export function useHomeViewModel() {
   };
   
   onMounted(fetchProducts);
+
+  // Se ejecuta cada vez que el componente es activado (ej. al navegar de vuelta)
+  onActivated(fetchProducts);
 
   const executeSearch = () => {
       fetchProducts();
