@@ -33,12 +33,24 @@
             />
             <button @click="executeSearch">Buscar</button>
           </div>
-          <select v-model="selectedFilter" @change="executeSearch" class="filter-select">
-            <option value="">Filtro</option>
-            <option value="entradas">Precio Mayor</option>
-            <option value="platos-fuertes">Precio Menor</option>
-            <option value="bebidas">Orden Alfabético</option>
-          </select>
+          <div class="sort-wrapper">
+            <label for="sortMode" class="sort-label">Ordenar:</label>
+            <select id="sortMode" v-model="sortMode" class="filter-select">
+              <option value="name-asc">Nombre A-Z</option>
+              <option value="name-desc">Nombre Z-A</option>
+              <option value="price-asc">Precio Menor-Mayor</option>
+              <option value="price-desc">Precio Mayor-Menor</option>
+            </select>
+          </div>
+          <div class="sort-wrapper">
+            <label for="categoryFilter" class="sort-label">Categoría:</label>
+            <select id="categoryFilter" v-model="selectedCategoryId" class="filter-select">
+              <option :value="null">Todas</option>
+              <option v-for="cat in activeCategories" :key="cat.id" :value="cat.id">
+                {{ cat.name }}
+              </option>
+            </select>
+          </div>
         </div>
         </div>
     </section>
@@ -56,7 +68,7 @@
         <p v-else-if="products.length === 0">No se encontraron productos. 🥺</p>
         
         <div v-else class="product-grid">
-          <div v-for="product in products" :key="product.id" class="product-card">
+          <div v-for="product in displayProducts" :key="product.id" class="product-card">
             <img :src="product.imageUrl" :alt="product.name" class="product-image">
             <div class="product-info">
               <h3 class="product-name">{{ product.name }}</h3>
@@ -126,10 +138,54 @@
 import { useRouter } from "vue-router";
 import { useHomeViewModel } from '../composables/HomeVM';
 import CarritoModal from '@/views/Cart/CarritoModal.vue';
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useAddToCartStore } from "../stores/addToCart";
+import { categories, getCategories } from '@/composables/CategoryVM.js';
 
 const { products, searchTerm, selectedFilter, isLoading, error, executeSearch, addToCart } = useHomeViewModel();
+
+// Modo de ordenamiento (alfabético o por precio)
+const sortMode = ref('name-asc');
+// Filtro por categoría (id)
+const selectedCategoryId = ref(null);
+
+onMounted(async () => {
+  // Cargar categorías para el filtro
+  await getCategories();
+});
+
+const activeCategories = computed(() => (categories.value || []).filter(c => c.active));
+
+// Lista de productos filtrada por nombre y ordenada según sortMode
+const displayProducts = computed(() => {
+  let list = products.value.slice();
+  const query = (searchTerm.value || '').toLowerCase().trim();
+  if (query) {
+    list = list.filter(p => (p.name || '').toLowerCase().includes(query));
+  }
+  // Filtrar por categoría si se seleccionó
+  if (selectedCategoryId.value) {
+    list = list.filter(p => {
+      const cat = p.category;
+      return cat && Number(cat.id) === Number(selectedCategoryId.value);
+    });
+  }
+  switch (sortMode.value) {
+    case 'name-desc':
+      list.sort((a,b) => (a.name||'').localeCompare(b.name||''));
+      list.reverse();
+      break;
+    case 'price-asc':
+      list.sort((a,b) => Number(a.price) - Number(b.price));
+      break;
+    case 'price-desc':
+      list.sort((a,b) => Number(b.price) - Number(a.price));
+      break;
+    default: // name-asc
+      list.sort((a,b) => (a.name||'').localeCompare(b.name||''));
+  }
+  return list;
+});
 
 const mostrarModal = ref(false);
 const productoSeleccionado = ref(null);
@@ -267,6 +323,17 @@ const goHome = () => {
   border: 1px solid #ddd;
   background-color: white;
   font-size: 1rem;
+}
+
+.sort-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.sort-label {
+  font-size: 0.8rem;
+  color: #ffffff;
+  font-weight: 500;
 }
 
 .search-bar input {

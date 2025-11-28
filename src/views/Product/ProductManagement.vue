@@ -123,7 +123,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watch, nextTick } from "vue";
 import { useRouter } from 'vue-router';
 
 import { 
@@ -148,6 +148,13 @@ onMounted(async () => {
 
 const activeCategories = computed(() => {
     return categories.value.filter(cat => cat.active);
+});
+
+// Lista filtrada de productos por nombre
+const filteredProducts = computed(() => {
+  const query = (searchQuery.value || '').toLowerCase().trim();
+  if (!query) return products.value;
+  return products.value.filter(p => (p.name || '').toLowerCase().includes(query));
 });
 
 const showDeleteModal = ref(false);
@@ -200,6 +207,29 @@ const handleSubmit = async () => {
     } else {
         showNotification(result.message, 'error');
     }
+};
+
+// Limitar y sanear el precio en tiempo real
+const validatePrice = () => {
+  let v = product.value.price;
+  if (v === null || v === undefined) { product.value.price = ''; return; }
+  // Convertir a string y eliminar caracteres no numéricos excepto punto
+  v = String(v).replace(/[^0-9.]/g, '');
+  // Evitar múltiples puntos
+  const parts = v.split('.')
+  if (parts.length > 2) {
+    v = parts[0] + '.' + parts.slice(1).join('');
+  }
+  // Limitar a dos decimales
+  const [intPart, decPart = ''] = v.split('.');
+  const cleanInt = intPart.replace(/^0+(?=\d)/, '');
+  const limitedDec = decPart.slice(0, 2);
+  v = limitedDec ? `${cleanInt}.${limitedDec}` : cleanInt;
+  // Evitar números muy largos
+  if (cleanInt.length > 7) {
+    v = cleanInt.slice(0, 7) + (limitedDec ? `.${limitedDec}` : '');
+  }
+  product.value.price = v;
 };
 
 const editProduct = (p) => {
