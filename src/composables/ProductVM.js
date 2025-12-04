@@ -2,21 +2,27 @@ import { ref } from 'vue';
 import Product, { ProductModel } from '@/models/ProductModel';
 import apiClient from '@/api/axiosConfig';
 
-const product = ref({ ...Product, category: { id: null } });
+// Mantener ambas representaciones para compatibilidad con el formulario (category_id) y backend (category.id)
+const product = ref({ ...Product, category: { id: null }, category_id: null });
 const products = ref([]); 
 
 
 const createProduct = async () => {
     try {
-        
+        // Resolver ID de categoría
+        const categoryId = product.value.category_id ?? (product.value.category && product.value.category.id);
         const payload = {
-            id: 0, 
-            name: product.value.name,
-            description: product.value.description,
+            name: product.value.name?.trim(),
+            description: product.value.description?.trim(),
             price: Number(product.value.price),
-            imageUrl: product.value.imageUrl,
-            category: product.value.category
+            imageUrl: product.value.imageUrl?.trim(),
+            category: categoryId ? { id: categoryId } : null
         };
+
+        // Validaciones mínimas antes de llamar backend
+        if (!payload.name || !payload.description || !payload.price || !payload.category) {
+            return { success: false, message: 'Completa todos los campos obligatorios antes de guardar.' };
+        }
 
         const response = await apiClient.post('/product/createProduct', payload);
         console.log('Producto creado:', response.data);
@@ -24,8 +30,14 @@ const createProduct = async () => {
         resetForm();
         return { success: true, message: 'Producto guardado exitosamente.' };
     } catch (error) {
-        console.error('Error al crear producto:', error);
-        return { success: false, message: 'Error al guardar el producto. Inténtalo de nuevo.' };
+        let backendMsg = 'Error al guardar el producto. Inténtalo de nuevo.';
+        if (error.response) {
+            backendMsg = error.response.data?.message || backendMsg;
+            console.error('Respuesta backend (crear producto):', error.response.status, error.response.data);
+        } else {
+            console.error('Error al crear producto (sin respuesta):', error);
+        }
+        return { success: false, message: backendMsg };
     }
 };
 
@@ -101,13 +113,16 @@ const deleteProduct = async (id) => {
 // --- ACCIONES AUXILIARES ---
 
 const resetForm = () => {
-    product.value = { ...Product, category: { id: null } };
+    product.value = { ...Product, category: { id: null }, category_id: null, price: '' };
 };
 
 const prepareEdit = (productToEdit) => {
     product.value = JSON.parse(JSON.stringify(productToEdit));
     if (!product.value.category) {
         product.value.category = { id: null };
+        product.value.category_id = null;
+    } else {
+        product.value.category_id = product.value.category.id;
     }
 };
 

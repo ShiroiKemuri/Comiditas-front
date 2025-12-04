@@ -39,6 +39,28 @@
           Iniciar configuración
         </button>
       </section>
+
+      <!-- Módulo para Información de Ventas -->
+      <section class="module-card">
+        <h2>Información de ventas</h2>
+        <p class="module-description">
+          Visualiza el historial de ventas, los totales y los productos más vendidos.
+        </p>
+        <button @click="goToSellsInformation" class="module-button">
+          Ver Ventas
+        </button>
+      </section>
+
+      <!-- Módulo para Gestionar Pedidos -->
+      <section class="module-card">
+        <h2>Gestión de Ordenes</h2>
+        <p class="module-description">
+          Consulta el historial de Ordenes de los clientes y gestiona su estado.
+        </p>
+        <button @click="goToOrderManagement" class="module-button">
+          Ver Pedidos
+        </button>
+      </section>
     </main>
   </div>
 </template>
@@ -54,15 +76,23 @@ const logout = () => {
 };
 
 const goToProductManagement = () => {
-  router.push('/admin/product/management');
+  router.push({ name: 'productManagement' });
 };
 
 const goToCategoryManagement = () => {
-  router.push('/admin/category/management');
+  router.push({ name: 'categoryManagement' });
 };
 
 const goToHomeScreen = () => {
   router.push('/');
+};
+
+const goToSellsInformation = () => {
+  router.push('/admin/sells/management');
+};
+
+const goToOrderManagement = () => {
+  router.push('/admin/orders/management');
 };
 </script>
 
