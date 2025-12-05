@@ -5,6 +5,7 @@
       <div class="nav-container">
         <div class="logo">
           <img src="@/assets/logo.png" alt="Comiditas Logo" class="logo-img" />
+        
           <span>Comiditas</span>
         </div>
         <nav class="nav-links">
@@ -29,9 +30,9 @@
               type="text" 
               v-model="searchTerm" 
               placeholder="Busca tus Comiditas favoritas..." 
-              @keyup.enter="executeSearch"
+              @keyup.enter="runSearch"
             />
-            <button @click="executeSearch">Buscar</button>
+            <button @click="runSearch">Buscar</button>
           </div>
           <div class="sort-wrapper">
             <select id="sortMode" v-model="sortMode" class="filter-select">
@@ -52,11 +53,6 @@
         </div>
         </div>
     </section>
-      <section class="category-section">
-        <h2>Categorías Populares</h2>
-        <p>Explora nuestras categorías más populares y encuentra tus Comiditas favoritas</p>
-        </section>
-
       <section class="featured-products">
         <h2>Comiditas Destacadas</h2>
         <p>Consulta nuestras selecciones principales y los favoritos de los clientes</p>
@@ -104,15 +100,7 @@
             <li><a @click="goToAdminLogin">Admin Dashboard</a></li>
           </ul>
         </div>
-        <div class="footer-links">
-          <h4>Categorías</h4>
-          <ul>
-            <li><a href="#">Frutas</a></li>
-            <li><a href="#">Verduras</a></li>
-            <li><a href="#">Snacks</a></li>
-            <li><a href="#">Bebidas</a></li>
-          </ul>
-        </div>
+      
       </div>
       <div class="footer-bottom">
         <p>© 2025 Comiditas. All rights reserved.</p>
@@ -142,6 +130,9 @@ import { categories, getCategories } from '@/composables/CategoryVM.js';
 
 const { products, searchTerm, selectedFilter, isLoading, error, executeSearch, addToCart } = useHomeViewModel();
 
+// Query aplicada solo cuando el usuario ejecuta la búsqueda
+const appliedQuery = ref('');
+
 // Modo de ordenamiento (alfabético o por precio)
 const sortMode = ref('name-asc');
 // Filtro por categoría (id)
@@ -157,7 +148,7 @@ const activeCategories = computed(() => (categories.value || []).filter(c => c.a
 // Lista de productos filtrada por nombre y ordenada según sortMode
 const displayProducts = computed(() => {
   let list = products.value.slice();
-  const query = (searchTerm.value || '').toLowerCase().trim();
+  const query = (appliedQuery.value || '').toLowerCase().trim();
   if (query) {
     list = list.filter(p => (p.name || '').toLowerCase().includes(query));
   }
@@ -184,6 +175,12 @@ const displayProducts = computed(() => {
   }
   return list;
 });
+
+// Ejecutar búsqueda manual: aplica la query y actualiza desde el VM
+const runSearch = () => {
+  appliedQuery.value = (searchTerm.value || '').trim();
+  executeSearch();
+};
 
 const mostrarModal = ref(false);
 const productoSeleccionado = ref(null);
@@ -240,7 +237,7 @@ const goHome = () => {
 .footer-bottom {
   max-width: 1800px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: auto 20px;
   width: 100%;
 }
 
@@ -392,9 +389,27 @@ const goHome = () => {
 
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 25px;
+  /* Base mobile-first: up to 2 cards per row */
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  /* Center items and the grid itself for nicer alignment, incl. single search result */
+  justify-items: center;
+  justify-content: center;
   text-align: left;
+}
+
+/* Tablet: max 3 cards per row */
+@media (min-width: 768px) {
+  .product-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Desktop: max 4 cards per row */
+@media (min-width: 1024px) {
+  .product-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
 .product-card {
@@ -403,7 +418,9 @@ const goHome = () => {
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  display: flex;
+  display: block;
+  width: 400px; 
+  height: 368px; 
   flex-direction: column;
   transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
 }

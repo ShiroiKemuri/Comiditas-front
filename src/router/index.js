@@ -72,21 +72,25 @@ const routes = [
     path: "/admin/category/update/:id",
     name: "catalogUpdate",
     component: CatalogUpdate,
+    meta: { requiresAuth: true },
   },
   {
     path: "/admin/dashboard",
     name: "adminDashboard",
     component: adminDashboard,
+    meta: { requiresAuth: true },
   },
   {
     path: "/admin/category/management",
     name: "categoryManagement",
     component: CategoryManagement,
+    meta: { requiresAuth: true },
   },
   {
     path: '/admin/categories/form',
     name: 'categoryForm',
     component: CategoryForm,
+    meta: { requiresAuth: true },
   },
   {
     path: '/finalizar-compra',
@@ -96,7 +100,8 @@ const routes = [
   {
     path: '/admin/product/management',
     name: 'productManagement',
-    component: ProductManagement
+    component: ProductManagement,
+    meta: { requiresAuth: true },
   },
   {
     path: '/admin/sells/management',

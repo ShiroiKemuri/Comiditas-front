@@ -4,7 +4,7 @@
       <div class="nav-container">
         <div class="logo">
           <img src="@/assets/logo.png" alt="Comiditas Logo" class="logo-img" />
-          <span>Comiditas</span>
+          <a @click="goHome">Comiditas</a>
         </div>
         <nav class="nav-links">
           <a @click="goHome">Inicio</a>
@@ -163,48 +163,37 @@
       </div>
     </div>
   </div>
-  <footer class="site-footer">
-    <div class="footer-container">
-      <div class="footer-about">
-        <h3 class="footer-logo">Comiditas</h3>
-        <p>
-          Tus deliciosas Comiditas entregadas directamente a la puerta de tu
-          casa
-        </p>
+   <footer class="site-footer">
+      <div class="footer-container">
+        <div class="footer-about">
+          <h3 class="footer-logo">Comiditas</h3>
+          <p>Tus deliciosas Comiditas entregadas directamente a la puerta de tu casa</p>
+        </div>
+        <div class="footer-links">
+          <h4>Enlaces Rápidos</h4>
+          <ul>
+            <li><a @click="goHome">Inicio</a></li>
+            
+            <li><a @click="goToCart">Mi Carrito</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h4>Para Vendedores</h4>
+          <ul>
+            <li><a @click="goToAdminLogin">Admin Dashboard</a></li>
+          </ul>
+        </div>
+      
       </div>
-      <div class="footer-links">
-        <h4>Enlaces Rápidos</h4>
-        <ul>
-          <li><a @click="goHome">Inicio</a></li>
-
-          <li><a href="#">Mi Carrito</a></li>
-        </ul>
+      <div class="footer-bottom">
+        <p>© 2025 Comiditas. All rights reserved.</p>
+        <div class="social-icons">
+          <a href="#">F</a>
+          <a href="#">T</a>
+          <a href="#">I</a>
+        </div>
       </div>
-      <div class="footer-links">
-        <h4>Para Vendedores</h4>
-        <ul>
-          <li><a @click="goToAdminLogin">Admin Dashboard</a></li>
-        </ul>
-      </div>
-      <div class="footer-links">
-        <h4>Categorías</h4>
-        <ul>
-          <li><a href="#">Frutas</a></li>
-          <li><a href="#">Verduras</a></li>
-          <li><a href="#">Snacks</a></li>
-          <li><a href="#">Bebidas</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p>© 2025 Comiditas. All rights reserved.</p>
-      <div class="social-icons">
-        <a href="#">F</a>
-        <a href="#">T</a>
-        <a href="#">I</a>
-      </div>
-    </div>
-  </footer>
+    </footer>
 </template>
 
 <script setup>
@@ -772,28 +761,60 @@ const goToAdminLogin = () => {
   list-style: none;
   padding: 0;
   margin: 0;
-  .footer-links a:hover {
-    color: #d97706;
-  }
-
-  .footer-bottom {
-    border-top: 1px solid #e5e7eb;
-    padding: 20px 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.9rem;
-    color: #6b7280;
-  }
-
-  .social-icons {
-    display: flex;
-    gap: 15px;
-  }
-
-  .social-icons a {
-    color: #6b7280;
-    text-decoration: none;
-  }
 }
+
+.footer-links li {
+  margin-bottom: 10px;
+}
+
+.footer-links a {
+  text-decoration: none;
+  color: #6b7280;
+  cursor: pointer;
+}
+
+.footer-links a:hover {
+  color: #d97706;
+}
+
+.footer-bottom {
+  border-top: 1px solid #e5e7eb;
+  padding: 20px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+.social-icons {
+  display: flex;
+  gap: 15px;
+}
+
+.social-icons a {
+  color: #6b7280;
+  text-decoration: none;
+}
+
+.hero {
+  background: linear-gradient(100deg, #f9b17a, #f7941d);
+  color: white;
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.hero-content h1 {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.hero-content p {
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin: 0 auto 30px auto;
+  opacity: 0.9;
+}
+
 </style>
