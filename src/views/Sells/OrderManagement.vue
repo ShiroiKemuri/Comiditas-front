@@ -17,7 +17,7 @@
             <th>Número de Venta</th>
             <th>Número de Cliente</th>
             <th>Productos Solicitados (Cantidad)</th>
-            <th>Total a Pagar</th>
+            <th>Total a Pagar (sin IVA)</th>
             <th>Fecha</th>
           </tr>
         </thead>

@@ -52,11 +52,6 @@
         </div>
         </div>
     </section>
-      <section class="category-section">
-        <h2>Categorías Populares</h2>
-        <p>Explora nuestras categorías más populares y encuentra tus Comiditas favoritas</p>
-        </section>
-
       <section class="featured-products">
         <h2>Comiditas Destacadas</h2>
         <p>Consulta nuestras selecciones principales y los favoritos de los clientes</p>
@@ -240,7 +235,7 @@ const goHome = () => {
 .footer-bottom {
   max-width: 1800px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 auto;
   width: 100%;
 }
 

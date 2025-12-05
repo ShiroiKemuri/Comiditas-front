@@ -30,7 +30,7 @@
             <th>Fecha</th>
             <th>Productos (Cantidad)</th>
             <th>Cantidad Total</th>
-            <th>Monto Total</th>
+            <th>Monto Total(sin IVA)</th>
           </tr>
         </thead>
         <tbody>
