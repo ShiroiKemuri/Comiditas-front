@@ -54,7 +54,7 @@
 
         <!-- Nuevo encabezado sección derecha -->
         <div class="header-products">
-          <button class="btn-back" @click="goBack">← Volver al Dashboard</button>
+          
         </div>
 
         <!-- Encabezado Gestión de Productos -->
