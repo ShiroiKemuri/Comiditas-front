@@ -45,13 +45,10 @@
 
 <script setup>
 import { useRouter } from 'vue-router';
-const router = useRouter();
+import { useAuthenticationVM } from '@/composables/useAuthenticationVM';
 
-const logout = () => {
-  localStorage.removeItem('jwt_token');
-  console.log('Cerrando sesión...');
-  router.push({name: 'Auth'});
-};
+const router = useRouter();
+const { logout } = useAuthenticationVM();
 
 const goToProductManagement = () => {
   router.push('/admin/product/management');

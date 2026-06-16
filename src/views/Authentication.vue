@@ -3,7 +3,7 @@
         <div class="login-card">
             <button @click="goToHome" class="back-button">← Volver</button>
             <div class="card-header">
-                <img src="https://cdn.discordapp.com/attachments/1212093127435755551/1438364149167034399/logo.png?ex=69169c80&is=69154b00&hm=98bbd0eaacf578d6c884a2c25d570483fbb876109b0c47907426907aa44e0b2a&" alt="Logo Comiditas" class="login-logo">
+                <img src="/logo.png" alt="Logo Comiditas" class="login-logo">
             </div>
             <h1>Inicio de Sesión</h1>
             <form @submit.prevent="handleLogin">
