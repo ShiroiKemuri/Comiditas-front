@@ -1,17 +1,27 @@
 import { createRouter, createWebHistory } from "vue-router";
-import AdminView from "@/views/adminCreate.vue";
-import AdminDeleteView from "@/views/adminDelete.vue";
-import AdminUpdateView from "@/views/adminUpdate.vue";
-import AdminSearch from "@/views/adminSearch.vue";
+
+// Admin Imports
+import AdminView from "@/views/Admin/adminCreate.vue";
+import AdminDeleteView from "@/views/Admin/adminDelete.vue";
+import AdminUpdateView from "@/views/Admin/adminUpdate.vue";
+import AdminSearch from "@/views/Admin/adminSearch.vue";
+import AdminDashboard from "@/views/Admin/AdminDashboard.vue";
+
+// category imports
+import CategoryManagement from "@/views/Category/CategoryManagement.vue";
+import CategoryForm from "@/views/Category/CategoryForm.vue";
+import CatalogUpdate from "@/views/Category/CategoryUpdate.vue";
+
+// product imports
+import ProductManagement from "@/views/Product/ProductManagement.vue";
+
+//Cart import
+import CartView from "@/views/Cart/CartView.vue";
+import FinalizarCompra from "@/views/Cart/FinalizarCompra.vue";
+
+// HomeScreen y Login Imports
 import Auth from "@/views/Authentication.vue";
 import HomeScreen from "@/views/HomeScreen.vue";
-import CartView from "@/views/CartView.vue";
-import FinalizarCompra from "@/views/FinalizarCompra.vue";
-import CatalogUpdate from "@/views/CatalogUpdate.vue";
-import AdminDashboard from "@/views/AdminDashboard.vue";
-import ProductManagement from "@/views/ProductManagement.vue";
-import CategoryManagement from "@/views/CategoryManagement.vue";
-import CategoryForm from "../views/CategoryForm.vue";
 
 const routes = [
   {
@@ -45,7 +55,7 @@ const routes = [
   },
   {
     path: "/login",
-    name: "login", // 1. Corregido: El nombre debe ser simple y consistente con la ruta.
+    name: "login", 
     component: Auth,
   },
   {
@@ -82,8 +92,7 @@ const routes = [
   {
     path: '/admin/product/management',
     name: 'productManagement',
-    component: ProductManagement,
-    meta: { requiresAuth: true } // <-- ¡ESTA ES LA CORRECCIÓN!
+    component: ProductManagement
   }
 
 ];
@@ -93,16 +102,14 @@ const router = createRouter({
   routes,
 });
 
-// Guard global para proteger rutas que requieren autenticación
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('jwt_token');
-  // Si la ruta requiere auth y no hay token, redirigir al login
   if (to.meta.requiresAuth && !token) {
-    return next({ name: 'login' }); // 2. Corregido: Redirige al nombre de ruta correcto.
+    return next({ name: 'login' });
   }
-  // Si el usuario ya está autenticado y accede al login, redirigir al dashboard
+
   if (to.name === 'login' && token) {
-    return next({ name: 'adminDashboard' }); // 3. Corregido: Redirige al dashboard principal.
+    return next({ name: 'adminDashboard' });
   }
   return next();
 });

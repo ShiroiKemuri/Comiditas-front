@@ -28,7 +28,7 @@ import { useRouter } from 'vue-router';
 import { Auth as AuthModel, login, errorMessage } from '@/composables/AuthenticationVM'
 import backgroundImage from '@/assets/top-view-desk-concept-with-laptop.jpg';
 const isPasswordVisible = ref(false);
-const router = useRouter(); // Importante para que el composable pueda usarlo
+const router = useRouter();
  
 const togglePasswordVisibility = () => {
   isPasswordVisible.value = !isPasswordVisible.value;
@@ -42,7 +42,7 @@ const goToHome = () => {
 };
 
 const handleLogin = () => {
-  login(router); // Pasamos la instancia del router a la función de login
+  login(router);
 };
 
 onMounted(() => {
@@ -63,19 +63,19 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1rem; /* Espacio entre el logo y el título */
+  gap: 1rem; 
   margin-bottom: 1rem;
 }
 
 .app-title {
   margin: 0;
-  font-size: 2.5rem; /* Tamaño del nombre de la app */
+  font-size: 2.5rem;
   color: var(--color-heading);
 }
 
 .login-logo {
-  width: 80px; /* Ancho del logo ajustado */
-  margin-bottom: 0; /* Se quita el margen inferior */
+  width: 80px; 
+  margin-bottom: 0; 
 }
 
 .authentication {
@@ -85,13 +85,12 @@ onUnmounted(() => {
   justify-content: center;
   padding: 2rem;
   text-align: center;
-  min-height: 100vh; /* Ocupa toda la altura de la pantalla */
-  box-sizing: border-box; /* Asegura que el padding no afecte la altura total */
+  min-height: 100vh; 
+  box-sizing: border-box; 
 }
 
 .login-card {
-  position: relative; /* Necesario para posicionar el botón de volver */
-  /* Fondo semitransparente con efecto de desenfoque */
+  position: relative;
   background-color: rgba(221, 221, 221, 0.6);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -107,20 +106,19 @@ onUnmounted(() => {
 .authentication form {
   display: flex;
   flex-direction: column;
-  gap: 1rem; /* Espacio entre elementos del formulario */
+  gap: 1rem;
   margin-top: 1.5rem;
 }
 
-/* Estilo general para los inputs de texto y contraseña */
 .authentication input[type="text"],
 .authentication input[type="password"] {
-  width: 100%; /* Ocupan todo el ancho del contenedor del formulario */
+  width: 100%; 
   padding: 0.8em 1em;
   border-radius: 8px;
   border: 1px solid var(--color-border);
-  background-color: rgba(0, 0, 0, 0.2); /* Fondo sutil para los inputs */
+  background-color: rgba(0, 0, 0, 0.2); 
   color: var(--color-text);
-  box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+  box-sizing: border-box; 
 }
 
 .input-wrapper {
@@ -130,7 +128,7 @@ onUnmounted(() => {
 }
 
 .password-wrapper input {
-  padding-right: 80px; /* Espacio para el botón 'Mostrar' */
+  padding-right: 80px; 
 }
 
 .toggle-button {
@@ -145,8 +143,8 @@ onUnmounted(() => {
 }
 
 .error-message {
-  color: #eb4444; /* Un rojo más suave para el tema oscuro */
-  background-color: rgba(230, 47, 34, 0.15); /* Fondo sutil usando el color de acento */
+  color: #eb4444; 
+  background-color: rgba(230, 47, 34, 0.15);
   border: 1px solid var(--color-accent-hover);
   padding: 0.75rem;
   border-radius: 8px;

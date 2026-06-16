@@ -16,8 +16,9 @@
       </div>
     </header>
 
+    
+    <!-- Módulo para Gestionar Productos -->
     <main class="modules-container">
-      <!-- Módulo para Gestionar Productos -->
       <section class="module-card">
         <h2>Gestión de Productos</h2>
         <p class="module-description">
@@ -87,9 +88,9 @@ const goToHomeScreen = () => {
   margin-bottom: 2rem;
 }
 
-.header-left {
+.header-left { /* apila título y subtítulo verticalmente */
   display: flex;
-  flex-direction: column; /* apila título y subtítulo verticalmente */
+  flex-direction: column; 
 }
 
 .welcome-text {
